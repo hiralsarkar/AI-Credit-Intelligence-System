@@ -1,6 +1,72 @@
 # AI Credit Intelligence System
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Machine Learning](https://img.shields.io/badge/Machine%20Learning-XGBoost%20%7C%20Scikit--learn-orange)
+![Domain](https://img.shields.io/badge/Domain-Credit%20Risk%20%2F%20BFSI-green)
+![Status](https://img.shields.io/badge/Status-Models%20Trained%20%26%20Validated-brightgreen)
+![Governance](https://img.shields.io/badge/Governance-SR%2011--7%20%2F%20RBI%20MRM-blueviolet)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
 *Trained credit risk models for application, behavioural, and portfolio/pricing risk - with full SR 11-7 / RBI MRM governance documentation.*
+
+---
+
+## System Architecture
+
+```mermaid
+flowchart TD
+
+subgraph Data_Layer["Data Layer"]
+A1[Home Credit Default Risk]
+A2[Give Me Some Credit]
+A3[LendingClub Loan Data]
+end
+
+subgraph Modeling["Risk Modeling Layer"]
+B1["Module A - Application Risk\nPD + WoE Scorecard\nAUC 0.7551 / KS 0.3786"]
+B2["Module B - Behavioural Risk\nDelinquency PD + Scorecard + SHAP\nAUC 0.8571 / KS 0.5630"]
+B3["Module C - Portfolio & Pricing Risk\nMarket PD + Grade Classifier\nAUC 0.7397 / Gini 0.4794"]
+end
+
+subgraph Financial_Intelligence["Financial Intelligence"]
+C1[Expected Loss\nPD x LGD x EAD]
+C2[Capital Modeling\nRWA / Economic Capital]
+C3[RAROC Engine]
+end
+
+subgraph Decision["Decision Engine"]
+D1[Signal Aggregator\nWeighted A+B+C]
+D2[5-Layer Decision Rules\nAPPROVE / DECLINE / REPRICE / REVIEW]
+D3[Explainability + Audit Log]
+end
+
+subgraph Governance["Governance"]
+E1[Model Cards\nSR 11-7 / RBI MRM]
+E2[Monitoring Triggers\nPSI / AUC / Fairness]
+E3[Regulatory Alignment\nBasel III / IFRS 9]
+end
+
+A1 --> B1
+A2 --> B2
+A3 --> B3
+
+B1 --> C1
+B2 --> C1
+B3 --> C1
+C1 --> C2 --> C3
+
+B1 --> D1
+B2 --> D1
+B3 --> D1
+C3 --> D1
+D1 --> D2 --> D3
+
+D2 --> E2
+B1 --> E1
+B2 --> E1
+B3 --> E1
+E1 --> E3
+```
 
 ---
 
