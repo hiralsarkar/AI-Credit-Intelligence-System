@@ -11,12 +11,12 @@
 | **Model name** | Application Risk PD Model — Champion (XGBoost) |
 | **Version** | v1.0 |
 | **Type** | Binary classification — Probability of Default |
-| **Champion model** | XGBoost (`xgb_pd_v1.pkl`) |
-| **Challenger model** | Logistic Regression (`lr_pd_v1.pkl`) |
-| **Scorecard** | WoE-based credit scorecard, 300–900 scale (`scorecard_v1.pkl`) |
+| **Champion model** | XGBoost (`xgboost_pd.pkl`) |
+| **Challenger model** | Logistic Regression (`logistic_regression_pd.pkl`, bundled with its `StandardScaler`) |
+| **Scorecard** | WoE-based credit scorecard, 300–900 scale (`scorecard_woe_map.pkl`, `scorecard_points.pkl`) |
 | **Developed by** | AI Credit Intelligence System — Module A |
-| **Last trained** | March 2026 |
-| **Next review due** | September 2026 |
+| **Last trained** | June 2026 |
+| **Next review due** | December 2026 |
 | **Regulatory status** | Pending independent validation |
 
 ---
@@ -183,4 +183,4 @@ Monitoring is implemented in `05_governance/monitoring_triggers.py`.
 
 ---
 
-*Model card version: 1.0 · Last updated: March 2026 · Next review: September 2026*
+*Model card version: 1.1 · Last updated: June 2026 · Next review: December 2026*
