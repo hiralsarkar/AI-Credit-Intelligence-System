@@ -31,9 +31,10 @@ The platform integrates:
 
 # 🏗 System Architecture
 
-```
 
+```
 ## System Architecture
+```
 
 ```mermaid
 flowchart TD
