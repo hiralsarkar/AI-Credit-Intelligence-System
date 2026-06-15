@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Credit Intelligence System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── DESIGN TOKENS ─────────────────────────────────────────────────────────── */
+:root {
+  --black:   #050508;
+  --surface: #0c0c12;
+  --card:    #111118;
+  --border:  #1e1e2e;
+  --magenta: #e91e8c;
+  --aqua:    #00e5cc;
+  --amber:   #ffb700;
+  --white:   #f0f0f5;
+  --muted:   #6b6b80;
+  --dim:     #2a2a3a;
+
+  --font-display: 'Bebas Neue', 'Impact', sans-serif;
+  --font-body:    'Space Grotesk', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+}
+
+/* ── RESET ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── MASTHEAD ───────────────────────────────────────────────────────────────── */
+.masthead {
+  position: relative;
+  overflow: hidden;
+  background: var(--black);
+  border-bottom: 1px solid var(--border);
+  padding: 0 0 0 0;
+}
+
+.masthead-accent-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--magenta) 0%, var(--aqua) 50%, var(--amber) 100%);
+}
+
+.masthead-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 80px 56px 64px;
+  position: relative;
+  z-index: 2;
+}
+
+/* giant ghost text behind */
+.masthead-ghost {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-size: 280px;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(233,30,140,0.08);
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+  z-index: 1;
+}
+
+.masthead-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--aqua);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.masthead-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--aqua);
+}
+
+.masthead h1 {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 10vw, 120px);
+  line-height: 0.92;
+  letter-spacing: 0.03em;
+  color: var(--white);
+  margin-bottom: 28px;
+}
+.masthead h1 .line-accent { color: var(--magenta); }
+.masthead h1 .line-aqua   { color: var(--aqua); }
+
+.masthead-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 56px;
+  font-weight: 400;
+}
+
+/* stat strip */
+.stat-strip {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--border);
+  padding-top: 40px;
+}
+.stat-item {
+  flex: 1;
+  padding-right: 36px;
+  border-right: 1px solid var(--border);
+  margin-right: 36px;
+}
+.stat-item:last-child { border-right: none; margin-right: 0; }
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.sv-mag  { color: var(--magenta); }
+.sv-aqua { color: var(--aqua); }
+.sv-amb  { color: var(--amber); }
+.sv-wh   { color: var(--white); }
+.stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── PAGE WRAPPER ───────────────────────────────────────────────────────────── */
+.page { max-width: 1000px; margin: 0 auto; padding: 0 56px 100px; }
+
+/* ── SECTION HEADER ─────────────────────────────────────────────────────────── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 80px 0 28px;
+}
+.sec-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--magenta);
+  min-width: 28px;
+}
+.sec-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  letter-spacing: 0.06em;
+  color: var(--white);
+}
+.sec-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── LEDE ───────────────────────────────────────────────────────────────────── */
+.lede {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #a0a0b8;
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+
+/* ── PITCH BOX ──────────────────────────────────────────────────────────────── */
+.pitch-box {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--magenta);
+  background: var(--card);
+  padding: 36px 40px;
+  margin: 32px 0 40px;
+  position: relative;
+}
+.pitch-quote-mark {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  font-family: var(--font-display);
+  font-size: 96px;
+  color: var(--magenta);
+  opacity: 0.12;
+  line-height: 1;
+}
+.pitch-text {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #c8c8dc;
+  font-weight: 300;
+}
+.pitch-text strong { color: var(--aqua); font-weight: 600; }
+
+/* ── MODULE GRID ────────────────────────────────────────────────────────────── */
+.module-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 28px 0 0;
+}
+.module-card {
+  background: var(--card);
+  padding: 32px 26px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.mc-a::before { background: var(--aqua); }
+.mc-b::before { background: var(--magenta); }
+.mc-c::before { background: var(--amber); }
+.mc-d::before { background: linear-gradient(90deg, var(--magenta), var(--aqua)); }
+.mc-g::before { background: var(--aqua); }
+
+.mc-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.ey-a { color: var(--aqua); }
+.ey-b { color: var(--magenta); }
+.ey-c { color: var(--amber); }
+.ey-d { color: var(--magenta); }
+.ey-g { color: var(--aqua); }
+
+.mc-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.mb-a { background: var(--aqua);    color: var(--black); }
+.mb-b { background: var(--magenta); color: var(--white); }
+.mb-c { background: var(--amber);   color: var(--black); }
+.mb-d { background: var(--magenta); color: var(--white); }
+.mb-g { background: var(--aqua);    color: var(--black); }
+
+.mc-title {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+.mc-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.mc-meta {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: #444458;
+  margin-top: 16px;
+  line-height: 1.7;
+}
+
+.signal-bridge {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 14px 24px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #444458;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.signal-bridge span { color: var(--aqua); }
+
+.module-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-top: none;
+  margin-bottom: 0;
+}
+
+/* ── PERF TABLE ─────────────────────────────────────────────────────────────── */
+.note-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  padding: 12px 18px;
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.note-row strong { color: var(--amber); }
+
+table.dt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+table.dt thead tr {
+  background: var(--dim);
+}
+table.dt thead th {
+  padding: 11px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+  border-bottom: 1px solid var(--border);
+}
+table.dt tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+table.dt tbody tr:hover { background: var(--surface); }
+table.dt tbody td {
+  padding: 11px 14px;
+  vertical-align: middle;
+}
+
+.big-num {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.03em;
+}
+.n-aqua   { color: var(--aqua); }
+.n-mag    { color: var(--magenta); }
+.n-amber  { color: var(--amber); }
+.n-white  { color: var(--white); }
+.n-muted  { color: var(--muted); }
+
+.pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.pill-champ { background: rgba(255,183,0,0.15);   color: var(--amber);   border: 1px solid rgba(255,183,0,0.3); }
+.pill-chal  { background: rgba(0,229,204,0.1);    color: var(--aqua);    border: 1px solid rgba(0,229,204,0.25); }
+.pill-pass  { background: rgba(0,229,204,0.12);   color: var(--aqua);    border: 1px solid rgba(0,229,204,0.3); }
+.pill-pend  { background: rgba(107,107,128,0.15); color: var(--muted);   border: 1px solid var(--border); }
+
+/* ── CAPITAL BAND GRID ──────────────────────────────────────────────────────── */
+.band-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0 10px;
+}
+.band-cell {
+  background: var(--card);
+  padding: 22px 16px;
+  text-align: center;
+  position: relative;
+}
+.band-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.bc-1::before { background: var(--aqua); }
+.bc-2::before { background: #00bfa5; }
+.bc-3::before { background: var(--amber); }
+.bc-4::before { background: #ff7043; }
+.bc-5::before { background: var(--magenta); }
+
+.band-label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.band-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+.band-name.vl  { color: var(--aqua); }
+.band-name.lo  { color: #00bfa5; }
+.band-name.me  { color: var(--amber); }
+.band-name.hi  { color: #ff7043; }
+.band-name.vh  { color: var(--magenta); }
+
+.band-metric-val {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.band-metric-lbl {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.bv-1 { color: var(--aqua); }
+.bv-2 { color: #00bfa5; }
+.bv-3 { color: var(--amber); }
+.bv-4 { color: #ff7043; }
+.bv-5 { color: var(--magenta); }
+
+/* ── STRATEGY GRID ──────────────────────────────────────────────────────────── */
+.strat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0 10px;
+}
+.strat-cell {
+  background: var(--card);
+  padding: 26px 20px;
+  position: relative;
+}
+.strat-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.sc-a::before { background: var(--magenta); }
+.sc-b::before { background: var(--aqua); }
+.sc-c::before { background: var(--amber); }
+.sc-d::before { background: linear-gradient(90deg, var(--magenta), var(--aqua)); }
+
+.strat-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+.strat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.strat-row:last-child { border-bottom: none; }
+.strat-key  { color: var(--muted); }
+.strat-val  { font-family: var(--font-mono); font-size: 11.5px; color: var(--white); }
+.strat-val.pos { color: var(--aqua); }
+.strat-val.neg { color: var(--magenta); }
+
+/* ── STRESS TABLE ───────────────────────────────────────────────────────────── */
+table.stress {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 24px 0 10px;
+}
+table.stress thead tr { background: var(--dim); }
+table.stress thead th {
+  padding: 11px 14px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+  border-bottom: 1px solid var(--border);
+}
+table.stress tbody tr { border-bottom: 1px solid var(--border); }
+table.stress tbody tr:hover { background: var(--surface); }
+table.stress tbody td { padding: 10px 14px; vertical-align: middle; }
+.sc-lbl  { font-family: var(--font-mono); font-size: 11px; color: var(--white); }
+.sc-sub  { font-size: 10px; color: #444458; margin-top: 2px; }
+.c-pos   { color: var(--aqua);    font-family: var(--font-mono); font-size: 12px; font-weight: 700; }
+.c-neg   { color: var(--magenta); font-family: var(--font-mono); font-size: 12px; font-weight: 700; }
+.c-warn  { color: var(--amber);   font-family: var(--font-mono); font-size: 12px; font-weight: 700; }
+.c-ok    { color: var(--aqua);    font-size: 12px; font-weight: 600; }
+.c-br    { color: var(--magenta); font-size: 12px; font-weight: 600; }
+
+/* ── DECISION CARDS ─────────────────────────────────────────────────────────── */
+.decision-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 28px 0;
+}
+.dec-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.dec-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+.dc-approve::after  { background: var(--aqua); }
+.dc-reprice::after  { background: var(--amber); }
+.dc-review::after   { background: #ff7043; }
+.dc-decline::after  { background: var(--magenta); }
+
+.dec-icon {
+  font-size: 26px;
+  margin-bottom: 10px;
+  display: block;
+}
+.dec-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.dn-approve { color: var(--aqua); }
+.dn-reprice { color: var(--amber); }
+.dn-review  { color: #ff7043; }
+.dn-decline { color: var(--magenta); }
+
+.dec-desc  { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.dec-rule  {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #444458;
+  background: var(--dim);
+  padding: 7px 10px;
+  border-left: 2px solid var(--border);
+}
+
+/* ── CODE BLOCK ─────────────────────────────────────────────────────────────── */
+.code-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+.ck  { color: #6b7fa8; }
+.cv  { color: var(--amber); }
+.cs  { color: var(--aqua); }
+.cc  { color: #3a3a52; }
+.ca  { color: var(--magenta); font-weight: 700; }
+
+/* ── FILE TREE ──────────────────────────────────────────────────────────────── */
+.file-tree {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--magenta);
+  padding: 32px 36px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 2.0;
+  margin: 24px 0;
+  overflow-x: auto;
+}
+.ft-root   { color: var(--white); font-weight: 700; }
+.ft-folder { color: var(--aqua); }
+.ft-nb     { color: #6be36b; }
+.ft-py     { color: var(--amber); }
+.ft-md     { color: #b48fff; }
+.ft-html   { color: var(--magenta); }
+.ft-gray   { color: #333348; }
+.ft-accent { color: var(--aqua); opacity: 0.5; }
+
+/* ── RUN BLOCKS ─────────────────────────────────────────────────────────────── */
+.run-step {
+  border: 1px solid var(--border);
+  margin: 12px 0;
+  overflow: hidden;
+}
+.run-header {
+  background: var(--dim);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.run-step-num {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--magenta);
+  min-width: 20px;
+}
+.run-step-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--aqua);
+}
+.run-body { padding: 16px 18px; background: var(--surface); }
+.run-cmd {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: #6be36b;
+  padding: 5px 0;
+}
+.run-note {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 0 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #444458;
+}
+
+/* ── REG STRIP ──────────────────────────────────────────────────────────────── */
+.reg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 24px 0;
+}
+.reg-cell {
+  background: var(--card);
+  padding: 24px 20px;
+  position: relative;
+}
+.reg-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.rc-1::before { background: var(--aqua); }
+.rc-2::before { background: var(--magenta); }
+.rc-3::before { background: var(--amber); }
+.rc-4::before { background: #b48fff; }
+.reg-std {
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.rs-1 { color: var(--aqua); }
+.rs-2 { color: var(--magenta); }
+.rs-3 { color: var(--amber); }
+.rs-4 { color: #b48fff; }
+.reg-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ── FOOTER ─────────────────────────────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 56px;
+  margin-top: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 32px;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.footer-brand span { color: var(--magenta); }
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #333348;
+  line-height: 1.9;
+}
+.footer-stats {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: #333348;
+  line-height: 2.0;
+}
+.footer-stats span { color: var(--aqua); }
+
+/* ── DIVIDER ─────────────────────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 72px 0;
+}
+.sub-note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* ── BUSINESS IMPACT SECTION ─────────────────────────────────────────────── */
+.kpi-header-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--magenta);
+  padding: 28px 32px;
+  margin: 28px 0;
+}
+.kpi-header-box h3 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  letter-spacing: 0.08em;
+  color: var(--magenta);
+  margin-bottom: 8px;
+}
+.kpi-header-box p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 680px;
+}
+.kpi-header-box strong { color: var(--white); }
+
+.criteria-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 24px 0;
+}
+.criteria-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 22px 20px;
+  position: relative;
+}
+.criteria-num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.cn-1 { color: var(--aqua); }
+.cn-2 { color: var(--amber); }
+.cn-3 { color: var(--magenta); }
+.criteria-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.ct-1 { color: var(--aqua); }
+.ct-2 { color: var(--amber); }
+.ct-3 { color: var(--magenta); }
+.criteria-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.criteria-desc strong { color: var(--white); }
+.criteria-card.gold-card {
+  border-color: var(--magenta);
+  background: rgba(233,30,140,0.04);
+}
+.gold-tag {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--magenta);
+  background: rgba(233,30,140,0.1);
+  padding: 3px 8px;
+  border: 1px solid rgba(233,30,140,0.3);
+}
+
+.impact-table-wrap {
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin: 24px 0;
+}
+table.impact {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+table.impact thead tr { background: var(--dim); }
+table.impact thead th {
+  padding: 11px 16px;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+  border-bottom: 1px solid var(--border);
+}
+table.impact tbody tr { border-bottom: 1px solid var(--border); }
+table.impact tbody tr.champion-row { background: rgba(0,229,204,0.04); }
+table.impact tbody tr:hover { background: var(--surface); }
+table.impact tbody td { padding: 12px 16px; vertical-align: middle; }
+.policy-name { font-weight: 600; color: var(--white); }
+.role-pill-base { background:rgba(107,107,128,0.15); color:var(--muted); border:1px solid var(--border); }
+.role-pill-chal { background:rgba(255,183,0,0.12);   color:var(--amber);   border:1px solid rgba(255,183,0,0.3); }
+.role-pill-champ{ background:rgba(0,229,204,0.12);   color:var(--aqua);    border:1px solid rgba(0,229,204,0.3); }
+.mono-val { font-family: var(--font-mono); font-size: 12.5px; }
+.tick { color: var(--aqua);    font-size: 16px; font-weight: 700; }
+.cross{ color: var(--magenta); font-size: 16px; font-weight: 700; }
+.star { color: var(--aqua);    font-size: 14px; font-weight: 700; }
+
+.interview-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--aqua);
+  padding: 28px 32px;
+  margin: 28px 0;
+}
+.interview-box h4 {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--aqua);
+  margin-bottom: 16px;
+}
+.interview-wrong {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  background: rgba(233,30,140,0.06);
+  border-left: 2px solid rgba(233,30,140,0.3);
+}
+.interview-wrong::before {
+  content: "✗  WEAK: ";
+  color: var(--magenta);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 5px;
+}
+.interview-right {
+  font-size: 13.5px;
+  color: #c8c8dc;
+  padding: 14px 16px;
+  background: rgba(0,229,204,0.05);
+  border-left: 2px solid rgba(0,229,204,0.4);
+  line-height: 1.7;
+}
+.interview-right::before {
+  content: "✓  STRONG: ";
+  color: var(--aqua);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 5px;
+}
+.interview-right strong { color: var(--aqua); }
+
+</style>
+</head>
+<body>
+
+<!-- ── MASTHEAD ─────────────────────────────────────────────────────────────── -->
+<div class="masthead-accent-bar"></div>
+<div class="masthead">
+  <div class="masthead-ghost">RISK</div>
+  <div class="masthead-inner">
+    <div class="masthead-eyebrow">Portfolio &amp; Credit Intelligence &nbsp;&middot;&nbsp; 2026</div>
+    <h1>
+      AI<br>
+      <span class="line-accent">RISK</span><br>
+      <span class="line-aqua">DECISIONING</span><br>
+      SYSTEM
+    </h1>
+    <p class="masthead-sub">
+      An end-to-end credit origination pipeline spanning three independent
+      risk modules, a rules-based decision engine, and a full model risk
+      governance layer built to production-grade regulatory standards.
+    </p>
+    <div class="stat-strip">
+      <div class="stat-item">
+        <div class="stat-val sv-mag">13</div>
+        <div class="stat-lbl">Notebooks</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val sv-aqua">3</div>
+        <div class="stat-lbl">Datasets</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val sv-amb">0.7551</div>
+        <div class="stat-lbl">Champion AUC</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val sv-aqua">₹36.5B</div>
+        <div class="stat-lbl">Portfolio Sized</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val sv-mag">4</div>
+        <div class="stat-lbl">Stress Scenarios</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── 01 WHAT THIS IS ──────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <span class="sec-title">WHAT THIS IS</span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="pitch-box">
+    <div class="pitch-quote-mark">&ldquo;</div>
+    <p class="pitch-text">
+      Most credit risk projects train a model and show an AUC score.
+      This one trains <strong>five models across three real datasets</strong>,
+      chains their outputs through a weighted signal aggregator, applies a
+      five-layer decision framework, generates
+      <strong>regulatory-compliant adverse action notices</strong>,
+      logs every decision with a full SR&nbsp;11-7 audit trail, and monitors
+      model drift against live GREEN/AMBER/RED thresholds.
+      It is a <strong>system</strong>, not a model.
+    </p>
+  </div>
+
+  <p class="lede">
+    The system replicates the credit origination workflow of a regulated Indian
+    lender end-to-end. Each module answers a distinct risk question, the Decision
+    Engine combines all three signals into a single explainable outcome, and
+    Governance closes the loop with model cards, regulatory alignment, and
+    automated monitoring.
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- ── 02 ARCHITECTURE ──────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <span class="sec-title">SYSTEM ARCHITECTURE</span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="module-grid">
+    <div class="module-card mc-a">
+      <div class="mc-eyebrow ey-a">Module A</div>
+      <div class="mc-badge mb-a">Application Risk</div>
+      <div class="mc-title">Who is this borrower at the point of application?</div>
+      <div class="mc-desc">PD model (LR + XGBoost) on 307,511 Home Credit loans. WoE scorecard 300-900 scale. EL/RWA/RAROC calculations, four-strategy simulator, Basel III stress testing across four macro scenarios.</div>
+      <div class="mc-meta">6 notebooks<br>Home Credit Default Risk</div>
+    </div>
+    <div class="module-card mc-b">
+      <div class="mc-eyebrow ey-b">Module B</div>
+      <div class="mc-badge mb-b">Behavioural Risk</div>
+      <div class="mc-title">How has this borrower actually behaved with credit?</div>
+      <div class="mc-desc">Delinquency model on 150,000 Give Me Some Credit records. WoE behavioural scorecard 0-100 scale, four hard-override stress flags, SHAP global and local explainability with reason codes.</div>
+      <div class="mc-meta">4 notebooks<br>Give Me Some Credit</div>
+    </div>
+    <div class="module-card mc-c">
+      <div class="mc-eyebrow ey-c">Module C</div>
+      <div class="mc-badge mb-c">Portfolio &amp; Pricing Risk</div>
+      <div class="mc-title">Is the rate right? Does this loan concentrate the book?</div>
+      <div class="mc-desc">Grade classifier on 1.34M LendingClub closed loans. Market-implied PD via grade lookup, suggested rate model, HHI concentration analysis, approval vs rejection mapping.</div>
+      <div class="mc-meta">3 notebooks<br>LendingClub 2007-2018</div>
+    </div>
+  </div>
+
+  <div class="signal-bridge">
+    <span>Module A signal</span> (pd_score, credit_score, raroc) &nbsp;+&nbsp;
+    <span>Module B signal</span> (delinquency_prob, stress_flags) &nbsp;+&nbsp;
+    <span>Module C signal</span> (market_pd, suggested_rate, concentration_flag)
+    &nbsp;&darr;
+  </div>
+
+  <div class="module-grid-2">
+    <div class="module-card mc-d">
+      <div class="mc-eyebrow ey-d">Module D</div>
+      <div class="mc-badge mb-d">Decision Engine</div>
+      <div class="mc-title">Composite signal &rarr; lending decision</div>
+      <div class="mc-desc">Five-layer rules framework. Signal aggregator (weighted composite PD), hard override checks, RAROC gate, Reprice pathway, SHAP explanation, JSON audit log with model version provenance.</div>
+      <div class="mc-meta">constants.py &middot; engine &middot; signal_aggregator<br>explainability &middot; audit_logger &middot; demo</div>
+    </div>
+    <div class="module-card mc-g">
+      <div class="mc-eyebrow ey-g">Governance</div>
+      <div class="mc-badge mb-g">Model Risk Management</div>
+      <div class="mc-title">SR 11-7 &middot; RBI MRM &middot; Basel III</div>
+      <div class="mc-desc">One model card per module with confirmed performance metrics. Full regulatory alignment map linking every requirement to its implementation. Runnable PSI, AUC, RAROC, and income parity monitoring.</div>
+      <div class="mc-meta">3 model cards &middot; regulatory_alignment.md<br>monitoring_triggers.py</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 03 PERFORMANCE ────────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <span class="sec-title">MODEL PERFORMANCE</span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="note-row">
+    <strong>Confirmed from executed notebooks.</strong> Module A metrics are taken directly from stored cell outputs.
+    Module B and C show expected ranges; populate after running the respective notebooks against the data files.
+  </div>
+
+  <table class="dt">
+    <thead>
+      <tr>
+        <th>Module</th>
+        <th>Model</th>
+        <th>Role</th>
+        <th>AUC</th>
+        <th>KS</th>
+        <th>Gini</th>
+        <th>PSI</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2" style="color:var(--aqua);font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;">A</td>
+        <td>XGBoost</td>
+        <td><span class="pill pill-champ">Champion</span></td>
+        <td><span class="big-num n-aqua">0.7551</span></td>
+        <td><span class="big-num n-aqua">0.3786</span></td>
+        <td><span class="big-num n-aqua">0.5102</span></td>
+        <td style="font-family:var(--font-mono);color:var(--aqua);">0.0001</td>
+        <td><span class="pill pill-pass">All thresholds met</span></td>
+      </tr>
+      <tr>
+        <td>Logistic Regression</td>
+        <td><span class="pill pill-chal">Challenger</span></td>
+        <td>0.7429</td>
+        <td>0.3583</td>
+        <td>0.4857</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">0.0001</td>
+        <td><span class="pill pill-pass">All thresholds met</span></td>
+      </tr>
+      <tr>
+        <td rowspan="2" style="color:var(--magenta);font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;">B</td>
+        <td>XGBoost</td>
+        <td><span class="pill pill-champ">Champion</span></td>
+        <td style="color:var(--muted);">~0.86-0.88</td>
+        <td style="color:var(--muted);">~0.50-0.58</td>
+        <td style="color:var(--muted);">~0.72-0.76</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">&lt;0.05</td>
+        <td><span class="pill pill-pend">Run NB02</span></td>
+      </tr>
+      <tr>
+        <td>Logistic Regression</td>
+        <td><span class="pill pill-chal">Challenger</span></td>
+        <td style="color:var(--muted);">~0.82-0.85</td>
+        <td style="color:var(--muted);">~0.45-0.52</td>
+        <td style="color:var(--muted);">~0.64-0.70</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">&lt;0.05</td>
+        <td><span class="pill pill-pend">Run NB02</span></td>
+      </tr>
+      <tr>
+        <td style="color:var(--amber);font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;">C</td>
+        <td>XGBoost Default</td>
+        <td><span class="pill pill-champ">Champion</span></td>
+        <td style="color:var(--muted);">~0.72-0.76</td>
+        <td style="color:var(--muted);">~0.38-0.45</td>
+        <td style="color:var(--muted);">~0.44-0.52</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">&lt;0.05</td>
+        <td><span class="pill pill-pend">Run NB02</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="sub-note">
+    Benchmark thresholds &mdash; AUC &gt; 0.70 &nbsp;&middot;&nbsp; KS &gt; 0.30 &nbsp;&middot;&nbsp; Gini &gt; 0.40 &nbsp;&middot;&nbsp; PSI &lt; 0.10
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- ── 04 CAPITAL ────────────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <span class="sec-title">CAPITAL MODEL &nbsp; <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;color:var(--muted);">BASEL III &middot; CONFIRMED OUTPUTS</span></span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="band-grid">
+    <div class="band-cell bc-1">
+      <div class="band-label">Band 1</div>
+      <div class="band-name vl">VERY LOW</div>
+      <div class="band-metric-val bv-1">3.65%</div>
+      <div class="band-metric-lbl">Mean PD</div>
+      <div class="band-metric-val bv-1">+94.60%</div>
+      <div class="band-metric-lbl">RAROC</div>
+      <div class="band-metric-val bv-1">1.55%</div>
+      <div class="band-metric-lbl">EL Rate</div>
+    </div>
+    <div class="band-cell bc-2">
+      <div class="band-label">Band 2</div>
+      <div class="band-name lo">LOW</div>
+      <div class="band-metric-val bv-2">7.94%</div>
+      <div class="band-metric-lbl">Mean PD</div>
+      <div class="band-metric-val bv-2">+69.00%</div>
+      <div class="band-metric-lbl">RAROC</div>
+      <div class="band-metric-val bv-2">3.57%</div>
+      <div class="band-metric-lbl">EL Rate</div>
+    </div>
+    <div class="band-cell bc-3">
+      <div class="band-label">Band 3</div>
+      <div class="band-name me">MEDIUM</div>
+      <div class="band-metric-val bv-3">15.53%</div>
+      <div class="band-metric-lbl">Mean PD</div>
+      <div class="band-metric-val bv-3">+19.07%</div>
+      <div class="band-metric-lbl">RAROC</div>
+      <div class="band-metric-val bv-3">7.00%</div>
+      <div class="band-metric-lbl">EL Rate</div>
+    </div>
+    <div class="band-cell bc-4">
+      <div class="band-label">Band 4</div>
+      <div class="band-name hi">HIGH</div>
+      <div class="band-metric-val bv-4">27.46%</div>
+      <div class="band-metric-lbl">Mean PD</div>
+      <div class="band-metric-val bv-4">-21.15%</div>
+      <div class="band-metric-lbl">RAROC</div>
+      <div class="band-metric-val bv-4">12.33%</div>
+      <div class="band-metric-lbl">EL Rate</div>
+    </div>
+    <div class="band-cell bc-5">
+      <div class="band-label">Band 5</div>
+      <div class="band-name vh">VERY HIGH</div>
+      <div class="band-metric-val bv-5">55.70%</div>
+      <div class="band-metric-lbl">Mean PD</div>
+      <div class="band-metric-val bv-5">-99.09%</div>
+      <div class="band-metric-lbl">RAROC</div>
+      <div class="band-metric-val bv-5">25.07%</div>
+      <div class="band-metric-lbl">EL Rate</div>
+    </div>
+  </div>
+
+  <p class="sub-note">
+    Portfolio totals &mdash; EAD ₹36.5B &nbsp;&middot;&nbsp; Total EL ₹6.4B &nbsp;&middot;&nbsp; Economic Capital ₹5.3B
+    &nbsp;&middot;&nbsp; Hurdle rate 14% (RBI CET1 4.5% + conservation buffer 2.5% + operational buffer)
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- ── 05 STRATEGY ───────────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <span class="sec-title">STRATEGY SIMULATOR &nbsp; <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;color:var(--muted);">4 LENDING POLICIES</span></span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="strat-grid">
+    <div class="strat-cell sc-a">
+      <div class="strat-name">AGGRESSIVE</div>
+      <div class="strat-row"><span class="strat-key">Approved</span><span class="strat-val">27,498</span></div>
+      <div class="strat-row"><span class="strat-key">Approval rate</span><span class="strat-val">44.7%</span></div>
+      <div class="strat-row"><span class="strat-key">Mean PD</span><span class="strat-val">22.11%</span></div>
+      <div class="strat-row"><span class="strat-key">EL rate</span><span class="strat-val">9.91%</span></div>
+      <div class="strat-row"><span class="strat-key">Portfolio RAROC</span><span class="strat-val neg">-6.73%</span></div>
+    </div>
+    <div class="strat-cell sc-b">
+      <div class="strat-name">CONSERVATIVE</div>
+      <div class="strat-row"><span class="strat-key">Approved</span><span class="strat-val">2,031</span></div>
+      <div class="strat-row"><span class="strat-key">Approval rate</span><span class="strat-val">3.3%</span></div>
+      <div class="strat-row"><span class="strat-key">Mean PD</span><span class="strat-val">7.42%</span></div>
+      <div class="strat-row"><span class="strat-key">EL rate</span><span class="strat-val">3.28%</span></div>
+      <div class="strat-row"><span class="strat-key">Portfolio RAROC</span><span class="strat-val pos">+72.66%</span></div>
+    </div>
+    <div class="strat-cell sc-c">
+      <div class="strat-name">RAROC GATED</div>
+      <div class="strat-row"><span class="strat-key">Approved</span><span class="strat-val">7,485</span></div>
+      <div class="strat-row"><span class="strat-key">Approval rate</span><span class="strat-val">12.2%</span></div>
+      <div class="strat-row"><span class="strat-key">Mean PD</span><span class="strat-val">12.00%</span></div>
+      <div class="strat-row"><span class="strat-key">EL rate</span><span class="strat-val">5.37%</span></div>
+      <div class="strat-row"><span class="strat-key">Portfolio RAROC</span><span class="strat-val pos">+37.09%</span></div>
+    </div>
+    <div class="strat-cell sc-d">
+      <div class="strat-name">RISK-BASED PRICING</div>
+      <div class="strat-row"><span class="strat-key">Approved</span><span class="strat-val">27,498</span></div>
+      <div class="strat-row"><span class="strat-key">Approval rate</span><span class="strat-val">44.7%</span></div>
+      <div class="strat-row"><span class="strat-key">Mean PD</span><span class="strat-val">22.11%</span></div>
+      <div class="strat-row"><span class="strat-key">EL rate</span><span class="strat-val">9.91%</span></div>
+      <div class="strat-row"><span class="strat-key">Portfolio RAROC</span><span class="strat-val pos">+47.31%</span></div>
+    </div>
+  </div>
+
+  <p class="sub-note">
+    Composite ranking &mdash; Conservative (31.8) &nbsp;&middot;&nbsp; Risk-Based Pricing (27.1) &nbsp;&middot;&nbsp; RAROC Gated (18.3) &nbsp;&middot;&nbsp; Aggressive (10.0).
+    Risk-Based Pricing achieves identical volume to Aggressive but earns +47.31% RAROC by adjusting rates per risk band.
+  </p>
+
+  <div class="divider"></div>
+
+  <!-- ── 06 STRESS TEST ────────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <span class="sec-title">STRESS TESTING &nbsp; <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;color:var(--muted);">RBI ICAAP &middot; CONFIRMED OUTPUTS</span></span>
+    <div class="sec-line"></div>
+  </div>
+
+  <table class="stress">
+    <thead>
+      <tr>
+        <th>Scenario</th>
+        <th>PD Shock</th>
+        <th>LGD Add</th>
+        <th>Aggressive</th>
+        <th>Conservative</th>
+        <th>RAROC Gated</th>
+        <th>Risk-Based Pricing</th>
+        <th>Capital Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="sc-lbl">BASELINE</div></td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">1.0&times;</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">+0pp</td>
+        <td class="c-neg">-6.73%</td>
+        <td class="c-pos">+72.66%</td>
+        <td class="c-pos">+37.09%</td>
+        <td class="c-pos">+47.31%</td>
+        <td class="c-ok">Adequate</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="sc-lbl">MILD STRESS</div>
+          <div class="sc-sub">India 2019 slowdown</div>
+        </td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">1.5&times;</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">+5pp</td>
+        <td class="c-neg">-55.86%</td>
+        <td class="c-pos">+44.91%</td>
+        <td class="c-warn">+0.45%</td>
+        <td class="c-neg">-1.82%</td>
+        <td class="c-ok">Adequate</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="sc-lbl">SEVERE STRESS</div>
+          <div class="sc-sub">COVID-19 equivalent</div>
+        </td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">2.5&times;</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">+15pp</td>
+        <td class="c-neg">-178.69%</td>
+        <td class="c-neg">-24.46%</td>
+        <td class="c-neg">-91.16%</td>
+        <td class="c-neg">-124.65%</td>
+        <td class="c-br">Breached</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="sc-lbl">EXTREME STRESS</div>
+          <div class="sc-sub">IL&amp;FS / NBFC crisis</div>
+        </td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">4.0&times;</td>
+        <td style="font-family:var(--font-mono);color:var(--muted);">+25pp</td>
+        <td class="c-neg">-351.23%</td>
+        <td class="c-neg">-144.71%</td>
+        <td class="c-neg">-249.94%</td>
+        <td class="c-neg">-297.19%</td>
+        <td class="c-br">Severely Breached</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="sub-note">Conservative strategy survives Mild Stress. All strategies breach under Severe/Extreme stress &mdash; expected for a retail portfolio under a systemic event. Break-even PD multiplier: Conservative at 2.0&times;, RAROC Gated at 1.3&times;.</p>
+
+  <div class="divider"></div>
+
+  <!-- ── 07 DECISION ENGINE ─────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <span class="sec-title">DECISION ENGINE &nbsp; <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;color:var(--muted);">4 OUTCOMES</span></span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="decision-grid">
+    <div class="dec-card dc-approve">
+      <span class="dec-icon">✅</span>
+      <div class="dec-name dn-approve">APPROVE</div>
+      <div class="dec-desc">Composite PD below 10% and RAROC above 14% hurdle. No adverse behavioural flags present.</div>
+      <div class="dec-rule">pd &lt; 0.10 AND raroc &ge; 0.14</div>
+    </div>
+    <div class="dec-card dc-reprice">
+      <span class="dec-icon">💰</span>
+      <div class="dec-name dn-reprice">REPRICE</div>
+      <div class="dec-desc">Borrower is creditworthy but proposed rate is below the risk-appropriate level. Suggested rate returned.</div>
+      <div class="dec-rule">Module C: pricing = Underpriced</div>
+    </div>
+    <div class="dec-card dc-review">
+      <span class="dec-icon">🔍</span>
+      <div class="dec-name dn-review">REVIEW</div>
+      <div class="dec-desc">Hard override flags fired, PD in review band (10-35%), or concentration risk from Module C detected.</div>
+      <div class="dec-rule">override OR 0.10 &le; pd &lt; 0.35</div>
+    </div>
+    <div class="dec-card dc-decline">
+      <span class="dec-icon">❌</span>
+      <div class="dec-name dn-decline">DECLINE</div>
+      <div class="dec-desc">Composite PD exceeds 35% ceiling or RAROC is negative. Adverse action notice generated automatically.</div>
+      <div class="dec-rule">pd &ge; 0.35 OR raroc &lt; 0</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="cc"># Composite PD formula</span>
+<span class="ck">composite_pd</span> = <span class="cv">0.60</span> &times; <span class="ck">module_a.pd_score</span> + <span class="cv">0.40</span> &times; <span class="ck">module_b.delinquency_prob</span>
+
+<span class="cc"># Validated against four preset profiles (all four decisions confirmed correct)</span>
+<span class="cs">ANAND_MEHTA</span>   pd=0.041  score=724  raroc=+86.9%           <span class="ca">&rarr; APPROVE ✅</span>
+<span class="cs">PRIYA_SHARMA</span>  pd=0.078  score=648  pricing=Underpriced     <span class="ca">&rarr; REPRICE 💰 (suggest 14.80%)</span>
+<span class="cs">VIKRAM_NAIR</span>   pd=0.181  score=582  critical_util=True     <span class="ca">&rarr; MANUAL REVIEW 🔍</span>
+<span class="cs">RAHUL_VERMA</span>   pd=0.386  score=431  high_delinq=True       <span class="ca">&rarr; DECLINE ❌</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 08 FILE STRUCTURE ──────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <span class="sec-title">PROJECT STRUCTURE</span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="file-tree">
+<span class="ft-root">AI-Risk-Decisioning-System/</span>
+<span class="ft-accent">&nbsp;</span>
+<span class="ft-folder">&#x251C;&#x2500;&#x2500; 01_module_a_application_risk/</span>          <span class="ft-gray">Home Credit &middot; 307,511 loans &middot; AUC 0.7551</span>
+<span class="ft-folder">&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 02_notebooks/</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 01_data_preprocessing.ipynb</span>         <span class="ft-gray">307k rows, 122 cols &rarr; 49 WoE-selected features</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 02_credit_risk_model.ipynb</span>          <span class="ft-gray">LR + XGBoost &middot; AUC 0.7551 &middot; KS 0.3786 &middot; PSI 0.0001</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 03_scorecard_analysis.ipynb</span>         <span class="ft-gray">WoE/IV scorecard &middot; 300-900 CIBIL-aligned scale</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 04_expected_loss_capital_model.ipynb</span>  <span class="ft-gray">EL = PD&times;LGD&times;EAD &middot; RWA &middot; RAROC &middot; ₹36.5B EAD</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 05_strategy_simulator.ipynb</span>         <span class="ft-gray">4 strategies &middot; Aggressive to Risk-Based Pricing</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 06_stress_testing.ipynb</span>             <span class="ft-gray">Baseline &rarr; Extreme &middot; IL&FS / COVID scenarios</span>
+<span class="ft-accent">&nbsp;</span>
+<span class="ft-folder">&#x251C;&#x2500;&#x2500; 02_module_b_behavioural_risk/</span>           <span class="ft-gray">Give Me Some Credit &middot; 150,000 borrowers</span>
+<span class="ft-folder">&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 02_notebooks/</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 01_data_preprocessing_b.ipynb</span>       <span class="ft-gray">Sentinel removal &middot; 7 engineered behavioural features</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 02_delinquency_model_b.ipynb</span>        <span class="ft-gray">LR + XGBoost &middot; delinquency_prob &middot; BRS 0-100</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 03_behavioural_scorecard_b.ipynb</span>    <span class="ft-gray">WoE scorecard &middot; 4 hard-override stress flags</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 04_shap_explainability_b.ipynb</span>      <span class="ft-gray">SHAP global + local &middot; adverse action reason codes</span>
+<span class="ft-accent">&nbsp;</span>
+<span class="ft-folder">&#x251C;&#x2500;&#x2500; 03_module_c_portfolio_pricing_risk/</span>    <span class="ft-gray">LendingClub &middot; 1.34M closed loans</span>
+<span class="ft-folder">&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 02_notebooks/</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 01_data_preprocessing_c.ipynb</span>       <span class="ft-gray">Chunked load &middot; closed-loans-only &middot; rejection summary</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 02_loan_grade_model_c.ipynb</span>         <span class="ft-gray">Grade classifier A-G &middot; market_pd lookup &middot; suggested rate</span>
+<span class="ft-nb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 03_portfolio_analysis_c.ipynb</span>       <span class="ft-gray">HHI concentration &middot; vintage analysis &middot; approval rates</span>
+<span class="ft-accent">&nbsp;</span>
+<span class="ft-folder">&#x251C;&#x2500;&#x2500; 04_decision_engine/</span>                     <span class="ft-gray">Integration layer &middot; all decisions logged</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; constants.py</span>                        <span class="ft-gray">Single source of truth &middot; all thresholds and weights</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 01_engine.py</span>                        <span class="ft-gray">5-layer rules &middot; APPROVE / DECLINE / REPRICE / REVIEW</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 02_signal_aggregator.py</span>             <span class="ft-gray">Weighted composite PD &middot; market PD divergence check</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 03_explainability.py</span>                <span class="ft-gray">Signal attribution &middot; reason codes &middot; narrative</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; 04_audit_logger.py</span>                 <span class="ft-gray">JSON + CSV log &middot; model versions &middot; SR 11-7 compliant</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; 05_demo.py</span>                          <span class="ft-gray">4 preset profiles + custom input + batch mode</span>
+<span class="ft-accent">&nbsp;</span>
+<span class="ft-folder">&#x2514;&#x2500;&#x2500; 05_governance/</span>                          <span class="ft-gray">SR 11-7 &middot; RBI MRM &middot; Basel III</span>
+<span class="ft-md">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; model_cards/</span>
+<span class="ft-md">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; module_a_model_card.md</span>            <span class="ft-gray">Confirmed AUC 0.7551 &middot; stress results &middot; approval chain</span>
+<span class="ft-md">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; module_b_model_card.md</span>            <span class="ft-gray">WoE scorecard &middot; SHAP &middot; stress flag validation</span>
+<span class="ft-md">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; module_c_model_card.md</span>            <span class="ft-gray">Grade classifier &middot; market PD &middot; pricing adequacy</span>
+<span class="ft-md">&nbsp;&nbsp;&nbsp;&nbsp;&#x251C;&#x2500;&#x2500; regulatory_alignment.md</span>             <span class="ft-gray">Every SR 11-7 / RBI MRM requirement linked to code</span>
+<span class="ft-py">&nbsp;&nbsp;&nbsp;&nbsp;&#x2514;&#x2500;&#x2500; monitoring_triggers.py</span>              <span class="ft-gray">PSI &middot; AUC &middot; RAROC &middot; income parity &middot; GREEN/AMBER/RED</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 09 HOW TO RUN ──────────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <span class="sec-title">HOW TO RUN</span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="run-step">
+    <div class="run-header">
+      <span class="run-step-num">1</span>
+      <span class="run-step-title">Install dependencies</span>
+    </div>
+    <div class="run-body">
+      <span class="run-cmd">pip install -r requirements.txt</span>
+      <div class="run-note">pandas, numpy, scikit-learn, xgboost, shap, matplotlib, seaborn, jupyter</div>
+    </div>
+  </div>
+
+  <div class="run-step">
+    <div class="run-header">
+      <span class="run-step-num">2</span>
+      <span class="run-step-title">Place datasets</span>
+    </div>
+    <div class="run-body">
+      <span class="run-cmd">01_module_a_application_risk/01_data/raw/         &larr;   application_train.csv</span>
+      <span class="run-cmd">02_module_b_behavioural_risk/01_data/raw/          &larr;   cs-training.csv</span>
+      <span class="run-cmd">03_module_c_portfolio_pricing_risk/01_data/raw/    &larr;   accepted_2007_to_2018Q4_csv.gz + rejected_2007_to_2018Q4_csv.gz</span>
+    </div>
+  </div>
+
+  <div class="run-step">
+    <div class="run-header">
+      <span class="run-step-num">3</span>
+      <span class="run-step-title">Execute notebooks in sequence</span>
+    </div>
+    <div class="run-body">
+      <span class="run-cmd">Module A &nbsp; NB01 &rarr; NB02 &rarr; NB03 &rarr; NB04 &rarr; NB05 &rarr; NB06</span>
+      <span class="run-cmd">Module B &nbsp; NB01 &rarr; NB02 &rarr; NB03 &rarr; NB04</span>
+      <span class="run-cmd">Module C &nbsp; NB01 &rarr; NB02 &rarr; NB03</span>
+    </div>
+  </div>
+
+  <div class="run-step">
+    <div class="run-header">
+      <span class="run-step-num">4</span>
+      <span class="run-step-title">Run the Decision Engine demo</span>
+    </div>
+    <div class="run-body">
+      <span class="run-cmd">cd 04_decision_engine</span>
+      <span class="run-cmd">python 05_demo.py</span>
+      <div class="run-note">Runs all 4 preset profiles and logs to JSON + CSV audit trail.</div>
+      <span class="run-cmd">python 05_demo.py --pd_a 0.08 --credit_score 642 --ead 250000 --pd_b 0.05 --brs 72 --market_pd 0.12 --grade B --rate 12.5 --pricing Fair</span>
+      <div class="run-note">Custom applicant. All flags optional.</div>
+    </div>
+  </div>
+
+  <div class="run-step">
+    <div class="run-header">
+      <span class="run-step-num">5</span>
+      <span class="run-step-title">Run monitoring checks</span>
+    </div>
+    <div class="run-body">
+      <span class="run-cmd">cd 05_governance</span>
+      <span class="run-cmd">python monitoring_triggers.py --scored_a ../01_module_a_application_risk/01_data/processed/scorecard_output.csv</span>
+      <div class="run-note">GREEN / AMBER / RED status for PSI, AUC, RAROC, and income parity. Export with --export.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 10 REGULATORY ──────────────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <span class="sec-title">REGULATORY FRAMEWORK</span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="reg-grid">
+    <div class="reg-cell rc-1">
+      <div class="reg-std rs-1">SR 11-7</div>
+      <div class="reg-desc">Model development, validation, ongoing monitoring. Conceptual soundness checks, champion/challenger, audit trail, PSI monitoring triggers.</div>
+    </div>
+    <div class="reg-cell rc-2">
+      <div class="reg-std rs-2">RBI MRM 2023</div>
+      <div class="reg-desc">Model inventory, risk tier classification, documentation. All five models carry full model cards. Independent validation required before production deployment.</div>
+    </div>
+    <div class="reg-cell rc-3">
+      <div class="reg-std rs-3">Basel III &middot; ICAAP</div>
+      <div class="reg-desc">EL = PD &times; LGD &times; EAD. RWA by risk weight. CET1 10.5% capital ratio. Four-scenario stress test calibrated to Indian macro events.</div>
+    </div>
+    <div class="reg-cell rc-4">
+      <div class="reg-std rs-4">Fair Practices Code</div>
+      <div class="reg-desc">Adverse action notices with top-3 plain-English reason codes. SHAP-derived feature attribution. Income parity monitoring across quartiles.</div>
+    </div>
+  </div>
+
+</div>
+
+
+  <!-- ── 11 BUSINESS IMPACT ─────────────────────────────────────────────── -->
+  <div class="sec-head">
+    <span class="sec-num">11</span>
+    <span class="sec-title">BUSINESS IMPACT &nbsp; <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;color:var(--muted);">CHAMPION VS CHALLENGER</span></span>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="kpi-header-box">
+    <h3>THE CEO DOES NOT CARE ABOUT AUC.</h3>
+    <p>
+      You improved Gini. You improved KS. You improved OOT performance. <strong>Great.</strong>
+      But business promotes models because they deliver better outcomes &mdash; not because they score higher on internal metrics.
+      In credit risk, the real question is: did your Challenger beat the Champion on the three success criteria a credit committee actually uses?
+    </p>
+  </div>
+
+  <div class="criteria-grid">
+    <div class="criteria-card">
+      <div class="criteria-num cn-1">#1</div>
+      <div class="criteria-title ct-1">Same Approval Rate</div>
+      <div class="criteria-desc">
+        Hold the approval rate constant at the Champion level.
+        <strong>Did the new model reduce the default rate in the approved population?</strong>
+        Same volume. Safer book. The lender wins.
+      </div>
+    </div>
+    <div class="criteria-card">
+      <div class="criteria-num cn-2">#2</div>
+      <div class="criteria-title ct-2">Same Default Rate</div>
+      <div class="criteria-desc">
+        Hold the default rate constant at the Champion level.
+        <strong>Did the new model approve more good loans?</strong>
+        Same risk. More revenue. The business wins.
+      </div>
+    </div>
+    <div class="criteria-card gold-card">
+      <div class="gold-tag">GOLD STANDARD</div>
+      <div class="criteria-num cn-3">#3</div>
+      <div class="criteria-title ct-3">Both Move Favourably</div>
+      <div class="criteria-desc">
+        <strong>Approval rate increases AND default rate decreases.</strong>
+        This is where real business value is created. This is what gets a model into production.
+      </div>
+    </div>
+  </div>
+
+  <p class="lede" style="font-size:14px;margin-bottom:20px;">
+    The strategy simulator (NB05) already computed approval rates, default rates, and RAROC for all four strategies.
+    NB07 formalises these as a structured Champion vs Challenger evaluation. The table below is the output.
+    Reference: <strong style="color:var(--magenta);">Aggressive strategy</strong> as the baseline (the simplest deployable model).
+  </p>
+
+  <div class="impact-table-wrap">
+    <table class="impact">
+      <thead>
+        <tr>
+          <th>Policy</th>
+          <th>Role</th>
+          <th>Approval Rate</th>
+          <th>Default Rate</th>
+          <th>Portfolio RAROC</th>
+          <th>C1: Same appr, lower default</th>
+          <th>C2: Same default, higher appr</th>
+          <th>C3: Both improve (Gold)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="policy-name">Baseline (No Model)</td>
+          <td><span class="pill role-pill-base">BASELINE</span></td>
+          <td class="mono-val">100.0%</td>
+          <td class="mono-val">8.05%</td>
+          <td class="mono-val n-muted">-56.98%</td>
+          <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="policy-name">Aggressive</td>
+          <td><span class="pill role-pill-chal">CHALLENGER 1</span></td>
+          <td class="mono-val">44.7%</td>
+          <td class="mono-val">2.70%</td>
+          <td class="mono-val n-muted">-6.73%</td>
+          <td style="text-align:center;">—</td>
+          <td style="text-align:center;">—</td>
+          <td style="text-align:center;">—</td>
+        </tr>
+        <tr>
+          <td class="policy-name">RAROC Gated</td>
+          <td><span class="pill role-pill-chal">CHALLENGER 2</span></td>
+          <td class="mono-val">12.2%</td>
+          <td class="mono-val n-aqua">1.27%</td>
+          <td class="mono-val n-aqua">+37.09%</td>
+          <td style="text-align:center;"><span class="tick">✓</span></td>
+          <td style="text-align:center;"><span class="cross">✗</span></td>
+          <td style="text-align:center;"><span class="cross">✗</span></td>
+        </tr>
+        <tr class="champion-row">
+          <td class="policy-name" style="color:var(--aqua);">&#9733; Risk-Based Pricing</td>
+          <td><span class="pill role-pill-champ">CHAMPION</span></td>
+          <td class="mono-val n-aqua">44.7%</td>
+          <td class="mono-val n-aqua">2.70%</td>
+          <td class="mono-val n-aqua">+47.31%</td>
+          <td style="text-align:center;"><span class="star">★</span></td>
+          <td style="text-align:center;"><span class="star">★</span></td>
+          <td style="text-align:center;"><span class="star">★</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="sub-note" style="margin-bottom:28px;">
+    Risk-Based Pricing passes all three criteria vs Aggressive: identical approval rate, dramatically higher RAROC (+54pp), lower capital intensity.
+    RAROC Gated satisfies Criterion 1 (safer book at same approval threshold) but not 2 or 3 (lower volume).
+    Full analysis in <span style="font-family:var(--font-mono);color:var(--aqua);">NB07_business_impact_analysis.ipynb</span>.
+  </p>
+
+  <div class="interview-box">
+    <h4>Interview Answer Framework</h4>
+    <div class="interview-wrong">
+      "I improved AUC from 0.74 to 0.76 and KS from 0.36 to 0.38."
+    </div>
+    <div class="interview-right">
+      "Gini, KS, and PSI were the foundation &mdash; they confirmed the model discriminates and is stable. But we evaluated production-readiness on business criteria.
+      Versus the Aggressive baseline at 44.7% approval rate, the Risk-Based Pricing champion lifted RAROC from <strong>-6.73% to +47.31%</strong> with identical volume.
+      Under a fixed approval rate constraint, RAROC Gated reduced the default rate in the approved book from <strong>2.70% to 1.27%</strong>. Both are the success criteria credit committees use to approve model deployment."
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<div class="footer" style="max-width:1000px;margin:0 auto;">
+  <div>
+    <div class="footer-brand">AI RISK <span>DECISIONING</span></div>
+    <div class="footer-meta">
+      3 Risk Modules &nbsp;&middot;&nbsp; 13 Notebooks &nbsp;&middot;&nbsp; 5 Decision Engine Files &nbsp;&middot;&nbsp; 5 Governance Documents<br>
+      Home Credit Default Risk &nbsp;&middot;&nbsp; Give Me Some Credit &nbsp;&middot;&nbsp; LendingClub 2007-2018
+    </div>
+  </div>
+  <div class="footer-stats">
+    XGBoost AUC <span>0.7551</span> &nbsp;&middot;&nbsp; KS <span>0.3786</span> &nbsp;&middot;&nbsp; Gini <span>0.5102</span><br>
+    Portfolio EAD <span>₹36.5B</span> &nbsp;&middot;&nbsp; Economic Capital <span>₹5.3B</span><br>
+    Hurdle Rate <span>14%</span> &nbsp;&middot;&nbsp; LGD <span>45%</span> &nbsp;&middot;&nbsp; Capital Ratio <span>10.5%</span>
+  </div>
+</div>
+
+</body>
+</html>
