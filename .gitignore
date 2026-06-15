@@ -2,6 +2,9 @@
 **/01_data/raw/*.csv
 **/01_data/raw/*.zip
 
+# Large intermediate processed data — not needed downstream, exceeds GitHub file size limits
+**/01_data/processed/clean_home_credit.csv
+
 # Python
 __pycache__/
 *.py[cod]

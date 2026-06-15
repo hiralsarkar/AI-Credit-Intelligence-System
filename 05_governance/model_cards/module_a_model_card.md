@@ -75,37 +75,37 @@ Score new credit applicants at origination. The output `pd_score` (0–1) feeds 
 
 | Model | AUC | KS | Gini | PSI | Role |
 |-------|-----|----|------|-----|------|
-| Logistic Regression | **0.7429** | **0.3583** | **0.4857** | 0.0001 | Challenger |
-| XGBoost | **0.7551** | **0.3786** | **0.5102** | 0.0001 | Champion |
+| Logistic Regression | **0.7480** | **0.3707** | **0.4961** | 0.0002 | Challenger |
+| XGBoost | **0.7595** | **0.3874** | **0.5190** | 0.0001 | Champion |
 
 ### Benchmark Thresholds (Industry Standard)
 
 | Metric | Minimum Acceptable | This Model |
 |--------|-------------------|------------|
-| AUC | > 0.70 | 0.7551 ✅ |
-| KS | > 0.30 | 0.3786 ✅ |
-| Gini | > 0.40 | 0.5102 ✅ |
+| AUC | > 0.70 | 0.7595 ✅ |
+| KS | > 0.30 | 0.3874 ✅ |
+| Gini | > 0.40 | 0.5190 ✅ |
 | PSI (train vs test) | < 0.10 | 0.0001 ✅ |
 
 ### Capital Model Outputs (from notebook 04)
 
 | Metric | Value |
 |--------|-------|
-| Portfolio EAD | ₹36.5 billion |
+| Portfolio EAD | ₹36.6 billion |
 | Total Expected Loss | ₹6.4 billion |
-| Portfolio EL Rate | 17.59% |
-| Mean RAROC (full portfolio) | -56.98% |
+| Portfolio EL Rate | 18.11% |
+| Mean RAROC (full portfolio) | -55.77% |
 | Value-Accretive loans (RAROC > 14%) | 12.2% |
 
 ### RAROC by Risk Band
 
 | Band | Label | Loans | Mean PD | RAROC |
 |------|-------|-------|---------|-------|
-| 1 | Very Low | 245 | 3.65% | +94.60% |
-| 2 | Low | 1,786 | 7.94% | +69.00% |
-| 3 | Medium | 8,925 | 15.53% | +19.07% |
-| 4 | High | 16,542 | 27.46% | -21.15% |
-| 5 | Very High | 34,005 | 55.70% | -99.09% |
+| 1 | Very Low | 182 | 3.82% | +92.89% |
+| 2 | Low | 1,798 | 8.04% | +68.54% |
+| 3 | Medium | 9,120 | 15.52% | +19.02% |
+| 4 | High | 16,979 | 27.34% | -20.89% |
+| 5 | Very High | 33,424 | 55.49% | -98.78% |
 
 **Interpretation:** Only Bands 1–3 are value-accretive. The strategy simulator (NB05) operationalises this — the RAROC-Gated and Conservative strategies restrict approvals accordingly.
 
@@ -113,10 +113,10 @@ Score new credit applicants at origination. The output `pd_score` (0–1) feeds 
 
 | Scenario | RAROC (Conservative) | RAROC (RAROC-Gated) | Capital Adequacy |
 |----------|---------------------|---------------------|------------------|
-| Baseline | +72.66% | +37.09% | Adequate |
-| Mild Stress (PD×1.5) | +44.91% | +0.45% | Adequate |
-| Severe Stress (PD×2.5) | -24.46% | -91.16% | Breached |
-| Extreme Stress (PD×4.0) | -144.71% | -249.94% | Severely Breached |
+| Baseline | +71.03% | +36.15% | Adequate |
+| Mild Stress (PD×1.5) | +42.19% | -0.84% | Breached |
+| Severe Stress (PD×2.5) | -29.90% | -93.32% | Breached |
+| Extreme Stress (PD×4.0) | -154.87% | -253.62% | Severely Breached |
 
 **Finding:** Conservative strategy survives Mild Stress. All strategies breach under Severe Stress — consistent with a systemic event (COVID-19 equivalent). This is expected for a retail lending portfolio under Basel III stress testing.
 
@@ -126,9 +126,9 @@ Score new credit applicants at origination. The output `pd_score` (0–1) feeds 
 
 | Metric | Value |
 |--------|-------|
-| Scorecard AUC | 0.3819 |
-| KS | 0.1712 |
-| AUC degradation vs XGBoost | 0.3732 |
+| Scorecard AUC | 0.3896 |
+| KS | 0.1794 |
+| AUC degradation vs XGBoost | 0.3699 |
 
 > **Note:** The WoE scorecard shows significantly lower AUC than XGBoost (0.38 vs 0.76). This is a known limitation of the scorecard — the IV selection process and WoE binning lose discriminatory power on this specific dataset because `EXT_SOURCE` features are already summary scores (not raw behavioural features), making WoE transformation less additive. The scorecard is retained for **interpretability and adverse action notice generation** only. XGBoost is the production PD model.
 

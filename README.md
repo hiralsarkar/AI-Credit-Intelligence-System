@@ -23,7 +23,7 @@ A3[LendingClub Loan Data]
 end
 
 subgraph Modeling["Risk Modeling Layer"]
-B1["Module A - Application Risk\nPD + WoE Scorecard\nAUC 0.7551 / KS 0.3786"]
+B1["Module A - Application Risk\nPD + WoE Scorecard\nAUC 0.7595 / KS 0.3874"]
 B2["Module B - Behavioural Risk\nDelinquency PD + Scorecard + SHAP\nAUC 0.8571 / KS 0.5630"]
 B3["Module C - Portfolio & Pricing Risk\nMarket PD + Grade Classifier\nAUC 0.7397 / Gini 0.4794"]
 end
@@ -76,7 +76,7 @@ A from-scratch credit risk modelling stack covering the three signals a lender n
 
 | Module | Risk Type | Dataset | Notebooks & Metrics | Trained Artifacts (`.pkl`) |
 |--------|-----------|---------|----------------------|------------------------------|
-| **A - Application Risk** | PD at point of application, scorecard, capital/RAROC | Home Credit Default Risk (Kaggle) | ✅ All 7 notebooks run - AUC 0.7551, KS 0.3786 (confirmed, see model card) | ✅ Included (`xgboost_pd.pkl`, `logistic_regression_pd.pkl`, `scorecard_woe_map.pkl`, `scorecard_points.pkl`) |
+| **A - Application Risk** | PD at point of application, scorecard, capital/RAROC | Home Credit Default Risk (Kaggle) | ✅ All 7 notebooks run - AUC 0.7595, KS 0.3874 (confirmed, see model card) | ✅ Included (`xgboost_pd.pkl`, `logistic_regression_pd.pkl`, `scorecard_woe_map.pkl`, `scorecard_points.pkl`) |
 | **B - Behavioural Risk** | Delinquency probability from 2-year payment history | Give Me Some Credit (Kaggle) | ✅ All 4 notebooks run - AUC 0.8571, KS 0.563 (confirmed) | ✅ Included (`xgb_behavioural.pkl`, `lr_behavioural.pkl`, scorecard, SHAP explainer) |
 | **C - Portfolio & Pricing Risk** | Market-calibrated PD, rate adequacy, concentration | LendingClub Loan Data (Kaggle) | ✅ All 3 notebooks run - AUC 0.7397, Gini 0.4794 (confirmed) | ✅ Included (`xgb_default_c.pkl`, `xgb_grade_classifier.pkl`, `grade_pd_lookup.pkl`) |
 
