@@ -11,7 +11,30 @@
 
 ---
 
+An **AI-powered lending risk decision platform** designed to optimize credit growth while maintaining **portfolio risk limits and capital efficiency**.
+
+This project simulates how modern financial institutions use **machine learning, financial risk modeling, and strategy simulation** to automate lending decisions.
+
+The platform integrates:
+
+* Credit risk modeling
+* Expected loss estimation
+* Capital allocation modeling
+* Risk-adjusted return optimization (RAROC)
+* Lending strategy simulation
+* Stress testing
+* Responsible AI governance
+* Portfolio monitoring dashboards
+
+
+---
+
+# 🏗 System Architecture
+
+
+```
 ## System Architecture
+```
 
 ```mermaid
 flowchart TD
@@ -88,6 +111,185 @@ A standalone `04_decision_engine/` combines the three signals into a 5-layer len
 
 ---
 
+---
+
+# 🚀 Key System Modules
+
+## 1. Credit Risk Modeling
+
+Predict **probability of default (PD)** using machine learning.
+
+Models implemented:
+
+* Logistic Regression
+* Random Forest
+* XGBoost
+
+Evaluation metrics:
+
+* AUC
+* KS Statistic
+* Precision / Recall
+
+---
+
+## 2. Expected Loss Engine
+
+Expected loss is calculated using the standard banking formula.
+
+```
+Expected Loss = PD × LGD × EAD
+```
+
+Where:
+
+| Variable | Meaning                |
+| -------- | ---------------------- |
+| PD       | Probability of Default |
+| LGD      | Loss Given Default     |
+| EAD      | Exposure at Default    |
+
+Outputs:
+
+* Loan-level expected loss
+* Portfolio expected loss
+
+---
+
+## 3. Capital Modeling
+
+Simulates regulatory capital requirements.
+
+```
+RWA = Exposure × Risk Weight
+Capital Required = RWA × Capital Ratio
+```
+
+Outputs:
+
+* Risk-weighted assets
+* Capital utilization
+* Capital efficiency metrics
+
+---
+
+## 4. RAROC Engine
+
+Risk Adjusted Return on Capital evaluates whether lending strategies generate economic value.
+
+```
+RAROC =
+(Net Interest Income − Expected Loss − Operating Cost)
+/ Capital Required
+```
+
+Used for **strategy comparison and portfolio optimization**.
+
+---
+
+## 5. Strategy Simulator
+
+Simulates multiple lending strategies.
+
+### Aggressive Growth
+
+Higher approvals, higher risk.
+
+### Conservative Filtering
+
+Lower approvals, safer portfolio.
+
+### Risk-Based Pricing
+
+Interest rates adjusted to borrower risk.
+
+Outputs:
+
+* Portfolio NPA
+* Expected loss
+* Revenue
+* Capital usage
+* RAROC
+
+---
+
+## 6. Stress Testing Simulator
+
+Evaluates portfolio resilience during economic downturns.
+
+| Scenario      | PD Change | LGD Change |
+| ------------- | --------- | ---------- |
+| Base Case     | 0%        | 0%         |
+| Mild Stress   | +15%      | +5%        |
+| Severe Stress | +35%      | +15%       |
+
+Outputs:
+
+* Expected loss under stress
+* Capital impact
+* Portfolio stability
+
+---
+
+## 7. Decision Engine
+
+Combines risk signals to generate automated lending decisions.
+
+Inputs:
+
+* Credit risk score
+* Fraud risk score
+* Risk policy thresholds
+
+Possible outcomes:
+
+* Approve
+* Reject
+* Manual review
+
+---
+
+## 8. Responsible AI Governance
+
+Ensures fairness and transparency.
+
+Includes:
+
+* SHAP explainability
+* Feature importance
+* Bias monitoring
+* Fairness checks
+
+---
+
+## 9. Monitoring Dashboard
+
+Tracks performance after deployment.
+
+Monitors:
+
+* Model drift
+* PD distribution shifts
+* Performance decay
+* Manual override decisions
+
+---
+
+# 📊 Interactive Risk Command Center
+
+The system includes a **Streamlit dashboard** for exploring the platform.
+
+Features:
+
+* KPI tracking
+* Model comparison
+* Strategy simulator
+* Stress testing
+* Portfolio analytics
+* Project execution tracker
+
+---
+
 ## Relationship to NirnayX
 
 This repository is the **model factory**: training notebooks, datasets, and the trained artifacts themselves.
@@ -129,5 +331,86 @@ python monitoring_triggers.py --export
 ```bash
 pip install -r requirements.txt
 ```
+# 📚 Datasets Used
+
+Public lending datasets used for modeling.
+
+* Home Credit Default Risk - primary credit risk modeling dataset.
+* LendingClub Loan Data - strategy simulation and portfolio analysis.
+* Give Me Some Credit - fraud/anomaly style modeling and risk signals.
+
+These datasets provide structured borrower information for credit risk modeling.
+
+---
+
+# 🧰 Technologies Used
+
+Programming
+
+* Python
+
+Machine Learning
+
+* Scikit-learn
+* XGBoost
+
+Data Processing
+
+* Pandas
+* NumPy
+
+Visualization
+
+* Matplotlib
+* Streamlit
+
+Explainability
+
+* SHAP
+
+---
+
+# 🎯 Target Performance Metrics
+
+| Metric              | Target |
+| ------------------- | ------ |
+| AUC                 | ≥ 0.80 |
+| KS Statistic        | ≥ 0.40 |
+| Portfolio NPA       | ≤ 5%   |
+| RAROC               | ≥ 18%  |
+| Capital Utilization | < 85%  |
+
+---
+
+# 🔮 Future Improvements
+
+Possible extensions include:
+
+* Real-time lending decision API
+* Reinforcement learning for strategy optimization
+* Advanced capital stress testing
+* Dynamic portfolio allocation
+* Regulatory compliance simulation
+
+---
+
+# 👩‍💻 Author
+
+**Hiral Sarkar**
+
+AI & Risk Analytics Enthusiast
+Building **AI-driven financial decision systems for banking and fintech**.
+
+---
+
+# 📜 License
+
+This project is intended for **educational and portfolio demonstration purposes**.
+
+---
+
+## ⭐ If you find this project interesting, consider starring the repository!
+
+---
 
 Raw Kaggle datasets are not included (see each module's README for download links and `01_data/raw/` placement). Processed datasets and trained model artifacts for all three modules (A, B, and C) are included so the decision engine and monitoring scripts run out of the box without re-running notebooks.
