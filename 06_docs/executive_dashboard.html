@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retail Portfolio Value Optimization Strategy — Executive Investment Memorandum</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E13;padding:32px 36px 64px;color:#E2EAF4;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-width:900px}
+.pn{background:#131920;border-radius:8px;padding:20px 22px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px}
+.sl{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A7090;margin-bottom:6px}
+.sh{font-size:17px;font-weight:700;color:#E2EAF4;margin-bottom:5px;line-height:1.2}
+.shd{width:28px;height:2px;background:#2563EB;margin-bottom:16px}
+.pos{color:#22C55E;font-weight:600}
+.neg{color:#EF4444;font-weight:600}
+.warn{color:#EAB308;font-weight:500}
+.hr{border:none;border-top:1px solid #161D27;margin:28px 0}
+.ci{font-size:9px;color:#56CCF2;margin-top:3px;letter-spacing:.02em;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:7px 10px;text-align:left;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38}
+th.r,td.r{text-align:right}
+td{padding:7px 10px;border-bottom:.5px solid rgba(30,42,56,.7);color:#B0C4D8;font-size:12px}
+td.fw{color:#E2EAF4;font-weight:500}
+tr:last-child td{border-bottom:none}
+.bg2{background:rgba(34,197,94,.15);color:#22C55E;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600}
+.ba2{background:rgba(234,179,8,.13);color:#EAB308;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600}
+.dot-g{width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block;margin-right:5px;vertical-align:middle}
+.dot-a{width:7px;height:7px;border-radius:50%;background:#EAB308;display:inline-block;margin-right:5px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid #161D27;margin-bottom:26px">
+  <div>
+    <p style="font-size:10px;color:#2563EB;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:8px">Executive Investment Memorandum · CRC-2026-09 · Board Restricted · June 2026</p>
+    <p style="font-size:32px;font-weight:700;line-height:1.1;color:#F1F5F9;letter-spacing:-.5px">Retail Portfolio Value Optimization Strategy</p>
+    <p style="font-size:13px;color:#7A96B2;margin-top:7px">₹36.6B Retail Lending Portfolio · Enhanced Credit Strategy · Credit Risk Committee</p>
+  </div>
+  <div style="text-align:right;font-size:11px;color:#3A5570;line-height:2.2;flex-shrink:0;padding-left:20px">
+    <span style="display:block">Risk Analytics · June 2026</span>
+    <span style="display:block">CRO · CFO · CCO · Board Risk</span>
+    <span style="display:block">Board Restricted</span>
+  </div>
+</div>
+
+<!-- INVESTMENT THESIS -->
+<div style="background:#131920;border:1px solid #1A2433;border-left:3px solid #2563EB;border-radius:8px;padding:24px 26px;margin-bottom:28px">
+  <p class="sl" style="margin-bottom:12px">Investment Thesis</p>
+
+  <div style="display:flex;gap:20px;margin-bottom:24px;align-items:flex-start">
+    <div style="flex:1">
+      <p style="font-size:13.5px;line-height:1.87;color:#B0C4D8">The current production framework is operating outside its design envelope — provision expense has increased ₹74M year-on-year, RAROC has fallen below the 15% hurdle, and population drift is approaching amber. <span style="color:#E2EAF4;font-weight:500">This proposal reallocates ₹36.6B of lending exposure toward a more profitable and capital-efficient risk profile through an Enhanced Credit Strategy, <em>estimated to generate</em> ₹43M incremental annual economic profit (95% CI: ₹36M–₹51M) while maintaining full regulatory compliance and operational control.</span></p>
+    </div>
+    <!-- Investment Confidence Badge -->
+    <div style="flex-shrink:0;width:158px;background:#0A0E13;border:1px solid #1A3A6A;border-radius:8px;padding:14px 16px">
+      <p style="font-size:9px;color:#5A80A8;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">Investment Confidence</p>
+      <p style="font-size:22px;font-weight:700;color:#22C55E;letter-spacing:.04em;margin-bottom:12px">HIGH</p>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:10.5px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">OOT Validation</span><span style="color:#22C55E;font-weight:700">✓</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Stress Tested</span><span style="color:#22C55E;font-weight:700">✓</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Ind. Validation</span><span style="color:#22C55E;font-weight:700">✓</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Rollback Ready</span><span style="color:#22C55E;font-weight:700">✓</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 KPI CARDS -->
+  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin-bottom:20px">
+    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Economic<br>Profit</p>
+      <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹43M</p>
+      <p class="ci">95% CI: ₹36M–₹51M</p>
+      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">₹159M → ₹202M (est.)</p>
+    </div>
+    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">ECL<br>Reduction</p>
+      <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">-₹13M</p>
+      <p class="ci">95% CI: -₹9M–-₹17M</p>
+      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">₹208M → ₹195M (est.)</p>
+    </div>
+    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">RAROC<br>Improvement</p>
+      <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+3.7pp</p>
+      <p class="ci">95% CI: +2.8–+4.6pp</p>
+      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">12.8% → 16.5% (est.)</p>
+    </div>
+    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">ROE<br>Improvement</p>
+      <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+2.2pp</p>
+      <p class="ci">95% CI: +1.6–+2.9pp</p>
+      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">10.2% → 12.4% (est.)</p>
+    </div>
+    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Expected Capital<br>Efficiency Benefit</p>
+      <p style="font-size:24px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap">₹28M</p>
+      <p class="ci">95% CI: ₹22M–₹34M</p>
+      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">RWA -₹350M · CET1 +0.3pp</p>
+    </div>
+    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Expected<br>Payback</p>
+      <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">~6 mo</p>
+      <p class="ci">Range: 4–9 months</p>
+      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">From 100% deployment</p>
+    </div>
+  </div>
+
+  <!-- APPROVE FOOTER -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #161D27">
+    <div style="display:flex;gap:24px;font-size:11.5px;color:#7A96B2">
+      <span><span class="pos">✓</span> Capital-adequate through Mild Stress (×1.5 PD)</span>
+      <span><span class="pos">✓</span> Independent validation complete · SR 11-7 / RBI MRM / Basel III / IFRS 9</span>
+      <span><span class="pos">✓</span> Full rollback available within 4 hours</span>
+    </div>
+    <div style="border:1.5px solid #22C55E;border-radius:7px;padding:11px 22px;text-align:center;flex-shrink:0;margin-left:20px;min-width:210px">
+      <p style="font-size:9.5px;color:#22C55E;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:4px">Recommended Action</p>
+      <p style="font-size:19px;font-weight:700;color:#22C55E;letter-spacing:.04em;margin-bottom:5px">✓ APPROVE</p>
+      <p style="font-size:9px;color:#5A9070;line-height:1.5">Phased deployment subject to ongoing<br>monitoring and quarterly framework<br>governance review</p>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- LEVEL 2: BUSINESS VALUE -->
+<div style="margin-bottom:28px">
+  <p class="sl">Level 2 — Business Value</p>
+  <div class="g2" style="margin-bottom:14px">
+
+    <!-- P&L -->
+    <div class="pn">
+      <p class="sh">Economic P&L</p><div class="shd"></div>
+      <table>
+        <thead><tr><th style="width:38%">Line item</th><th class="r">Current</th><th class="r">Projected</th><th class="r">Est. change</th></tr></thead>
+        <tbody>
+          <tr><td colspan="4" style="padding:5px 10px 3px;font-size:9px;color:#2563EB;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Revenue</td></tr>
+          <tr><td>Gross interest income</td><td class="r">₹1,285M</td><td class="r">₹1,320M</td><td class="r pos">+₹35M</td></tr>
+          <tr><td>Funding cost (45%)</td><td class="r">₹578M</td><td class="r">₹595M</td><td class="r neg">+₹17M</td></tr>
+          <tr><td>Net fee income</td><td class="r">₹118M</td><td class="r">₹125M</td><td class="r pos">+₹7M</td></tr>
+          <tr style="border-top:1px solid #1E2A38"><td class="fw">Net Revenue</td><td class="r fw">₹825M</td><td class="r fw">₹850M</td><td class="r pos">+₹25M</td></tr>
+          <tr><td colspan="4" style="padding:5px 10px 3px;font-size:9px;color:#2563EB;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Costs</td></tr>
+          <tr><td>Expected Credit Loss</td><td class="r">₹208M</td><td class="r">₹195M</td><td class="r pos">-₹13M</td></tr>
+          <tr><td>Operating cost</td><td class="r">₹248M</td><td class="r">₹254M</td><td class="r neg">+₹6M</td></tr>
+          <tr style="border-top:1px solid #1E2A38"><td class="fw">Pre-capital profit</td><td class="r fw">₹369M</td><td class="r fw">₹401M</td><td class="r pos">+₹32M</td></tr>
+          <tr><td>Capital charge (17%)</td><td class="r">₹210M</td><td class="r">₹199M</td><td class="r pos">-₹11M</td></tr>
+          <tr style="border-top:1.5px solid #2563EB;background:#0C1928"><td class="fw" style="color:#56CCF2;font-size:13px">Economic Profit</td><td class="r fw" style="color:#56CCF2;font-size:13px">₹159M</td><td class="r fw" style="color:#56CCF2;font-size:13px">₹202M</td><td class="r pos" style="font-size:13px">+₹43M</td></tr>
+          <tr><td colspan="4"><p style="font-size:9px;color:#56CCF2;padding:2px 0 0">95% CI on profit uplift: ₹36M–₹51M</p></td></tr>
+          <tr><td style="color:#B0C4D8">RAROC</td><td class="r warn">12.8%</td><td class="r pos">~16.5%</td><td class="r pos">+3.7pp</td></tr>
+          <tr><td class="fw" style="color:#56CCF2">Return on Equity</td><td class="r warn" style="font-size:13px;font-weight:600">10.2%</td><td class="r pos" style="font-size:13px;font-weight:700">~12.4%</td><td class="r pos" style="font-size:13px">+2.2pp</td></tr>
+          <tr><td>Cost of Risk</td><td class="r warn">126 bps</td><td class="r pos">~118 bps</td><td class="r pos">~-8 bps</td></tr>
+          <tr><td>IFRS 9 provision</td><td class="r">₹255M</td><td class="r pos">~₹235M</td><td class="r pos">~-₹20M</td></tr>
+          <tr><td>RWA</td><td class="r">₹8.25B</td><td class="r pos">~₹7.90B</td><td class="r pos">~-₹350M</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <!-- ECONOMIC VALUE BRIDGE -->
+      <div class="pn">
+        <p class="sh">Economic Value Bridge</p><div class="shd"></div>
+        <p style="font-size:11px;color:#7A96B2;margin-bottom:14px">Expected drivers of ₹43M incremental economic profit</p>
+        <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin-bottom:10px">
+          <div style="text-align:center">
+            <div style="background:#0C1928;border:1px solid #1A3A6A;border-radius:6px;padding:11px 5px">
+              <p style="font-size:8px;color:#5A80A8;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px">Current EP</p>
+              <p style="font-size:18px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap">₹159M</p>
+              <p style="font-size:8.5px;color:#3A5570;margin-top:3px">Baseline</p>
+            </div>
+            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:12px">→</span></div>
+          </div>
+          <div style="text-align:center">
+            <div style="background:#0C1F14;border:1px solid #1A4028;border-radius:6px;padding:11px 5px">
+              <p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px">Revenue NII</p>
+              <p style="font-size:18px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹25M</p>
+              <p style="font-size:8.5px;color:#22C55E;opacity:.6;margin-top:3px">→ ₹184M</p>
+            </div>
+            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:12px">→</span></div>
+          </div>
+          <div style="text-align:center">
+            <div style="background:#0C1F14;border:1px solid #1A4028;border-radius:6px;padding:11px 5px">
+              <p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px">ECL Saving</p>
+              <p style="font-size:18px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹13M</p>
+              <p style="font-size:8.5px;color:#22C55E;opacity:.6;margin-top:3px">→ ₹197M</p>
+            </div>
+            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:12px">→</span></div>
+          </div>
+          <div style="text-align:center">
+            <div style="background:#1F0C0C;border:1px solid #3A1A1A;border-radius:6px;padding:11px 5px">
+              <p style="font-size:8px;color:#906060;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px">OpEx Cost</p>
+              <p style="font-size:18px;font-weight:700;color:#EF4444;line-height:1;white-space:nowrap">-₹6M</p>
+              <p style="font-size:8.5px;color:#EF4444;opacity:.6;margin-top:3px">→ ₹191M</p>
+            </div>
+            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:12px">→</span></div>
+          </div>
+          <div style="text-align:center">
+            <div style="background:#0C1F14;border:1px solid #1A4028;border-radius:6px;padding:11px 5px">
+              <p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px">Capital Saving</p>
+              <p style="font-size:18px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹11M</p>
+              <p style="font-size:8.5px;color:#22C55E;opacity:.6;margin-top:3px">→ ₹202M</p>
+            </div>
+            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#22C55E;font-size:12px">→</span></div>
+          </div>
+          <div style="text-align:center">
+            <div style="background:#0C2218;border:1px solid #1A5030;border-radius:6px;padding:11px 5px">
+              <p style="font-size:8px;color:#3A9060;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px">Projected EP</p>
+              <p style="font-size:18px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">₹202M</p>
+              <p style="font-size:8.5px;color:#22C55E;opacity:.7;margin-top:3px">+₹43M est.</p>
+            </div>
+            <div style="height:14px"></div>
+          </div>
+        </div>
+        <div style="background:#0A0E13;border-radius:5px;padding:9px 12px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:10px;color:#5A7090;white-space:nowrap">Estimated net uplift</span>
+          <div style="flex:1;background:#1A2433;border-radius:2px;height:5px;position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:58%;background:#22C55E;border-radius:2px"></div></div>
+          <span style="font-size:11px;color:#22C55E;font-weight:700;white-space:nowrap">₹43M / ₹74M gross drivers</span>
+        </div>
+      </div>
+
+      <!-- TORNADO -->
+      <div class="pn">
+        <p class="sh">Macro Sensitivity (₹M impact on Economic Profit)</p><div class="shd"></div>
+        <p style="font-size:11px;color:#7A96B2;margin-bottom:12px">All downside scenarios remain positive vs current framework</p>
+        <div style="position:relative;height:155px"><canvas id="tornadoChart" role="img" aria-label="Tornado chart showing macro sensitivity: combined adverse -₹25M, framework drift -₹17M, unemployment +2% gives -₹10M, GDP -1% gives -₹8M, interest +200bp gives -₹6M, inflation +3% gives -₹4M">Macro sensitivity tornado chart.</canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENARIOS + IMPLEMENTATION -->
+  <div class="g2">
+    <div class="pn">
+      <p class="sh">Scenario Analysis — Probability Weighted</p><div class="shd"></div>
+      <table style="margin-bottom:14px">
+        <thead><tr><th>Scenario</th><th class="r">Prob</th><th class="r">Est. net benefit</th><th class="r">RAROC</th><th class="r">ROE</th><th class="r">Payback</th></tr></thead>
+        <tbody>
+          <tr style="background:rgba(34,197,94,.05)"><td class="fw">Optimistic</td><td class="r" style="color:#7A96B2">15%</td><td class="r pos">₹52M</td><td class="r pos">~18.1%</td><td class="r pos">~13.8%</td><td class="r">~4 mo</td></tr>
+          <tr style="background:rgba(37,99,235,.08)"><td class="fw">Base case</td><td class="r" style="color:#56CCF2;font-weight:600">60%</td><td class="r" style="color:#F1F5F9;font-weight:600">₹35M</td><td class="r" style="color:#F1F5F9">~16.5%</td><td class="r" style="color:#F1F5F9">~12.4%</td><td class="r">~6 mo</td></tr>
+          <tr><td class="fw">Pessimistic</td><td class="r" style="color:#7A96B2">20%</td><td class="r warn">₹22M</td><td class="r warn">~14.8%</td><td class="r warn">~11.3%</td><td class="r">~10 mo</td></tr>
+          <tr><td class="fw">Severe recession</td><td class="r" style="color:#7A96B2">5%</td><td class="r warn">₹8M</td><td class="r warn">~13.4%</td><td class="r warn">~10.8%</td><td class="r">~28 mo</td></tr>
+        </tbody>
+      </table>
+      <div style="background:#0A0E13;border-radius:7px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <p class="sl" style="margin-bottom:3px">Probability-weighted EV</p>
+          <p style="font-size:22px;font-weight:700;color:#22C55E;letter-spacing:-.4px">₹34M / yr</p>
+          <p style="font-size:9.5px;color:#5A7090;margin-top:3px">0.60×₹35M + 0.15×₹52M + 0.20×₹22M + 0.05×₹8M</p>
+        </div>
+        <div style="text-align:right">
+          <p class="sl" style="margin-bottom:3px">Worst case still positive</p>
+          <p style="font-size:19px;font-weight:700;color:#EAB308">₹8M / yr</p>
+          <p style="font-size:9.5px;color:#5A7090;margin-top:3px">Severe recession · above current framework</p>
+        </div>
+      </div>
+      <div style="background:#0C0F14;border:1px solid #1A2433;border-radius:7px;padding:12px 14px">
+        <p class="sl" style="margin-bottom:10px">Downside case — framework drift scenario</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div><p style="font-size:10px;color:#7A96B2;margin-bottom:4px">Est. economic benefit</p><p style="font-size:18px;font-weight:700;color:#EAB308">₹18M/yr</p><p style="font-size:9.5px;color:#5A7090;margin-top:2px">Still positive</p></div>
+          <div><p style="font-size:10px;color:#7A96B2;margin-bottom:4px">Expected capital benefit</p><p style="font-size:18px;font-weight:700;color:#EAB308">₹11M</p><p style="font-size:9.5px;color:#5A7090;margin-top:2px">Still released</p></div>
+          <div><p style="font-size:10px;color:#7A96B2;margin-bottom:4px">RAROC</p><p style="font-size:18px;font-weight:700;color:#EAB308">~14.1%</p><p style="font-size:9.5px;color:#5A7090;margin-top:2px">Above current 12.8%</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pn">
+      <p class="sh">Implementation Economics</p><div class="shd"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px">
+        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
+          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">One-time investment</p>
+          <p style="font-size:28px;font-weight:700;color:#EF4444;line-height:1;white-space:nowrap">₹19M</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:7px">Dev ₹8M · IMV ₹5M · Infra ₹4M · UAT ₹2M</p>
+        </div>
+        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
+          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Est. annual net benefit</p>
+          <p style="font-size:28px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">₹35M</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:7px">After ₹8M annual governance cost</p>
+        </div>
+        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
+          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Year 1 ROI</p>
+          <p style="font-size:28px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">4.4×</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:7px">Year 3 cumulative ~10×</p>
+        </div>
+        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
+          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Expected payback</p>
+          <p style="font-size:28px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">~6 mo</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:7px">Range: 4–9 months</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px">
+        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
+          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">5-year NPV at 12%</p>
+          <p style="font-size:28px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap">~₹110M</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:7px">Pessimistic case: ~₹34M</p>
+        </div>
+        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
+          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">IRR (5-year)</p>
+          <p style="font-size:28px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap">~180%</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:7px">Driven by 6-month payback</p>
+        </div>
+      </div>
+      <div style="background:#0C2218;border:1.5px solid #1A5030;border-radius:7px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <p style="font-size:9px;color:#3A9060;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Net value creation — Year 1</p>
+          <p style="font-size:28px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">₹24M</p>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#5A9070;line-height:1.8">
+          <p>₹43M gross benefit</p>
+          <p>− ₹19M one-time investment</p>
+          <p style="color:#22C55E;font-weight:600">= ₹24M net Year 1</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- LEVEL 3: PORTFOLIO STRATEGY -->
+<div style="margin-bottom:28px">
+  <p class="sl">Level 3 — Portfolio Strategy</p>
+  <div class="g3">
+
+    <!-- PORTFOLIO MIGRATION -->
+    <div class="pn">
+      <p class="sh">Portfolio Risk Migration</p><div class="shd"></div>
+      <p style="font-size:11px;color:#7A96B2;margin-bottom:18px">Expected approved book composition — % by PD band</p>
+      <div style="display:flex;flex-direction:column;gap:17px">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px"><span style="font-size:11.5px;color:#E2EAF4;font-weight:500">Low risk <span style="color:#7A96B2;font-size:10px">(PD &lt;10%)</span></span><span style="font-size:11.5px;color:#22C55E;font-weight:700">+5pp ↑</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:52px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#15614A;height:11px;border-radius:2px;width:43%"></div></div><span style="font-size:10.5px;color:#B0C4D8;width:30px;text-align:right;font-weight:500">43%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#22C55E;width:52px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#22C55E;height:11px;border-radius:2px;width:48%"></div></div><span style="font-size:10.5px;color:#22C55E;width:30px;text-align:right;font-weight:700">48%</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px"><span style="font-size:11.5px;color:#E2EAF4;font-weight:500">Medium risk <span style="color:#7A96B2;font-size:10px">(PD 10–20%)</span></span><span style="font-size:11.5px;color:#22C55E;font-weight:700">+4pp ↑</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:52px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#1A3E7A;height:11px;border-radius:2px;width:25%"></div></div><span style="font-size:10.5px;color:#B0C4D8;width:30px;text-align:right;font-weight:500">25%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#3B82F6;width:52px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#3B82F6;height:11px;border-radius:2px;width:29%"></div></div><span style="font-size:10.5px;color:#3B82F6;width:30px;text-align:right;font-weight:700">29%</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px"><span style="font-size:11.5px;color:#E2EAF4;font-weight:500">High risk <span style="color:#7A96B2;font-size:10px">(PD 20–40%)</span></span><span style="font-size:11.5px;color:#EF4444;font-weight:700">-2pp ↓</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:52px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#6B4F0A;height:11px;border-radius:2px;width:18%"></div></div><span style="font-size:10.5px;color:#B0C4D8;width:30px;text-align:right;font-weight:500">18%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#EAB308;width:52px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#EAB308;height:11px;border-radius:2px;width:16%"></div></div><span style="font-size:10.5px;color:#EAB308;width:30px;text-align:right;font-weight:700">16%</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px"><span style="font-size:11.5px;color:#E2EAF4;font-weight:500">Very high risk <span style="color:#7A96B2;font-size:10px">(PD 40%+)</span></span><span style="font-size:11.5px;color:#EF4444;font-weight:700">-7pp ↓</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:52px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#6B1A1A;height:11px;border-radius:2px;width:14%"></div></div><span style="font-size:10.5px;color:#B0C4D8;width:30px;text-align:right;font-weight:500">14%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#EF4444;width:52px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:11px"><div style="background:#EF4444;height:11px;border-radius:2px;width:7%"></div></div><span style="font-size:10.5px;color:#EF4444;width:30px;text-align:right;font-weight:700">7%</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:10px 12px;background:#0A0E13;border-radius:6px">
+        <p style="font-size:11px;color:#7A96B2;line-height:1.7"><span class="pos">Expected net effect:</span> 876 value-destructive exposures removed. 1,358 incorrectly declined good borrowers expected to be unlocked. Estimated net approval rate +0.5pp.</p>
+      </div>
+    </div>
+
+    <!-- APPROVAL MIGRATION -->
+    <div class="pn">
+      <p class="sh">Approval Strategy Migration</p><div class="shd"></div>
+      <p style="font-size:11px;color:#7A96B2;margin-bottom:20px">Decision distribution — current vs Enhanced Credit Strategy</p>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><span style="font-size:12.5px;font-weight:700;color:#22C55E">APPROVE</span><span style="font-size:11.5px;color:#22C55E;font-weight:600">+0.5pp</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:56px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#15614A;height:13px;border-radius:2px;width:45%"></div></div><span style="font-size:11px;color:#B0C4D8;font-weight:600;width:38px;text-align:right">45.0%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#22C55E;width:56px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#22C55E;height:13px;border-radius:2px;width:45.5%"></div></div><span style="font-size:11px;color:#22C55E;font-weight:700;width:38px;text-align:right">45.5%</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><span style="font-size:12.5px;font-weight:700;color:#EAB308">MANUAL REVIEW</span><span style="font-size:11.5px;color:#EAB308;font-weight:600">+3.0pp</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:56px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#6B4F0A;height:13px;border-radius:2px;width:6%"></div></div><span style="font-size:11px;color:#B0C4D8;font-weight:600;width:38px;text-align:right">6.0%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#EAB308;width:56px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#EAB308;height:13px;border-radius:2px;width:9%"></div></div><span style="font-size:11px;color:#EAB308;font-weight:700;width:38px;text-align:right">9.0%</span></div>
+          </div>
+          <p style="font-size:10px;color:#5A7090;margin-top:6px">+2 FTE credit ops. Override rate expected to normalise by Month 4.</p>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><span style="font-size:12.5px;font-weight:700;color:#EF4444">DECLINE</span><span style="font-size:11.5px;color:#22C55E;font-weight:600">-3.5pp (quality gain)</span></div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#5A7090;width:56px;flex-shrink:0">Current</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#6B1A1A;height:13px;border-radius:2px;width:49%"></div></div><span style="font-size:11px;color:#B0C4D8;font-weight:600;width:38px;text-align:right">49.0%</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#EF4444;width:56px;flex-shrink:0;font-weight:600">Projected</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#EF4444;height:13px;border-radius:2px;width:45.5%"></div></div><span style="font-size:11px;color:#EF4444;font-weight:700;width:38px;text-align:right">45.5%</span></div>
+          </div>
+          <p style="font-size:10px;color:#5A7090;margin-top:6px">876 value-destructive exposures removed. 1,358 good borrowers expected to be approved.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAROC BY SEGMENT -->
+    <div class="pn">
+      <p class="sh">RAROC by Risk Segment</p><div class="shd"></div>
+      <p style="font-size:11px;color:#7A96B2;margin-bottom:6px">Value-accretive vs value-destructive — Risk Segmentation Framework</p>
+      <div style="display:flex;gap:12px;margin-bottom:14px;font-size:10.5px">
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#22C55E;flex-shrink:0"></span><span style="color:#7A96B2">Accretive</span></span>
+        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#EF4444;flex-shrink:0"></span><span style="color:#7A96B2">Destructive</span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Segment 1 <span style="color:#7A96B2;font-size:10px">PD 3.8%</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+92.9%</span></div><div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:46.4%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Segment 2 <span style="color:#7A96B2;font-size:10px">PD 8.0%</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+68.5%</span></div><div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:34.3%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Segment 3 <span style="color:#7A96B2;font-size:10px">PD 15.5%</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+19.0%</span></div><div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:9.5%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:2px 0"><div style="flex:1;height:1px;background:#EF4444;opacity:.28"></div><span style="font-size:9.5px;color:#EF4444;letter-spacing:.07em;text-transform:uppercase;font-weight:600;white-space:nowrap">Strategy cutoff — RAROC = 0%</span><div style="flex:1;height:1px;background:#EF4444;opacity:.28"></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Segment 4 <span style="color:#7A96B2;font-size:10px">PD 27.3%</span></span><span style="font-size:11px;color:#EF4444;font-weight:700">-20.9%</span></div><div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;right:50%;top:2px;bottom:2px;width:10.5%;background:#EF4444;border-radius:2px 0 0 2px"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Segment 5 <span style="color:#7A96B2;font-size:10px">PD 55.5%</span></span><span style="font-size:11px;color:#EF4444;font-weight:700">-98.8%</span></div><div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;right:50%;top:2px;bottom:2px;width:49.4%;background:#EF4444;border-radius:2px 0 0 2px"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:9.5px;color:#3A5068"><span>-100%</span><span>0%</span><span>+100%</span></div>
+      <p style="font-size:10.5px;color:#7A96B2;margin-top:12px;line-height:1.7">Enhanced Credit Strategy: Approve Segments 1–3, reprice Segment 3 at +4.5%, manual review Segment 4, decline Segment 5. Expected to shift approved book RAROC from 12.8% to ~16.5%.</p>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- LEVEL 4 -->
+<div style="margin-bottom:28px">
+  <p class="sl">Level 4 — Technical Evidence · Governance · Decision</p>
+  <div class="g2">
+
+    <!-- DECISION SCORECARD -->
+    <div class="pn">
+      <p class="sh">Committee Decision Scorecard</p><div class="shd"></div>
+      <table>
+        <thead><tr><th style="width:58%">Criterion</th><th style="width:16%">Status</th><th style="width:26%">Evidence</th></tr></thead>
+        <tbody>
+          <tr><td class="fw">Positive NPV (5-year at 12%)</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">~₹110M est.</td></tr>
+          <tr><td class="fw">Expected payback under 12 months</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">~6 months</td></tr>
+          <tr><td class="fw">Expected capital efficiency benefit</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">₹28M est.</td></tr>
+          <tr><td class="fw">Regulatory compliant (RBI MRM · SR 11-7)</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">SHAP adverse-action</td></tr>
+          <tr><td class="fw">Stress tested (4 macro scenarios)</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">Mild stress adequate</td></tr>
+          <tr><td class="fw">Independent validation complete</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">Gate condition: 10%</td></tr>
+          <tr><td class="fw">Rollback available (within 4 hours)</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">Auto — 7 triggers</td></tr>
+          <tr><td class="fw">Governance accountability assigned</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">7-role RACI confirmed</td></tr>
+          <tr><td class="fw">Operationally feasible (phased rollout)</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">Shadow → 10% → 100%</td></tr>
+          <tr><td class="fw">Downside scenario still positive</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">₹8M/yr severe recession</td></tr>
+          <tr style="border-top:1.5px solid #2563EB;background:#0C1928">
+            <td class="fw" style="font-size:13px;color:#F1F5F9">Recommended Action</td>
+            <td colspan="2" style="padding:12px 10px">
+              <p style="font-size:19px;font-weight:700;color:#22C55E;margin-bottom:4px">✓ APPROVE</p>
+              <p style="font-size:9.5px;color:#3A9060;line-height:1.5">Phased deployment subject to ongoing monitoring<br>and quarterly framework governance review</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <!-- RISK CONTROL DASHBOARD -->
+      <div class="pn">
+        <p class="sh">Risk Control Dashboard</p><div class="shd"></div>
+        <table>
+          <thead><tr><th>Metric</th><th class="r">Current</th><th class="r">Amber</th><th class="r">Red</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="fw">Population Stability Index</td><td class="r warn">0.17</td><td class="r" style="color:#5A7090">0.20</td><td class="r" style="color:#5A7090">0.25</td><td><span class="dot-a"></span><span class="ba2">Near amber</span></td></tr>
+            <tr><td class="fw">Calibration gap</td><td class="r warn">14.1%</td><td class="r" style="color:#5A7090">15%</td><td class="r" style="color:#5A7090">25%</td><td><span class="dot-a"></span><span class="ba2">Near amber</span></td></tr>
+            <tr><td class="fw">Cost of Risk</td><td class="r">126 bps</td><td class="r" style="color:#5A7090">141</td><td class="r" style="color:#5A7090">151</td><td><span class="dot-g"></span><span class="bg2">Normal</span></td></tr>
+            <tr><td class="fw">Stage 1→2 migration rate</td><td class="r warn">6.8%</td><td class="r" style="color:#5A7090">7.5%</td><td class="r" style="color:#5A7090">9.0%</td><td><span class="dot-a"></span><span class="ba2">Monitoring</span></td></tr>
+            <tr><td class="fw">Override rate</td><td class="r">6%</td><td class="r" style="color:#5A7090">12%</td><td class="r" style="color:#5A7090">20%</td><td><span class="dot-g"></span><span class="bg2">Normal</span></td></tr>
+            <tr><td class="fw">Approval rate drift</td><td class="r">0.0pp</td><td class="r" style="color:#5A7090">±3pp</td><td class="r" style="color:#5A7090">±5pp</td><td><span class="dot-g"></span><span class="bg2">Stable</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- KEY RISKS & MITIGATIONS -->
+      <div class="pn">
+        <p class="sh">Key Risks &amp; Mitigations</p><div class="shd"></div>
+        <div class="g2">
+          <div>
+            <p style="font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#EF4444;margin-bottom:10px">Key Risks</p>
+            <div style="font-size:11.5px;color:#B0C4D8;line-height:1.9">
+              <p><span style="color:#EF4444">→</span> Higher interpretability burden</p>
+              <p><span style="color:#EF4444">→</span> Quarterly recalibration — permanent</p>
+              <p><span style="color:#EF4444">→</span> Geographic training data mismatch</p>
+              <p><span style="color:#EF4444">→</span> Bureau single point of failure</p>
+              <p><span style="color:#EF4444">→</span> Initial override rate 8–10%</p>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#22C55E;margin-bottom:10px">Mitigations</p>
+            <div style="font-size:11.5px;color:#B0C4D8;line-height:1.9">
+              <p><span style="color:#22C55E">→</span> WoE scorecard for adverse-action</p>
+              <p><span style="color:#22C55E">→</span> ₹8M governance cost included</p>
+              <p><span style="color:#22C55E">→</span> Indian PD overlay applied</p>
+              <p><span style="color:#22C55E">→</span> 4-hour auto rollback — 7 triggers</p>
+              <p><span style="color:#22C55E">→</span> Worst case still ₹8M positive</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="border-top:1px solid #161D27;padding-top:14px">
+  <p style="font-size:9.5px;color:#3A5068;font-style:italic;margin-bottom:5px">Estimates assume current macro environment, stable recovery rates, unchanged pricing policy and historical portfolio behaviour.</p>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+    <p style="font-size:9.5px;color:#3A5068;font-style:italic;flex:1">Recommendation based on historical portfolio performance and scenario analysis; actual outcomes may vary with macroeconomic conditions.</p>
+    <p style="font-size:9.5px;color:#2A4058;font-style:italic;flex-shrink:0;text-align:right">CRC-2026-09 · Risk Analytics · June 2026 · Board Restricted</p>
+  </div>
+</div>
+
+<script>
+Chart.defaults.color='#7A96B2';
+Chart.defaults.borderColor='#1E2A38';
+Chart.defaults.font.family="'Segoe UI',system-ui,-apple-system,sans-serif";
+Chart.defaults.font.size=11;
+new Chart(document.getElementById('tornadoChart'),{
+  type:'bar',
+  data:{
+    labels:['Inflation +3%','Interest +200bp','GDP -1%','Unemployment +2%','Framework drift','Combined adverse'],
+    datasets:[{
+      data:[-4,-6,-8,-10,-17,-25],
+      backgroundColor:['rgba(239,68,68,.28)','rgba(239,68,68,.38)','rgba(239,68,68,.48)','rgba(239,68,68,.58)','rgba(239,68,68,.72)','rgba(239,68,68,.90)'],
+      borderColor:'rgba(239,68,68,.35)',borderWidth:1,borderRadius:3
+    }]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ' ₹'+ctx.raw+'M on Economic Profit';}}}},
+    scales:{
+      x:{grid:{color:'#0D1520'},ticks:{color:'#7A96B2',callback:function(v){return '₹'+v+'M';}},min:-30,max:0},
+      y:{grid:{color:'transparent'},ticks:{color:'#B0C4D8',font:{size:10.5}}}
+    }
+  }
+});
+</script>
+</body>
+</html>
