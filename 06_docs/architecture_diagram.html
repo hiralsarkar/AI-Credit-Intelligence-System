@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Decision Engine Architecture — AI Credit Intelligence System</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Segoe UI',system-ui,sans-serif;color:#E2EAF4;padding:32px 48px 64px;min-width:1100px}
+.header-label{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#2563EB;margin-bottom:8px}
+h1{font-size:28px;font-weight:700;color:#F1F5F9;letter-spacing:-.3px;margin-bottom:4px}
+.subtitle{font-size:12px;color:#7A96B2;margin-bottom:36px}
+svg text{font-family:'Segoe UI',system-ui,sans-serif}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:#7A96B2}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.note{font-size:10.5px;color:#5A7090;font-style:italic;margin-top:20px;line-height:1.8;border-top:1px solid #161D27;padding-top:14px}
+</style>
+</head>
+<body>
+
+<p class="header-label">AI Credit Intelligence System · Module A · System Architecture</p>
+<h1>Decision Engine Architecture</h1>
+<p class="subtitle">End-to-end pipeline: raw application data → RAROC-gated credit decision → IFRS 9 provision → portfolio monitoring</p>
+
+<svg viewBox="0 0 1100 820" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1100px">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#2563EB" opacity="0.8"/>
+    </marker>
+    <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#22C55E" opacity="0.8"/>
+    </marker>
+    <marker id="arr-r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#EF4444" opacity="0.8"/>
+    </marker>
+    <marker id="arr-y" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#EAB308" opacity="0.8"/>
+    </marker>
+    <marker id="arr-c" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#56CCF2" opacity="0.8"/>
+    </marker>
+  </defs>
+
+  <!-- ===== LAYER 0: DATA INGESTION ===== -->
+  <rect x="10" y="10" width="1080" height="56" rx="6" fill="#0C1018" stroke="#1E2A38" stroke-width="1"/>
+  <text x="550" y="28" text-anchor="middle" font-size="8" fill="#3A5068" font-weight="600" letter-spacing="2">LAYER 0 — DATA INGESTION</text>
+
+  <!-- Raw data boxes -->
+  <rect x="30" y="34" width="130" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="95" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">application_train.csv</text>
+
+  <rect x="175" y="34" width="130" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="240" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">bureau_data.csv</text>
+
+  <rect x="320" y="34" width="130" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="385" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">behavioural_data.csv</text>
+
+  <rect x="465" y="34" width="130" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="530" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">lending_portfolio.csv</text>
+
+  <rect x="610" y="34" width="120" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="670" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">market_rates.csv</text>
+
+  <rect x="745" y="34" width="140" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="815" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">macro_stress_params.csv</text>
+
+  <rect x="900" y="34" width="170" height="24" rx="4" fill="#0F1822" stroke="#1E3A58" stroke-width="1"/>
+  <text x="985" y="49" text-anchor="middle" font-size="10" fill="#56CCF2">regulatory_capital_params.csv</text>
+
+  <!-- ===== LAYER 1: PREPROCESSING ===== -->
+  <line x1="550" y1="66" x2="550" y2="92" stroke="#2563EB" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="160" y="92" width="780" height="68" rx="6" fill="#0D1520" stroke="#1E3050" stroke-width="1.5"/>
+  <text x="550" y="108" text-anchor="middle" font-size="8" fill="#3A5080" font-weight="600" letter-spacing="2">LAYER 1 — FEATURE ENGINEERING & PREPROCESSING (Notebook 01)</text>
+
+  <rect x="180" y="114" width="155" height="36" rx="4" fill="#111C2A" stroke="#1E3A58" stroke-width="1"/>
+  <text x="257" y="128" text-anchor="middle" font-size="10" fill="#B0C4D8" font-weight="600">Missing Value</text>
+  <text x="257" y="142" text-anchor="middle" font-size="10" fill="#7A96B2">Imputation (median/mode)</text>
+
+  <rect x="350" y="114" width="155" height="36" rx="4" fill="#111C2A" stroke="#1E3A58" stroke-width="1"/>
+  <text x="427" y="128" text-anchor="middle" font-size="10" fill="#B0C4D8" font-weight="600">Outlier Treatment</text>
+  <text x="427" y="142" text-anchor="middle" font-size="10" fill="#7A96B2">Winsorize at P1/P99</text>
+
+  <rect x="520" y="114" width="155" height="36" rx="4" fill="#111C2A" stroke="#1E3A58" stroke-width="1"/>
+  <text x="597" y="128" text-anchor="middle" font-size="10" fill="#B0C4D8" font-weight="600">WoE Encoding</text>
+  <text x="597" y="142" text-anchor="middle" font-size="10" fill="#7A96B2">Weight of Evidence binning</text>
+
+  <rect x="690" y="114" width="155" height="36" rx="4" fill="#111C2A" stroke="#1E3A58" stroke-width="1"/>
+  <text x="767" y="128" text-anchor="middle" font-size="10" fill="#B0C4D8" font-weight="600">Feature Selection</text>
+  <text x="767" y="142" text-anchor="middle" font-size="10" fill="#7A96B2">VIF + IV + Correlation</text>
+
+  <!-- ===== LAYER 2: PD MODEL ===== -->
+  <line x1="550" y1="160" x2="550" y2="186" stroke="#2563EB" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="80" y="186" width="940" height="100" rx="6" fill="#0D1828" stroke="#1A3060" stroke-width="1.5"/>
+  <text x="550" y="202" text-anchor="middle" font-size="8" fill="#2A4090" font-weight="600" letter-spacing="2">LAYER 2 — PD MODEL (Notebooks 02, 03, 09)</text>
+
+  <!-- PD Model block -->
+  <rect x="100" y="210" width="200" height="64" rx="5" fill="#0F1C36" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="200" y="226" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">PD Model</text>
+  <text x="200" y="241" text-anchor="middle" font-size="10" fill="#7A96B2">Logistic Regression + XGBoost</text>
+  <text x="200" y="255" text-anchor="middle" font-size="9.5" fill="#5A7090">AUROC: 0.74 · KS: 0.33 · Gini: 0.48</text>
+  <text x="200" y="268" text-anchor="middle" font-size="9" fill="#3A5070">Output: PD ∈ [0,1] per applicant</text>
+
+  <!-- Scorecard block -->
+  <rect x="320" y="210" width="200" height="64" rx="5" fill="#0F1C36" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="420" y="226" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">Credit Scorecard</text>
+  <text x="420" y="241" text-anchor="middle" font-size="10" fill="#7A96B2">PDO: 20 pts · Base score: 600</text>
+  <text x="420" y="255" text-anchor="middle" font-size="9.5" fill="#5A7090">Score range: 459–493</text>
+  <text x="420" y="268" text-anchor="middle" font-size="9" fill="#3A5070">Interpretable for underwriters</text>
+
+  <!-- Calibration block -->
+  <rect x="540" y="210" width="200" height="64" rx="5" fill="#0F1C36" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="640" y="226" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">Calibration & PSI</text>
+  <text x="640" y="241" text-anchor="middle" font-size="10" fill="#7A96B2">Platt scaling · Brier score</text>
+  <text x="640" y="255" text-anchor="middle" font-size="9.5" fill="#5A7090">PSI monitoring: Amber 0.10–0.25</text>
+  <text x="640" y="268" text-anchor="middle" font-size="9" fill="#3A5070">Annual recalibration trigger</text>
+
+  <!-- Vintage block -->
+  <rect x="760" y="210" width="240" height="64" rx="5" fill="#0F1C36" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="880" y="226" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">Vintage Analysis</text>
+  <text x="880" y="241" text-anchor="middle" font-size="10" fill="#7A96B2">Cohort DR: 4.6% (2016) → 9.7% (2026)</text>
+  <text x="880" y="255" text-anchor="middle" font-size="9.5" fill="#5A7090">Survival curve → Lifetime PD</text>
+  <text x="880" y="268" text-anchor="middle" font-size="9" fill="#3A5070">36M survival: 57.3% · LT_PD scale: 1.61x</text>
+
+  <!-- ===== LAYER 3: IFRS 9 STAGING ===== -->
+  <line x1="550" y1="286" x2="550" y2="312" stroke="#56CCF2" stroke-width="1.5" marker-end="url(#arr-c)"/>
+  <rect x="80" y="312" width="940" height="88" rx="6" fill="#0A1820" stroke="#1A4050" stroke-width="1.5"/>
+  <text x="550" y="328" text-anchor="middle" font-size="8" fill="#2A5060" font-weight="600" letter-spacing="2">LAYER 3 — IFRS 9 STAGING & LIFETIME PD (Notebook 10)</text>
+
+  <!-- Stage boxes -->
+  <rect x="100" y="336" width="270" height="52" rx="5" fill="#0C2030" stroke="#22C55E" stroke-width="1.5"/>
+  <text x="235" y="352" text-anchor="middle" font-size="11" fill="#22C55E" font-weight="700">Stage 1 — 12-Month ECL</text>
+  <text x="235" y="367" text-anchor="middle" font-size="10" fill="#7A96B2">PD &lt; 20% AND RAROC ≥ 0</text>
+  <text x="235" y="381" text-anchor="middle" font-size="9" fill="#5A7090">17.7% of book · ECL = PD × LGD × EAD</text>
+
+  <rect x="390" y="336" width="270" height="52" rx="5" fill="#1A1800" stroke="#EAB308" stroke-width="1.5"/>
+  <text x="525" y="352" text-anchor="middle" font-size="11" fill="#EAB308" font-weight="700">Stage 2 — Lifetime ECL</text>
+  <text x="525" y="367" text-anchor="middle" font-size="10" fill="#7A96B2">PD ≥ 20% OR RAROC &lt; 0 (SICR)</text>
+  <text x="525" y="381" text-anchor="middle" font-size="9" fill="#5A7090">74.2% of book · LT_PD = 1-(1-PD)³</text>
+
+  <rect x="680" y="336" width="270" height="52" rx="5" fill="#200A0A" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="815" y="352" text-anchor="middle" font-size="11" fill="#EF4444" font-weight="700">Stage 3 — Lifetime ECL</text>
+  <text x="815" y="367" text-anchor="middle" font-size="10" fill="#7A96B2">ACTUAL_DEFAULT = 1</text>
+  <text x="815" y="381" text-anchor="middle" font-size="9" fill="#5A7090">8.1% of book · Interest on net value</text>
+
+  <!-- ===== LAYER 4: FINANCIAL INTELLIGENCE ===== -->
+  <line x1="550" y1="400" x2="550" y2="426" stroke="#2563EB" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="80" y="426" width="940" height="88" rx="6" fill="#0D1520" stroke="#1E2A40" stroke-width="1.5"/>
+  <text x="550" y="442" text-anchor="middle" font-size="8" fill="#2A4070" font-weight="600" letter-spacing="2">LAYER 4 — FINANCIAL INTELLIGENCE (Notebook 04)</text>
+
+  <rect x="100" y="452" width="200" height="50" rx="5" fill="#101828" stroke="#2563EB" stroke-width="1"/>
+  <text x="200" y="468" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">ECL Computation</text>
+  <text x="200" y="482" text-anchor="middle" font-size="9.5" fill="#7A96B2">EL = PD × LGD × EAD</text>
+  <text x="200" y="494" text-anchor="middle" font-size="9" fill="#5A7090">LGD = 0.45 (base) · LGD sensitivity: 30-60%</text>
+
+  <rect x="320" y="452" width="200" height="50" rx="5" fill="#101828" stroke="#2563EB" stroke-width="1"/>
+  <text x="420" y="468" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">Economic Capital</text>
+  <text x="420" y="482" text-anchor="middle" font-size="9.5" fill="#7A96B2">Basel risk-weight formula</text>
+  <text x="420" y="494" text-anchor="middle" font-size="9" fill="#5A7090">Scales with LGD · Tier-1 ratio impact</text>
+
+  <rect x="540" y="452" width="200" height="50" rx="5" fill="#101828" stroke="#2563EB" stroke-width="1"/>
+  <text x="640" y="468" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">RAROC Engine</text>
+  <text x="640" y="482" text-anchor="middle" font-size="9.5" fill="#7A96B2">RAROC = NI / Econ. Capital</text>
+  <text x="640" y="494" text-anchor="middle" font-size="9" fill="#5A7090">NI = Revenue - Funding - EL - OpEx</text>
+
+  <rect x="760" y="452" width="240" height="50" rx="5" fill="#101828" stroke="#2563EB" stroke-width="1"/>
+  <text x="880" y="468" text-anchor="middle" font-size="11" fill="#60A5FA" font-weight="700">Risk-Based Pricing</text>
+  <text x="880" y="482" text-anchor="middle" font-size="9.5" fill="#7A96B2">Rate = f(PD, LGD, target RAROC)</text>
+  <text x="880" y="494" text-anchor="middle" font-size="9" fill="#5A7090">Pricing Alpha: +₹1,299M on same book</text>
+
+  <!-- ===== LAYER 5: DECISION ENGINE ===== -->
+  <line x1="550" y1="514" x2="550" y2="540" stroke="#22C55E" stroke-width="2" marker-end="url(#arr-g)"/>
+  <rect x="80" y="540" width="940" height="108" rx="6" fill="#091A0E" stroke="#1A4028" stroke-width="2"/>
+  <text x="550" y="556" text-anchor="middle" font-size="8" fill="#1A5030" font-weight="600" letter-spacing="2">LAYER 5 — DECISION ENGINE (Notebook 05) — THE CORE VALUE LAYER</text>
+
+  <!-- RAROC Gate -->
+  <rect x="100" y="564" width="220" height="72" rx="5" fill="#0C2218" stroke="#22C55E" stroke-width="2"/>
+  <text x="210" y="580" text-anchor="middle" font-size="12" fill="#22C55E" font-weight="700">RAROC Gate</text>
+  <text x="210" y="595" text-anchor="middle" font-size="10.5" fill="#B0C4D8">Threshold: ≥ 2.5%</text>
+  <text x="210" y="609" text-anchor="middle" font-size="9.5" fill="#7A96B2">Portfolio Economic Optimum</text>
+  <text x="210" y="623" text-anchor="middle" font-size="9" fill="#5A9070">(Current Assumptions · ≈17% approval)</text>
+  <text x="210" y="635" text-anchor="middle" font-size="9" fill="#3A7050">10,456 loans · NI +₹183M</text>
+
+  <!-- Strategy Comparison -->
+  <rect x="340" y="564" width="220" height="72" rx="5" fill="#0F1C10" stroke="#4ADE80" stroke-width="1.5"/>
+  <text x="450" y="580" text-anchor="middle" font-size="12" fill="#4ADE80" font-weight="700">Strategy Simulator</text>
+  <text x="450" y="596" text-anchor="middle" font-size="9.5" fill="#7A96B2">A: Aggressive (45.7%) NI -₹169M</text>
+  <text x="450" y="610" text-anchor="middle" font-size="9.5" fill="#7A96B2">B: Conservative (12.2%) NI +₹166M</text>
+  <text x="450" y="622" text-anchor="middle" font-size="9.5" fill="#22C55E">C: RAROC Gated (17%) NI +₹183M ★</text>
+  <text x="450" y="634" text-anchor="middle" font-size="9.5" fill="#7A96B2">D: Risk-Based Pricing NI +₹1,130M</text>
+
+  <!-- Efficient Frontier -->
+  <rect x="580" y="564" width="220" height="72" rx="5" fill="#0F1C10" stroke="#4ADE80" stroke-width="1.5"/>
+  <text x="690" y="580" text-anchor="middle" font-size="12" fill="#4ADE80" font-weight="700">Efficient Frontier</text>
+  <text x="690" y="596" text-anchor="middle" font-size="9.5" fill="#7A96B2">NI vs Approval Rate sweep (12-22%)</text>
+  <text x="690" y="610" text-anchor="middle" font-size="9.5" fill="#7A96B2">LGD sensitivity: 30-60% stress</text>
+  <text x="690" y="622" text-anchor="middle" font-size="9.5" fill="#7A96B2">Peak: 17-18% approval · ₹183M NI</text>
+  <text x="690" y="634" text-anchor="middle" font-size="9" fill="#5A7090">Policy choice belongs to committee</text>
+
+  <!-- Ready Reckoner -->
+  <rect x="820" y="564" width="180" height="72" rx="5" fill="#0F1C10" stroke="#4ADE80" stroke-width="1.5"/>
+  <text x="910" y="580" text-anchor="middle" font-size="12" fill="#4ADE80" font-weight="700">Ready Reckoner</text>
+  <text x="910" y="596" text-anchor="middle" font-size="9.5" fill="#7A96B2">Per-loan NI/RAROC lookup</text>
+  <text x="910" y="610" text-anchor="middle" font-size="9.5" fill="#7A96B2">Underwriter decision support</text>
+  <text x="910" y="622" text-anchor="middle" font-size="9.5" fill="#7A96B2">Band + score + rate matrix</text>
+  <text x="910" y="634" text-anchor="middle" font-size="9" fill="#5A7090">Real-time decisioning tool</text>
+
+  <!-- ===== LAYER 6: STRESS TESTING ===== -->
+  <line x1="550" y1="648" x2="550" y2="670" stroke="#EAB308" stroke-width="1.5" marker-end="url(#arr-y)"/>
+  <rect x="80" y="670" width="940" height="72" rx="6" fill="#16130A" stroke="#3A3010" stroke-width="1.5"/>
+  <text x="550" y="686" text-anchor="middle" font-size="8" fill="#5A5020" font-weight="600" letter-spacing="2">LAYER 6 — STRESS TESTING (Notebook 06)</text>
+
+  <rect x="100" y="694" width="200" height="38" rx="4" fill="#1A1604" stroke="#EAB308" stroke-width="1"/>
+  <text x="200" y="709" text-anchor="middle" font-size="10.5" fill="#EAB308" font-weight="600">Baseline</text>
+  <text x="200" y="722" text-anchor="middle" font-size="9" fill="#7A96B2">PD × 1.0 · NI +₹183M (Gated)</text>
+
+  <rect x="318" y="694" width="200" height="38" rx="4" fill="#1A1604" stroke="#EAB308" stroke-width="1"/>
+  <text x="418" y="709" text-anchor="middle" font-size="10.5" fill="#EAB308" font-weight="600">Mild (PD ×1.5)</text>
+  <text x="418" y="722" text-anchor="middle" font-size="9" fill="#7A96B2">NI -₹4M · Gated still viable</text>
+
+  <rect x="536" y="694" width="200" height="38" rx="4" fill="#1A1604" stroke="#EF4444" stroke-width="1"/>
+  <text x="636" y="709" text-anchor="middle" font-size="10.5" fill="#EF4444" font-weight="600">Severe (PD ×2.5)</text>
+  <text x="636" y="722" text-anchor="middle" font-size="9" fill="#7A96B2">NI -₹429M · Tighten gate</text>
+
+  <rect x="754" y="694" width="246" height="38" rx="4" fill="#200808" stroke="#EF4444" stroke-width="1.5"/>
+  <text x="877" y="709" text-anchor="middle" font-size="10.5" fill="#EF4444" font-weight="600">Extreme (PD ×3.6)</text>
+  <text x="877" y="722" text-anchor="middle" font-size="9" fill="#7A96B2">NI -₹1,166M · Capital action required</text>
+
+  <!-- ===== LAYER 7: MONITORING ===== -->
+  <line x1="550" y1="742" x2="550" y2="762" stroke="#EF4444" stroke-width="1.5" marker-end="url(#arr-r)"/>
+  <rect x="80" y="762" width="940" height="46" rx="6" fill="#16080A" stroke="#3A1018" stroke-width="1.5"/>
+  <text x="550" y="778" text-anchor="middle" font-size="8" fill="#5A2030" font-weight="600" letter-spacing="2">LAYER 7 — MONITORING DASHBOARD (Notebook 07)</text>
+  <text x="200" y="798" text-anchor="middle" font-size="10" fill="#7A96B2">Portfolio RAROC · Amber: 16% / Red: 14%</text>
+  <text x="440" y="798" text-anchor="middle" font-size="10" fill="#7A96B2">PSI · Amber: 0.10–0.25 / Red: &gt;0.25</text>
+  <text x="670" y="798" text-anchor="middle" font-size="10" fill="#7A96B2">B4+B5 share · Amber: +5pp / Red: +10pp</text>
+  <text x="900" y="798" text-anchor="middle" font-size="10" fill="#7A96B2">ECL Provision vs Actual Loss coverage</text>
+
+  <!-- FLOW ARROWS between strategy outputs -->
+  <line x1="320" y1="600" x2="340" y2="600" stroke="#22C55E" stroke-width="1" marker-end="url(#arr-g)"/>
+  <line x1="560" y1="600" x2="580" y2="600" stroke="#22C55E" stroke-width="1" marker-end="url(#arr-g)"/>
+  <line x1="800" y1="600" x2="820" y2="600" stroke="#22C55E" stroke-width="1" marker-end="url(#arr-g)"/>
+
+  <!-- OUTPUT LABELS (right side) -->
+  <text x="1060" y="508" text-anchor="end" font-size="9" fill="#2563EB" font-style="italic">strategy_output.csv</text>
+  <text x="1060" y="520" text-anchor="end" font-size="9" fill="#2563EB" font-style="italic">portfolio_summary.csv</text>
+  <text x="1060" y="660" text-anchor="end" font-size="9" fill="#22C55E" font-style="italic">★ APPROVE / REJECT</text>
+</svg>
+
+<div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:20px;padding:16px 20px;background:#0D1520;border-radius:8px;border:1px solid #1E2A38">
+  <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div>Data pipeline / preprocessing</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#56CCF2"></div>IFRS 9 compliance layer</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22C55E"></div>Decision engine (core)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#EAB308"></div>Stress testing</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#EF4444"></div>Monitoring / risk triggers</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#60A5FA"></div>Model components</div>
+</div>
+
+<p class="note">
+  Each layer is implemented as a runnable Jupyter notebook (01–10). Outputs flow sequentially: raw data → features → PD → staging → financial intelligence → decision → stress → monitoring.<br>
+  The RAROC Gate (Layer 5) is the primary policy lever. Changing the RAROC threshold does not require retraining any model — it is a post-score policy calibration step.<br>
+  All numbers derive from 307,511 Home Credit applications (training set) and 61,503 loans in the decision engine evaluation set. LGD = 0.45 base case, cost of capital = 17%, Basel risk weights throughout.
+</p>
+
+</body>
+</html>

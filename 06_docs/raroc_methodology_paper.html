@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RAROC Optimization Framework — Methodology Paper</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070B12;font-family:'Segoe UI',system-ui,sans-serif;color:#E2EAF4;padding:56px 72px 80px;max-width:1060px;margin:0 auto}
+.doc-meta{font-size:9.5px;color:#3A5068;letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px;line-height:2}
+h1{font-size:30px;font-weight:700;color:#F1F5F9;letter-spacing:-.3px;margin-bottom:8px;line-height:1.2}
+.abstract-label{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#2563EB;margin:28px 0 8px}
+.abstract{font-size:13px;color:#7A96B2;line-height:1.9;border-left:3px solid #1E2A38;padding-left:20px;margin-bottom:36px}
+h2{font-size:18px;font-weight:700;color:#E2EAF4;margin:44px 0 6px;counter-increment:section}
+h2::before{content:counter(section)". ";color:#2563EB}
+body{counter-reset:section}
+.shd{width:28px;height:2px;background:#2563EB;margin-bottom:18px}
+h3{font-size:13px;font-weight:600;color:#B0C4D8;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.08em}
+p{font-size:13px;color:#B0C4D8;line-height:1.9;margin-bottom:14px}
+.formula{background:#0A0E13;border:1px solid #1A2433;border-left:3px solid #2563EB;border-radius:0 6px 6px 0;padding:16px 20px;font-family:'Courier New',monospace;font-size:12.5px;color:#60A5FA;margin:14px 0;line-height:2.1}
+.formula .comment{color:#3A5068;font-style:italic}
+.def-box{background:#0D1520;border:1px solid #1E2A38;border-radius:8px;padding:16px 20px;margin:14px 0}
+.def-term{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#5A7090;margin-bottom:6px}
+.def-body{font-size:12.5px;color:#B0C4D8;line-height:1.85}
+.note{background:#0A1020;border-left:3px solid #2563EB;padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+.note p{font-size:12px;color:#7A96B2;margin-bottom:0}
+.theorem{background:#091A0E;border:1px solid #1A4028;border-left:3px solid #22C55E;border-radius:0 8px 8px 0;padding:16px 20px;margin:14px 0}
+.theorem p{color:#7A9078;font-size:12.5px;margin-bottom:0}
+.theorem-title{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#22C55E;margin-bottom:8px}
+.warn{background:#16130A;border-left:3px solid #EAB308;padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+.warn p{font-size:12px;color:#9A8050;margin-bottom:0}
+table{width:100%;border-collapse:collapse;font-size:12px;margin:14px 0}
+th{padding:8px 12px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38;background:#070B12}
+td{padding:8px 12px;border-bottom:.5px solid rgba(30,42,56,.6);color:#B0C4D8}
+td.fw{color:#E2EAF4;font-weight:500}
+th.r,td.r{text-align:right}
+.pos{color:#22C55E;font-weight:600}.neg{color:#EF4444;font-weight:600}
+.tag{border-radius:3px;padding:2px 8px;font-size:9.5px;font-weight:600;white-space:nowrap;display:inline-block}
+.cite{font-size:10px;color:#3A5068;vertical-align:super}
+.refs{border-top:1px solid #161D27;padding-top:24px;margin-top:40px}
+.ref-item{font-size:11.5px;color:#5A7090;margin-bottom:8px;line-height:1.7;padding-left:28px;text-indent:-28px}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin:14px 0}
+</style>
+</head>
+<body>
+
+<div class="doc-meta">
+  Working Paper · AI Credit Intelligence System · CRC-2026-09 · June 2026<br>
+  Risk Analytics Team · Classification: Board Restricted · Version 1.0
+</div>
+
+<h1>A RAROC-Based Policy Efficient Frontier for<br>Retail Credit Portfolio Optimisation</h1>
+
+<p style="font-size:13px;color:#5A7090;margin-bottom:0">Methodology paper explaining the Risk-Adjusted Return on Capital optimisation framework, efficient frontier derivation, IFRS 9 staging integration, and LGD sensitivity analysis applied to a ₹36.6B retail lending portfolio.</p>
+
+<div class="abstract-label">Abstract</div>
+<div class="abstract">
+  This paper presents a loan-level RAROC optimisation framework for retail credit portfolio management. We derive a Policy Efficient Frontier by sweeping approval thresholds over a ranked loan population and measuring the resulting portfolio net income, expected credit loss (ECL), and capital efficiency. The frontier identifies a Portfolio Economic Optimum — defined as the approval rate that maximises portfolio net income subject to the constraint that every approved loan carries positive RAROC — under current modelling assumptions. We show that the optimal RAROC gate is not a fixed constant but a function of the assumed Loss Given Default (LGD): as LGD increases from 30% to 60%, the optimal approval rate contracts from approximately 29% to 12%. We integrate the framework with IFRS 9 lifetime ECL staging and demonstrate that the RAROC-gated approval policy reduces the institution's IFRS 9 provision requirement by 95.7% relative to the simulation baseline. All results are derived from 61,503 loan records. The RAROC threshold is identified as the primary policy lever; the approval rate is a consequence of applying that threshold to the current portfolio composition, not an independent target.
+</div>
+
+<!-- ============================================================ -->
+<h2>Introduction</h2>
+<div class="shd"></div>
+
+<p>Retail credit portfolio management requires simultaneous optimisation across multiple objectives: maximising net income, minimising expected credit loss, maintaining adequate capital buffers, and complying with IFRS 9 provisioning requirements. These objectives are partially conflicting — approving more loans increases revenue but also increases ECL; tightening approval increases capital efficiency but reduces book size.</p>
+
+<p>The conventional approach is to set a minimum credit score cutoff, derived from a PD model, and apply it uniformly. This approach conflates two distinct decisions: (1) the <em>model</em> decision — estimating the probability of default — and (2) the <em>policy</em> decision — determining which loans to approve given their estimated risk and return profile. Risk-Adjusted Return on Capital (RAROC) provides a theoretically grounded framework for the policy decision by expressing each loan's contribution to shareholder value on a risk-comparable basis.</p>
+
+<p>This paper formalises the RAROC optimisation framework, derives the efficient frontier, characterises its sensitivity to model assumptions, and integrates the results with IFRS 9 compliance requirements.</p>
+
+<!-- ============================================================ -->
+<h2>RAROC Framework</h2>
+<div class="shd"></div>
+
+<h3>2.1 Loan-Level RAROC Definition</h3>
+
+<div class="def-box">
+  <p class="def-term">Definition 1 — Loan-Level RAROC</p>
+  <p class="def-body">For loan <em>i</em>, the Risk-Adjusted Return on Capital is defined as:</p>
+</div>
+
+<div class="formula">RAROC_i = NI_i / EconCap_i
+
+where:
+  NI_i       = Net Income = Revenue_i - FundingCost_i - EL_i - OpEx_i
+  EconCap_i  = Economic Capital (Basel risk-weight formula)
+  EL_i       = Expected Loss = PD_i × LGD × EAD_i
+  Revenue_i  = EAD_i × Rate_i × (1 - PD_i)   <span class="comment"># interest income on non-defaulting loans</span>
+  FundingCost_i = EAD_i × CoF                 <span class="comment"># cost of funds (here: 17% p.a.)</span></div>
+
+<h3>2.2 Economic Capital Formula</h3>
+
+<p>Economic Capital is computed using the Basel II/III single-factor model for retail exposures, scaled linearly with LGD:</p>
+
+<div class="formula">EconCap_i = EAD_i × RW_i × CapitalRatio
+
+RW_i = 1.06 × LGD × N[ (1/(1-R))^0.5 × G(PD) + (R/(1-R))^0.5 × G(0.999) ] - LGD × PD
+<span class="comment"># Basel formula: N = standard normal CDF, G = quantile function, R = correlation</span>
+
+For retail: R = 0.03 × (1 - exp(-35×PD))/(1-exp(-35)) + 0.16 × (1 - (1-exp(-35×PD))/(1-exp(-35)))</div>
+
+<div class="note"><p>Note: Economic Capital scales approximately linearly with LGD under the Basel formula, which is why LGD sensitivity has a direct and predictable effect on both EL and EconCap. A loan with LGD=0.55 vs LGD=0.45 holds approximately 22% more capital, simultaneously increasing the denominator of RAROC and reducing net income through higher EL — a compound effect that explains why the optimal gate contracts significantly at higher LGD assumptions.</p></div>
+
+<h3>2.3 Portfolio RAROC</h3>
+
+<p>Portfolio RAROC is the capital-weighted average of loan-level RAROC — not the simple mean. Loans with larger economic capital have proportionally more influence on the portfolio metric:</p>
+
+<div class="formula">Portfolio_RAROC = Σ(RAROC_i × EconCap_i) / Σ(EconCap_i)
+                = Σ(NI_i) / Σ(EconCap_i)
+                = Total_NI / Total_EconCap</div>
+
+<div class="warn"><p><strong style="color:#EAB308">Common error:</strong> Using unweighted mean of loan-level RAROC. This overstates portfolio RAROC when low-capital loans have high RAROC (which is typical for high-quality borrowers). Capital-weighted aggregation is the correct method.</p></div>
+
+<!-- ============================================================ -->
+<h2>Efficient Frontier Derivation</h2>
+<div class="shd"></div>
+
+<h3>3.1 Algorithm</h3>
+
+<p>The Policy Efficient Frontier is constructed by the following procedure:</p>
+
+<div class="formula">Algorithm: Policy Efficient Frontier
+
+Input:  {(RAROC_i, NI_i, EL_i, EconCap_i, EAD_i, PD_i)} for i=1..N
+Output: Frontier curve (approval_rate, portfolio_NI, portfolio_RAROC, ECL)
+
+1. Sort loans by RAROC descending: RAROC_1 ≥ RAROC_2 ≥ ... ≥ RAROC_N
+2. For each threshold t ∈ {1%, 2%, ..., 100%}:
+   a. n_t = floor(t × N)   <span class="comment"># number of loans approved</span>
+   b. Approved = {loans 1..n_t}
+   c. Portfolio_NI(t)    = Σ NI_i  over Approved
+   d. Portfolio_RAROC(t) = Σ(NI_i) / Σ(EconCap_i)  over Approved
+   e. ECL(t)             = Σ EL_i  over Approved
+   f. ExpDefaults(t)     = Σ (PD_i × 1)  over Approved
+3. Identify Portfolio Economic Optimum:
+   t* = argmax Portfolio_NI(t)  subject to  RAROC_i > 0  for all i in Approved(t)
+4. Report frontier as {(t, Portfolio_NI(t), Portfolio_RAROC(t), ECL(t))}</div>
+
+<h3>3.2 The Positive-RAROC Constraint</h3>
+
+<div class="theorem">
+  <p class="theorem-title">Theorem 1 — Positive-RAROC Constraint</p>
+  <p>Let S(t) denote the set of approved loans at threshold t, sorted by RAROC descending. Since RAROC_1 ≥ RAROC_2 ≥ ... ≥ RAROC_N, there exists a unique threshold t* such that RAROC_{n_{t*}} ≥ 0 and RAROC_{n_{t*}+1} &lt; 0. For all t ≤ t*, every loan in S(t) has positive RAROC. For all t > t*, at least one approved loan has negative RAROC. The Portfolio Economic Optimum is the value of t ≤ t* that maximises Portfolio_NI(t).</p>
+</div>
+
+<p>In the evaluated portfolio (N = 61,503), the positive-RAROC boundary occurs at approximately 17–18% approval. The NI frontier peaks in this region because: (a) each additional loan added (in RAROC rank order) contributes positive NI until RAROC crosses zero, and (b) the marginal contribution of loans near the zero-RAROC boundary is small enough that ECL and capital costs erode total NI before the loan-level RAROC formally turns negative.</p>
+
+<h3>3.3 Frontier Results (12–22% Approval)</h3>
+
+<table>
+  <thead>
+    <tr><th>Approval</th><th class="r">Loans</th><th class="r">NI (₹M)</th><th class="r">ECL (₹M)</th><th class="r">Capital (₹M)</th><th class="r">Port. RAROC</th><th class="r">Def. Rate</th><th>Gate</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="fw" style="color:#3B82F6">12% ◇</td><td class="r">7,380</td><td class="r">+165</td><td class="r">248</td><td class="r">450</td><td class="r pos">36.6%</td><td class="r">1.29%</td><td><span class="tag" style="background:rgba(59,130,246,.12);color:#3B82F6">&gt;14.5%</span></td></tr>
+    <tr><td class="fw">14%</td><td class="r">8,610</td><td class="r">+175</td><td class="r">310</td><td class="r">535</td><td class="r pos">32.8%</td><td class="r">1.35%</td><td><span class="tag" style="background:rgba(34,197,94,.08);color:#22C55E">&gt;9.7%</span></td></tr>
+    <tr><td class="fw">16%</td><td class="r">9,840</td><td class="r">+181</td><td class="r">375</td><td class="r">617</td><td class="r pos">29.4%</td><td class="r">1.53%</td><td><span class="tag" style="background:rgba(34,197,94,.08);color:#22C55E">&gt;4.9%</span></td></tr>
+    <tr style="background:rgba(34,197,94,.06)"><td class="fw" style="color:#22C55E">17% ★</td><td class="r">10,456</td><td class="r pos">+183</td><td class="r">409</td><td class="r">658</td><td class="r pos">27.8%</td><td class="r">1.57%</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">&gt;2.5% ★</span></td></tr>
+    <tr style="background:rgba(234,179,8,.04)"><td class="fw" style="color:#EAB308">18% ◆</td><td class="r">11,071</td><td class="r" style="color:#EAB308">+183</td><td class="r">444</td><td class="r">700</td><td class="r pos">26.2%</td><td class="r">1.66%</td><td><span class="tag" style="background:rgba(234,179,8,.12);color:#EAB308">&gt;0.1% ◆</span></td></tr>
+    <tr><td class="fw">20%</td><td class="r">12,301</td><td class="r">+181</td><td class="r">515</td><td class="r">820</td><td class="r pos">22.1%</td><td class="r">1.74%</td><td><span class="tag" style="background:rgba(239,68,68,.08);color:#EF4444">&gt;-2.9%</span></td></tr>
+    <tr><td class="fw">22%</td><td class="r">13,531</td><td class="r">+176</td><td class="r">591</td><td class="r">943</td><td class="r pos">18.7%</td><td class="r">1.84%</td><td><span class="tag" style="background:rgba(239,68,68,.08);color:#EF4444">&gt;-5.8%</span></td></tr>
+  </tbody>
+</table>
+
+<p>◇ = Legacy hurdle equivalent · ★ = Portfolio Economic Optimum (Current Assumptions) · ◆ = Absolute NI peak</p>
+
+<!-- ============================================================ -->
+<h2>LGD Sensitivity Analysis</h2>
+<div class="shd"></div>
+
+<h3>4.1 LGD-RAROC Relationship</h3>
+
+<p>LGD enters the RAROC formula through two channels simultaneously, making the sensitivity non-linear at the portfolio level:</p>
+
+<div class="formula">NI_i(LGD) = Gross_i - EL_i(LGD)
+           = (NI_i^base + EL_i^base) - PD_i × LGD × EAD_i
+           = Gross_i - PD_i × (LGD/LGD_base) × EL_i^base
+
+EconCap_i(LGD) ≈ EconCap_i^base × (LGD/LGD_base)   <span class="comment"># approximately linear in LGD</span>
+
+RAROC_i(LGD) = NI_i(LGD) / EconCap_i(LGD)
+             = [Gross_i - (LGD/LGD_base) × EL_i^base] / [(LGD/LGD_base) × EconCap_i^base]</span></div>
+
+<h3>4.2 LGD and the Optimal Gate</h3>
+
+<p>As LGD increases, the EL term grows faster than the numerator Gross_i in most loans, causing RAROC to fall. Loans near the RAROC=0 boundary fall below zero first, contracting the positive-RAROC set. This is why the optimal approval rate is a decreasing function of LGD:</p>
+
+<table>
+  <thead><tr><th>LGD Assumption</th><th class="r">ECL (₹M)</th><th class="r">Net Income (₹M)</th><th class="r">Portfolio RAROC</th><th class="r">Implied Optimal Approval</th></tr></thead>
+  <tbody>
+    <tr><td class="fw pos">30% (optimistic)</td><td class="r">272</td><td class="r pos">+319</td><td class="r pos">72.7%</td><td class="r">~29%</td></tr>
+    <tr><td class="fw pos">35%</td><td class="r">318</td><td class="r pos">+274</td><td class="r pos">53.4%</td><td class="r">~25%</td></tr>
+    <tr><td class="fw pos">40%</td><td class="r">363</td><td class="r pos">+228</td><td class="r pos">39.0%</td><td class="r">~21%</td></tr>
+    <tr style="background:rgba(34,197,94,.06)"><td class="fw" style="color:#22C55E">45% ★ base</td><td class="r">409</td><td class="r pos">+183</td><td class="r pos">27.8%</td><td class="r">~17%</td></tr>
+    <tr><td class="fw" style="color:#EAB308">50%</td><td class="r">454</td><td class="r pos">+137</td><td class="r pos">18.8%</td><td class="r">~14%</td></tr>
+    <tr><td class="fw neg">55%</td><td class="r">499</td><td class="r pos">+92</td><td class="r pos">11.4%</td><td class="r">~12%</td></tr>
+    <tr><td class="fw neg">60% (severe)</td><td class="r">545</td><td class="r pos">+46</td><td class="r pos">5.3%</td><td class="r">~10%</td></tr>
+  </tbody>
+</table>
+
+<div class="theorem">
+  <p class="theorem-title">Key Result — Legacy Hurdle Interpretation</p>
+  <p>The existing 14% RAROC hurdle (producing ~12% approval) is shown to be consistent with an implicit LGD assumption of approximately 55%. Under LGD=55%, the frontier peaks at approximately 12% approval — exactly the output of the legacy policy. This reframes the legacy hurdle not as an arbitrary threshold but as a rational policy choice under a more pessimistic recovery assumption. Both the legacy policy (LGD~55%, RAROC gate 14%) and the recommended policy (LGD 0.45, RAROC gate 2.5%) are internally consistent. The appropriate policy depends on the institution's confidence in its LGD estimates and risk appetite.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>IFRS 9 Integration</h2>
+<div class="shd"></div>
+
+<h3>5.1 Lifetime PD from Survival Curve</h3>
+
+<p>IFRS 9 requires Lifetime PD for Stage 2 and Stage 3 exposures. We derive Lifetime PD using the empirical survival curve from the vintage analysis and the constant hazard rate extension:</p>
+
+<div class="formula">Survival function:  S(t) = P(default occurs after time t)
+
+Empirical estimates from vintage analysis:
+  S(12M) = 0.7353  →  12M cumulative PD = 26.47%
+  S(36M) = 0.5735  →  36M cumulative PD = 42.65%
+
+Constant hazard extension (3-year retail tenor):
+  Lifetime_PD_i = 1 - (1 - PD_12m_i)^T,  T = 3 years
+
+Validation: model-implied S(36M) = (1 - mean(PD_12m))^3 ≈ 0.574
+            empirical S(36M)     = 0.5735   →  error &lt; 0.1%</div>
+
+<h3>5.2 Stage Classification and Provision Impact</h3>
+
+<table>
+  <thead><tr><th>Stage</th><th>Trigger Criteria</th><th class="r">Loans</th><th class="r">ECL Measure</th><th class="r">ECL Amount (₹M)</th><th class="r">% of IFRS 9 Total</th></tr></thead>
+  <tbody>
+    <tr><td class="fw" style="color:#22C55E">Stage 1</td><td>PD &lt; 20% AND RAROC ≥ 0</td><td class="r">10,916 (17.7%)</td><td class="r">12-Month ECL</td><td class="r pos">439</td><td class="r">4.0%</td></tr>
+    <tr><td class="fw" style="color:#EAB308">Stage 2</td><td>PD ≥ 20% OR RAROC &lt; 0</td><td class="r">45,622 (74.2%)</td><td class="r">Lifetime ECL</td><td class="r" style="color:#EAB308">9,382</td><td class="r">86.0%</td></tr>
+    <tr><td class="fw neg">Stage 3</td><td>ACTUAL_DEFAULT = 1</td><td class="r">4,965 (8.1%)</td><td class="r">Lifetime ECL</td><td class="r neg">1,082</td><td class="r">9.9%</td></tr>
+    <tr style="background:rgba(30,42,56,.4)"><td class="fw" colspan="4">Total IFRS 9 ECL (full book)</td><td class="r neg">10,903</td><td class="r">100%</td></tr>
+    <tr style="background:rgba(34,197,94,.06)"><td class="fw" style="color:#22C55E" colspan="4">RAROC Gated portfolio (≈17%) IFRS 9 ECL</td><td class="r pos">469</td><td class="r pos">-95.7%</td></tr>
+  </tbody>
+</table>
+
+<p>The RAROC gated portfolio achieves 91.7% Stage 1 classification (vs 17.7% for the full book) because the RAROC gate directly filters out Band 4 and Band 5 borrowers who are the primary Stage 2 population (PD ≥ 20%). The result is a 95.7% reduction in IFRS 9 ECL provision — the strongest regulatory argument for the strategy.</p>
+
+<!-- ============================================================ -->
+<h2>Policy Implications & Objective Function Scoping</h2>
+<div class="shd"></div>
+
+<p>The analysis presented in this paper is explicitly scoped to a single objective function:</p>
+
+<div class="formula">Objective:  max Σ NI_i(t)  subject to  RAROC_i > 0  ∀i ∈ Approved(t)
+            over t ∈ [0, 1]
+
+Under assumptions:
+  LGD = 0.45 (fixed)
+  Cost of capital k = 17%
+  Basel retail risk weights
+  Product rate schedule as per rate matrix</div>
+
+<p>Different objective functions — maximising portfolio RAROC (not NI), minimising capital consumption, achieving a target ROE, maintaining a minimum approval volume for growth objectives, or complying with concentration limits — will yield different points on the frontier as optimal. No single point is universally optimal; the committee's stated objective determines the optimal policy.</p>
+
+<div class="two-col">
+  <div class="def-box">
+    <p class="def-term">Committees optimising for RAROC</p>
+    <p class="def-body">Select the leftmost point (highest RAROC, lowest approval). Legacy hurdle (~12%) is consistent with LGD-adjusted RAROC maximisation. Appropriate when capital is scarce and quality is prioritised over volume.</p>
+  </div>
+  <div class="def-box">
+    <p class="def-term">Committees optimising for NI</p>
+    <p class="def-body">Select the ≈17–18% approval point (Portfolio Economic Optimum under current assumptions). Appropriate when the institution has adequate capital and seeks to maximise absolute profitability on the approved book.</p>
+  </div>
+</div>
+
+<div class="warn"><p><strong style="color:#EAB308">Scope boundary:</strong> This framework does not account for multi-period dynamics (how today's approvals affect tomorrow's applicant pool), concentration risk, regulatory capital constraints beyond the modelled risk weights, or strategic objectives such as market share growth. Institutions with binding capital constraints or growth targets may rationally choose a policy that appears suboptimal on the single-period NI frontier.</p></div>
+
+<!-- ============================================================ -->
+<h2>Conclusion</h2>
+<div class="shd"></div>
+
+<p>This paper presents a complete, computationally transparent framework for RAROC-based credit portfolio optimisation. The main contributions are:</p>
+
+<p><strong style="color:#E2EAF4">1. Efficient frontier algorithm.</strong> A computationally simple O(N log N) algorithm for deriving the policy efficient frontier from loan-level RAROC scores. The algorithm requires only the model outputs already produced by the PD engine — no additional modelling is required.</p>
+
+<p><strong style="color:#E2EAF4">2. LGD-gate relationship.</strong> A characterisation of how the optimal RAROC gate is a decreasing function of LGD, resolving the apparent contradiction between the legacy 14% hurdle and the current simulation's 2.5% optimum. Both are shown to be internally consistent under different LGD assumptions.</p>
+
+<p><strong style="color:#E2EAF4">3. IFRS 9 integration.</strong> The RAROC gate is shown to simultaneously optimise NI and IFRS 9 provision, reducing the provision burden by 95.7% relative to the simulation baseline — a result that is unlikely to be achievable through any other single policy instrument.</p>
+
+<p><strong style="color:#E2EAF4">4. Objective function scoping.</strong> The framework explicitly scopes its recommendations to a stated objective function, enabling the committee to identify where their stated objective differs and select the appropriate frontier point accordingly.</p>
+
+<div class="theorem">
+  <p class="theorem-title">Recommended Action</p>
+  <p>Implement the RAROC Gate ≥ 2.5% as the primary approval policy for new applications. Monitor LGD realisation quarterly; if empirical LGD exceeds 50% consistently, tighten the gate to ≥ 9.7% (14% approval equivalent) pending recalibration. The RAROC threshold is the policy; the approval rate is a consequence of that threshold applied to the current portfolio composition. As portfolio composition changes, the threshold remains stable while the approval rate adjusts automatically.</p>
+</div>
+
+<!-- REFERENCES -->
+<div class="refs">
+  <p style="font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#3A5068;margin-bottom:14px">References</p>
+  <p class="ref-item">[1] Basel Committee on Banking Supervision (2004). <em>International Convergence of Capital Measurement and Capital Standards</em> (Basel II). Bank for International Settlements.</p>
+  <p class="ref-item">[2] Basel Committee on Banking Supervision (2017). <em>Basel III: Finalising Post-Crisis Reforms</em>. Bank for International Settlements.</p>
+  <p class="ref-item">[3] IASB (2014). <em>IFRS 9: Financial Instruments</em>. International Accounting Standards Board.</p>
+  <p class="ref-item">[4] Bluhm, C., Overbeck, L., &amp; Wagner, C. (2010). <em>Introduction to Credit Risk Modeling</em> (2nd ed.). Chapman &amp; Hall / CRC.</p>
+  <p class="ref-item">[5] Merton, R. C. (1974). On the pricing of corporate debt: The risk structure of interest rates. <em>Journal of Finance</em>, 29(2), 449–470.</p>
+  <p class="ref-item">[6] Platt, J. (1999). Probabilistic outputs for support vector machines and comparisons to regularized likelihood methods. <em>Advances in Large Margin Classifiers</em>, 10(3), 61–74.</p>
+  <p class="ref-item">[7] Siddiqi, N. (2005). <em>Credit Risk Scorecards: Developing and Implementing Intelligent Credit Scoring</em>. Wiley.</p>
+  <p class="ref-item">[8] Thomas, L. C., Edelman, D. B., &amp; Crook, J. N. (2002). <em>Credit Scoring and Its Applications</em>. Society for Industrial and Applied Mathematics.</p>
+  <p class="ref-item">[9] EBA (2017). <em>Guidelines on PD estimation, LGD estimation and the treatment of defaulted exposures</em>. European Banking Authority EBA/GL/2017/16.</p>
+  <p class="ref-item">[10] Home Credit Group (2018). <em>Home Credit Default Risk Dataset</em>. Kaggle competition dataset. Available: kaggle.com/c/home-credit-default-risk.</p>
+</div>
+
+<p style="font-size:10px;color:#2A3848;font-style:italic;margin-top:24px;border-top:1px solid #0D1520;padding-top:14px">Working Paper · AI Credit Intelligence System · CRC-2026-09 · Risk Analytics · June 2026 · Version 1.0 · Board Restricted<br>For queries contact: risk.analytics@institution.com. Next review: Q1 2027 aligned with annual model validation cycle.</p>
+
+</body>
+</html>

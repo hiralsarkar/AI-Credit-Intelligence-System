@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Executive Presentation — AI Credit Intelligence System</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070B12;font-family:'Segoe UI',system-ui,sans-serif;color:#E2EAF4;overflow-x:hidden}
+
+/* SLIDE ENGINE */
+.slides{width:100%;position:relative}
+.slide{display:none;min-height:100vh;padding:56px 72px 48px;flex-direction:column;justify-content:flex-start;animation:fadeIn .35s ease}
+.slide.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+.nav{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;background:#0D1520;border:1px solid #1E2A38;border-radius:40px;padding:10px 24px;z-index:100;backdrop-filter:blur(8px)}
+.nav-btn{background:none;border:1px solid #1E2A38;color:#7A96B2;border-radius:20px;padding:6px 18px;cursor:pointer;font-size:12px;font-family:inherit;transition:all .2s}
+.nav-btn:hover{background:#1E2A38;color:#E2EAF4}
+.slide-counter{font-size:11px;color:#5A7090;min-width:48px;text-align:center}
+.dot-nav{display:flex;gap:8px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:#1E2A38;cursor:pointer;transition:all .2s}
+.dot.active{background:#2563EB;width:20px;border-radius:4px}
+
+/* SLIDE COMPONENTS */
+.slide-label{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#2563EB;margin-bottom:10px}
+.slide-title{font-size:38px;font-weight:700;color:#F1F5F9;letter-spacing:-.5px;line-height:1.1;margin-bottom:8px}
+.slide-sub{font-size:15px;color:#7A96B2;margin-bottom:36px;line-height:1.6}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.kpi{background:#0D1520;border:1px solid #1E2A38;border-radius:10px;padding:20px 18px}
+.kpi-label{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A7090;margin-bottom:8px}
+.kpi-value{font-size:32px;font-weight:700;line-height:1;margin-bottom:4px}
+.kpi-note{font-size:10px;color:#5A7090}
+.kpi.pos .kpi-value{color:#22C55E}
+.kpi.blue .kpi-value{color:#60A5FA}
+.kpi.warn .kpi-value{color:#EAB308}
+.kpi.red .kpi-value{color:#EF4444}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.panel{background:#0D1520;border:1px solid #1E2A38;border-radius:10px;padding:22px}
+.panel-title{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#5A7090;margin-bottom:14px}
+.insight-box{background:#091A0E;border:1.5px solid #22C55E;border-radius:8px;padding:18px 20px;margin-top:16px}
+.insight-text{font-size:13.5px;color:#C8D8E8;line-height:1.85}
+.tag{border-radius:3px;padding:2px 8px;font-size:9.5px;font-weight:600;white-space:nowrap;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{padding:8px 12px;text-align:left;font-size:8.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38;background:#070B12}
+td{padding:8px 12px;border-bottom:.5px solid rgba(30,42,56,.6);color:#B0C4D8}
+td.fw{color:#E2EAF4;font-weight:500}
+th.r,td.r{text-align:right}
+tr.highlight{background:rgba(34,197,94,.06);border-left:2px solid #22C55E}
+.bullet{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.bullet-dot{width:6px;height:6px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.bullet-text{font-size:13px;color:#B0C4D8;line-height:1.75}
+.wave{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2563EB,#22C55E,#2563EB);border-radius:0 0 8px 8px;opacity:.4}
+.sc3{background:#0A1A30;border:1px solid #2563EB;border-radius:6px;padding:12px 16px;font-size:12px;color:#60A5FA;margin-top:12px;line-height:1.7}
+.decision-box{background:#091A0E;border:2px solid #22C55E;border-radius:10px;padding:20px 24px;margin-top:20px}
+.phase{background:#0D1520;border-radius:8px;padding:14px 16px;border:1px solid #1E2A38}
+.phase-num{font-size:22px;font-weight:700;color:#2563EB;margin-bottom:4px}
+.phase-title{font-size:12px;font-weight:600;color:#E2EAF4;margin-bottom:6px}
+.phase-text{font-size:11px;color:#7A96B2;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="slides">
+
+<!-- ============================================================
+     SLIDE 1: TITLE
+     ============================================================ -->
+<div class="slide active" id="s1">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;max-width:820px">
+    <p class="slide-label">Credit Risk Committee · CRC-2026-09 · June 2026 · Board Restricted</p>
+    <h1 class="slide-title">AI Credit Intelligence<br>System</h1>
+    <p class="slide-sub" style="font-size:18px;margin-bottom:40px">Retail Credit Strategy Review<br>Executive Investment Memorandum — 5-Minute Brief</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:720px">
+      <div style="background:#0D1520;border-radius:8px;padding:14px 16px;border:1px solid #1E2A38">
+        <p style="font-size:8px;color:#5A7090;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">Portfolio</p>
+        <p style="font-size:18px;font-weight:700;color:#60A5FA">₹36.6B</p>
+        <p style="font-size:10px;color:#5A7090">61,503 loans</p>
+      </div>
+      <div style="background:#0D1520;border-radius:8px;padding:14px 16px;border:1px solid #1E2A38">
+        <p style="font-size:8px;color:#5A7090;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">NI Recovery</p>
+        <p style="font-size:18px;font-weight:700;color:#22C55E">+₹352M</p>
+        <p style="font-size:10px;color:#5A7090">vs current policy</p>
+      </div>
+      <div style="background:#0D1520;border-radius:8px;padding:14px 16px;border:1px solid #1E2A38">
+        <p style="font-size:8px;color:#5A7090;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">ECL Reduction</p>
+        <p style="font-size:18px;font-weight:700;color:#22C55E">93.6%</p>
+        <p style="font-size:10px;color:#5A7090">vs no-segmentation</p>
+      </div>
+      <div style="background:#0D1520;border-radius:8px;padding:14px 16px;border:1px solid #1E2A38">
+        <p style="font-size:8px;color:#5A7090;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">Modules</p>
+        <p style="font-size:18px;font-weight:700;color:#60A5FA">10</p>
+        <p style="font-size:10px;color:#5A7090">notebooks · production-ready</p>
+      </div>
+    </div>
+    <p style="font-size:11px;color:#3A5068;margin-top:40px;font-style:italic">Use arrow keys or click navigation below to advance · 5 slides · ~5 minutes</p>
+  </div>
+  <div style="position:absolute;right:72px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;opacity:.4">
+    <div style="width:3px;height:60px;background:linear-gradient(180deg,transparent,#2563EB);border-radius:2px"></div>
+    <div style="width:3px;height:60px;background:#2563EB;border-radius:2px;opacity:.6"></div>
+    <div style="width:3px;height:60px;background:linear-gradient(180deg,#2563EB,transparent);border-radius:2px"></div>
+  </div>
+  <div class="wave"></div>
+</div>
+
+<!-- ============================================================
+     SLIDE 2: THE PROBLEM & THESIS
+     ============================================================ -->
+<div class="slide" id="s2">
+  <p class="slide-label">Slide 2 of 5 · The Problem</p>
+  <h1 class="slide-title" style="font-size:30px">The current portfolio destroys<br>₹3.1 billion in value annually</h1>
+  <p class="slide-sub">Under no risk segmentation, the institution holds 61,503 loans with an 8.07% default rate and -₹3,110M net income. The fix does not require new products or new customers — it requires smarter allocation of the existing applicant pool.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="panel" style="margin-bottom:16px">
+        <p class="panel-title">What is broken today</p>
+        <div class="bullet"><div class="bullet-dot" style="background:#EF4444"></div><div class="bullet-text">Aggressive approval policy (45.7%) includes 60.5% Band 4–5 borrowers with RAROC below zero</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#EF4444"></div><div class="bullet-text">No risk-differentiated pricing — same rate regardless of default probability</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#EF4444"></div><div class="bullet-text">ECL provision ₹6,404M required on full book (17.50% ECL rate) — ₹5,995M avoidable</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#EF4444"></div><div class="bullet-text">IFRS 9 uplift: 74.2% of book classified Stage 2 → lifetime ECL adds +₹4,499M provision</div></div>
+      </div>
+      <div class="sc3">
+        <strong style="color:#60A5FA">SC3 Gold Standard:</strong> A strategy is transformative only if it simultaneously achieves lower approval volume AND lower default rate. The RAROC Gated strategy is the only configuration in this portfolio that satisfies SC3 — 17% approval, 1.57% default rate vs 2.62% for the current policy.
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <p class="panel-title">Economic Value Bridge (Aggressive → Gated)</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#200808;border-radius:5px;border-left:3px solid #EF4444">
+            <span style="font-size:11px;color:#B0C4D8">Current NI (Aggressive)</span>
+            <span style="font-size:13px;font-weight:700;color:#EF4444">-₹169M</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0C2218;border-radius:5px;border-left:3px solid #22C55E">
+            <span style="font-size:11px;color:#B0C4D8">+ Eliminate B4/B5 losses</span>
+            <span style="font-size:13px;font-weight:700;color:#22C55E">+₹352M</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#1A1600;border-radius:5px;border-left:3px solid #EAB308">
+            <span style="font-size:11px;color:#B0C4D8">- Band 3 sub-hurdle trim</span>
+            <span style="font-size:13px;font-weight:700;color:#EAB308">-₹17M</span>
+          </div>
+          <div style="height:1px;background:#1E2A38;margin:4px 0"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#0C2218;border-radius:5px;border:1.5px solid #22C55E">
+            <span style="font-size:12px;color:#E2EAF4;font-weight:600">= RAROC Gated NI</span>
+            <span style="font-size:16px;font-weight:700;color:#22C55E">+₹183M</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:#0D1520;border-radius:8px;padding:14px 16px;border:1px solid #1E2A38;margin-top:14px">
+        <p style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#5A7090;margin-bottom:8px">Capital freed for redeployment</p>
+        <p style="font-size:22px;font-weight:700;color:#60A5FA;margin-bottom:3px">₹4,707M</p>
+        <p style="font-size:11px;color:#5A7090">Economic capital released vs no-segmentation baseline → Tier-1 ratio improvement or new lending capacity</p>
+      </div>
+    </div>
+  </div>
+  <div class="wave"></div>
+</div>
+
+<!-- ============================================================
+     SLIDE 3: THE STRATEGY RECOMMENDATION
+     ============================================================ -->
+<div class="slide" id="s3">
+  <p class="slide-label">Slide 3 of 5 · Recommendation</p>
+  <h1 class="slide-title" style="font-size:30px">Four-strategy analysis: one clear winner</h1>
+  <p class="slide-sub">RAROC Gated (≈17% approval, RAROC ≥ 2.5%) is the Portfolio Economic Optimum under current assumptions. Risk-Based Pricing extends its value to the existing book without changing approval volume.</p>
+
+  <div style="margin-bottom:16px">
+    <table>
+      <thead>
+        <tr>
+          <th>Strategy</th><th class="r">Approval</th><th class="r">Loans</th>
+          <th class="r">Default Rate</th><th class="r">Portfolio RAROC</th>
+          <th class="r">Net Income</th><th class="r">ECL Provision</th>
+          <th class="r">Capital Reserve</th><th>SC3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw" style="color:#EF4444">A — Aggressive (current)</td>
+          <td class="r">45.7%</td><td class="r">28,079</td>
+          <td class="r" style="color:#EF4444">2.62%</td>
+          <td class="r" style="color:#EF4444">-7.1%</td>
+          <td class="r" style="color:#EF4444">-₹169M</td>
+          <td class="r">₹1,762M</td><td class="r">₹2,388M</td>
+          <td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">Fail</span></td>
+        </tr>
+        <tr>
+          <td class="fw" style="color:#3B82F6">B — Conservative (~12%)</td>
+          <td class="r">12.2%</td><td class="r">7,531</td>
+          <td class="r" style="color:#22C55E">1.27%</td>
+          <td class="r" style="color:#22C55E">36.2%</td>
+          <td class="r" style="color:#22C55E">+₹166M</td>
+          <td class="r">₹248M</td><td class="r">₹460M</td>
+          <td><span class="tag" style="background:rgba(59,130,246,.15);color:#3B82F6">Partial</span></td>
+        </tr>
+        <tr class="highlight">
+          <td class="fw" style="color:#22C55E">C — RAROC Gated ★ (≈17%)</td>
+          <td class="r">17.0%</td><td class="r">10,456</td>
+          <td class="r" style="color:#22C55E">1.57%</td>
+          <td class="r" style="color:#22C55E">27.8%</td>
+          <td class="r" style="color:#22C55E">+₹183M</td>
+          <td class="r" style="color:#22C55E">₹409M</td>
+          <td class="r" style="color:#22C55E">₹658M</td>
+          <td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">SC3 ✓</span></td>
+        </tr>
+        <tr>
+          <td class="fw" style="color:#EAB308">D — Risk-Based Pricing</td>
+          <td class="r">45.7%</td><td class="r">28,079</td>
+          <td class="r" style="color:#EF4444">2.62%</td>
+          <td class="r" style="color:#22C55E">47.3%</td>
+          <td class="r" style="color:#22C55E">+₹1,130M</td>
+          <td class="r">₹1,762M</td><td class="r">₹2,388M</td>
+          <td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Volume ✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="three-col">
+    <div class="panel">
+      <p class="panel-title">Why 17% not 12%?</p>
+      <p style="font-size:12px;color:#B0C4D8;line-height:1.8">Approximately 3,076 economically profitable loans (RAROC ≥ 2.5%) are excluded by the legacy 14% hurdle. Including them adds +₹18M NI at only marginal ECL cost. The 14% hurdle is consistent with an implicit LGD assumption of ~55% — valid for a pessimistic scenario but leaving value on the table at LGD 0.45.</p>
+    </div>
+    <div class="panel">
+      <p class="panel-title">LGD Robustness</p>
+      <p style="font-size:12px;color:#B0C4D8;line-height:1.8">Net income at the ≈17% gate remains positive across all LGD scenarios from 30% to 60%. At LGD=60% (severe stress), NI is still +₹46M and RAROC 5.3%. The recommendation is directionally robust to LGD estimation error.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        <span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">LGD 30%: +₹319M</span>
+        <span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">LGD 45%: +₹183M</span>
+        <span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">LGD 60%: +₹46M</span>
+      </div>
+    </div>
+    <div class="panel">
+      <p class="panel-title">Stress Test</p>
+      <p style="font-size:12px;color:#B0C4D8;line-height:1.8">Gated strategy remains viable (positive NI) even under Mild stress (PD ×1.5). Capital action is only required under Extreme stress (PD ×3.6). Aggressive strategy turns deeply negative at Mild stress.</p>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px;font-size:11px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Baseline</span><span style="color:#22C55E">+₹183M ✓</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Mild PD×1.5</span><span style="color:#EAB308">-₹4M (monitor)</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Severe PD×2.5</span><span style="color:#EF4444">-₹429M (act)</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Extreme PD×3.6</span><span style="color:#EF4444">-₹1,166M (crisis)</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="wave"></div>
+</div>
+
+<!-- ============================================================
+     SLIDE 4: IFRS 9 & VINTAGE FINDINGS
+     ============================================================ -->
+<div class="slide" id="s4">
+  <p class="slide-label">Slide 4 of 5 · IFRS 9 & Vintage</p>
+  <h1 class="slide-title" style="font-size:30px">IFRS 9 staging adds ₹4.5B in provision<br>— the gated strategy eliminates 95.7% of it</h1>
+  <p class="slide-sub">Proper IFRS 9 lifetime ECL staging reveals the true cost of carrying high-risk borrowers. The vintage analysis confirms portfolio quality drift and provides the survival curve underpinning Lifetime PD estimates.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="panel" style="margin-bottom:14px">
+        <p class="panel-title">IFRS 9 Stage Distribution (Full Portfolio)</p>
+        <table>
+          <thead><tr><th>Stage</th><th>Classification</th><th class="r">Loans</th><th class="r">ECL Measure</th><th class="r">ECL Amount</th></tr></thead>
+          <tbody>
+            <tr><td class="fw" style="color:#22C55E">Stage 1</td><td>No SICR</td><td class="r">10,916 (17.7%)</td><td class="r">12-Month</td><td class="r" style="color:#22C55E">₹439M</td></tr>
+            <tr><td class="fw" style="color:#EAB308">Stage 2</td><td>SICR detected</td><td class="r">45,622 (74.2%)</td><td class="r">Lifetime</td><td class="r" style="color:#EAB308">₹9,382M</td></tr>
+            <tr><td class="fw" style="color:#EF4444">Stage 3</td><td>Credit-impaired</td><td class="r">4,965 (8.1%)</td><td class="r">Lifetime</td><td class="r" style="color:#EF4444">₹1,082M</td></tr>
+            <tr style="background:rgba(30,42,56,.4)"><td class="fw" colspan="4">Total IFRS 9 ECL</td><td class="r" style="color:#EF4444;font-weight:700">₹10,903M</td></tr>
+            <tr style="background:rgba(34,197,94,.06)"><td class="fw" colspan="4" style="color:#22C55E">RAROC Gated (≈17%) IFRS 9 ECL</td><td class="r" style="color:#22C55E;font-weight:700">₹469M</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:10px;color:#5A7090;font-style:italic;margin-top:8px">SICR trigger: PD ≥ 20% OR RAROC &lt; 0. Lifetime PD = 1-(1-PD)³ (3-year maturity, constant hazard)</p>
+      </div>
+
+      <div style="background:#0A1A30;border:1px solid #1E3A58;border-radius:8px;padding:14px 16px">
+        <p style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#3A6090;margin-bottom:10px">Lifetime PD Scale Factors</p>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:11.5px">
+          <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">12M survival S(12M)</span><span style="color:#B0C4D8">0.7353 → 12M cum PD: 26.5%</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">36M survival S(36M)</span><span style="color:#B0C4D8">0.5735 → Lifetime PD: 42.7%</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Avg scale factor</span><span style="color:#60A5FA;font-weight:600">1.614× (12M → Lifetime)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <p class="panel-title">Vintage Analysis — Key Findings</p>
+        <div class="bullet"><div class="bullet-dot" style="background:#EF4444"></div><div class="bullet-text"><strong style="color:#E2EAF4">Portfolio quality drift:</strong> Default rate rose from 4.6% (2016 cohort) to 9.7% (2026 cohort) — recent originations are ~2× riskier than older cohorts</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#EAB308"></div><div class="bullet-text"><strong style="color:#E2EAF4">Peak loss period:</strong> First 6 months (DR 9.4–10.0%) — early seasoning hump typical of retail portfolios; underwriting discipline at origination is critical</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#22C55E"></div><div class="bullet-text"><strong style="color:#E2EAF4">Survival at 36M:</strong> 57.3% of loans survive the full 3-year cycle without default</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#60A5FA"></div><div class="bullet-text"><strong style="color:#E2EAF4">PD model calibration:</strong> Model overpredicts default at all bands (ratio 0.14×–0.23×) — conservative, appropriate for regulatory use</div></div>
+        <div class="bullet"><div class="bullet-dot" style="background:#22C55E"></div><div class="bullet-text"><strong style="color:#E2EAF4">ECL coverage:</strong> Provision broadly adequate; 2024–2026 vintages may warrant quota review given rising trend</div></div>
+
+        <div style="background:#0A0E13;border-radius:6px;padding:12px 14px;margin-top:12px">
+          <p style="font-size:9px;color:#5A7090;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">Cohort Default Rate Trend</p>
+          <div style="display:flex;align-items:flex-end;gap:4px;height:56px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:28px;background:#22C55E;border-radius:2px 2px 0 0" style="height:25px"></div><span style="font-size:8px;color:#5A7090">16</span></div>
+            <div style="flex:1;display:flex;align-items:flex-end;gap:3px">
+              <!-- Cohort bars: 2016=4.6%, 2017=4.5%, 2018=5.4%, 2019=5.6%, 2020=6.0%, 2021=6.4%, 2022=7.1%, 2023=8.3%, 2024=9.3%, 2025=9.5%, 2026=9.7% -->
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#22C55E;border-radius:2px 2px 0 0;height:24px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'16</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#22C55E;border-radius:2px 2px 0 0;height:23px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'17</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#4ADE80;border-radius:2px 2px 0 0;height:28px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'18</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#EAB308;border-radius:2px 2px 0 0;height:29px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'19</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#EAB308;border-radius:2px 2px 0 0;height:31px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'20</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#F97316;border-radius:2px 2px 0 0;height:33px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'21</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#F97316;border-radius:2px 2px 0 0;height:37px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'22</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#EF4444;border-radius:2px 2px 0 0;height:43px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'23</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#EF4444;border-radius:2px 2px 0 0;height:48px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'24</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#EF4444;border-radius:2px 2px 0 0;height:49px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'25</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="width:100%;background:#EF4444;border-radius:2px 2px 0 0;height:50px"></div>
+                <span style="font-size:7.5px;color:#5A7090">'26</span>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:9px;color:#3A5068;margin-top:4px">4.6% (2016) → 9.7% (2026) — 2.1× increase over 10-year observation window</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wave"></div>
+</div>
+
+<!-- ============================================================
+     SLIDE 5: DECISION REQUESTED
+     ============================================================ -->
+<div class="slide" id="s5">
+  <p class="slide-label">Slide 5 of 5 · Decision Requested</p>
+  <h1 class="slide-title" style="font-size:30px">Committee Decision & Implementation</h1>
+  <p class="slide-sub">Four-phase rollout. Phase 1 implementable within 30 days using existing model outputs. Full risk-based pricing requires rate authority delegation and product team coordination.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi pos"><div class="kpi-label">Phase 1 target NI</div><div class="kpi-value">+₹183M</div><div class="kpi-note">RAROC Gated ≥ 2.5% · 30 days</div></div>
+    <div class="kpi blue"><div class="kpi-label">Capital freed</div><div class="kpi-value">₹4.7B</div><div class="kpi-note">vs no-segmentation baseline</div></div>
+    <div class="kpi pos"><div class="kpi-label">ECL reduction</div><div class="kpi-value">93.6%</div><div class="kpi-note">₹5,995M provisioning released</div></div>
+    <div class="kpi pos"><div class="kpi-label">Pricing Alpha</div><div class="kpi-value">+₹1.1B</div><div class="kpi-note">Phase 4 · same approval volume</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+    <div class="phase">
+      <div class="phase-num">1</div>
+      <div class="phase-title">RAROC Gate</div>
+      <div class="phase-text">Deploy RAROC ≥ 2.5% threshold to new applications. No model retraining required. Policy change only. Timeline: 30 days.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">2</div>
+      <div class="phase-title">IFRS 9 Provision Update</div>
+      <div class="phase-text">Reclassify existing book into Stage 1/2/3 using PD/RAROC triggers. Restate ECL provision. Timeline: 60 days (next quarterly close).</div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">3</div>
+      <div class="phase-title">Monitoring Live</div>
+      <div class="phase-text">Activate PSI tracker, band-share alerts, and RAROC amber/red dashboards. Vintage cohort review quarterly. Timeline: 90 days.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">4</div>
+      <div class="phase-title">Risk-Based Pricing</div>
+      <div class="phase-text">Band-differentiated rates for B1–B3 borrowers. Pricing Alpha: +₹1,130M NI on same approval volume. Timeline: 6 months.</div>
+    </div>
+  </div>
+
+  <div class="decision-box">
+    <p style="font-size:9px;color:#22C55E;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px">Committee Decision Scorecard</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div style="text-align:center;padding:12px;background:#0A0E13;border-radius:6px">
+        <p style="font-size:10px;color:#5A7090;margin-bottom:6px">Approve RAROC Gate</p>
+        <div style="display:flex;justify-content:center;gap:8px">
+          <span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E;font-size:11px;padding:4px 12px">YES</span>
+          <span class="tag" style="background:#131920;color:#5A7090;font-size:11px;padding:4px 12px">NO</span>
+        </div>
+      </div>
+      <div style="text-align:center;padding:12px;background:#0A0E13;border-radius:6px">
+        <p style="font-size:10px;color:#5A7090;margin-bottom:6px">IFRS 9 Restatement</p>
+        <div style="display:flex;justify-content:center;gap:8px">
+          <span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E;font-size:11px;padding:4px 12px">YES</span>
+          <span class="tag" style="background:#131920;color:#5A7090;font-size:11px;padding:4px 12px">NO</span>
+        </div>
+      </div>
+      <div style="text-align:center;padding:12px;background:#0A0E13;border-radius:6px">
+        <p style="font-size:10px;color:#5A7090;margin-bottom:6px">Monitoring Activation</p>
+        <div style="display:flex;justify-content:center;gap:8px">
+          <span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E;font-size:11px;padding:4px 12px">YES</span>
+          <span class="tag" style="background:#131920;color:#5A7090;font-size:11px;padding:4px 12px">NO</span>
+        </div>
+      </div>
+      <div style="text-align:center;padding:12px;background:#0A0E13;border-radius:6px">
+        <p style="font-size:10px;color:#5A7090;margin-bottom:6px">Pricing Authority</p>
+        <div style="display:flex;justify-content:center;gap:8px">
+          <span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E;font-size:11px;padding:4px 12px">GRANT</span>
+          <span class="tag" style="background:#131920;color:#5A7090;font-size:11px;padding:4px 12px">DEFER</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:9.5px;color:#3A5068;font-style:italic;margin-top:16px">All numbers derived from 307,511 Home Credit applications and 61,503 decision-engine loan records. LGD 0.45 base case. Cost of capital 17%. Basel risk weights. RAROC threshold is policy; approval rate is consequence of applying that threshold to the current portfolio composition. CRC-2026-09.</p>
+  <div class="wave"></div>
+</div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav">
+  <button class="nav-btn" onclick="changeSlide(-1)">← Prev</button>
+  <div class="dot-nav" id="dots"></div>
+  <span class="slide-counter" id="counter">1 / 5</span>
+  <button class="nav-btn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const dotsEl = document.getElementById('dots');
+const counterEl = document.getElementById('counter');
+let current = 0;
+
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  dotsEl.children[current].classList.remove('active');
+  current = Math.max(0, Math.min(n, slides.length - 1));
+  slides[current].classList.add('active');
+  dotsEl.children[current].classList.add('active');
+  counterEl.textContent = `${current + 1} / ${slides.length}`;
+}
+
+function changeSlide(dir) { goTo(current + dir); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+});
+</script>
+</body>
+</html>
