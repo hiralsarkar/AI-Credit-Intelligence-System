@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optimal Approval Policy & ECL Analysis - CRC-2026-09</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A0E13;padding:32px 40px 64px;color:#E2EAF4;font-family:'Segoe UI',system-ui,sans-serif;min-width:900px}
+.pn{background:#131920;border-radius:8px;padding:20px 22px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px}
+.sl{font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A7090;margin-bottom:5px}
+.sh{font-size:16px;font-weight:700;color:#E2EAF4;margin-bottom:4px}
+.shd{width:26px;height:2px;background:#2563EB;margin-bottom:14px}
+.pos{color:#22C55E;font-weight:600}.neg{color:#EF4444;font-weight:600}.warn{color:#EAB308;font-weight:500}
+.hr{border:none;border-top:1px solid #161D27;margin:24px 0}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{padding:7px 10px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38;background:#0A0E13}
+th.r,td.r{text-align:right}
+td{padding:7px 10px;border-bottom:.5px solid rgba(30,42,56,.8);color:#B0C4D8}
+td.fw{color:#E2EAF4;font-weight:500}
+tr.opt{background:rgba(34,197,94,.06)}
+tr.peak{background:rgba(234,179,8,.05)}
+tr.leg{background:rgba(59,130,246,.05)}
+.tag{border-radius:3px;padding:2px 7px;font-size:9px;font-weight:600;white-space:nowrap;display:inline-block}
+</style></head><body>
+
+<p style="font-size:9.5px;color:#2563EB;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:7px">Credit Risk Committee · CRC-2026-09 · June 2026 · Board Restricted</p>
+<p style="font-size:30px;font-weight:700;color:#F1F5F9;letter-spacing:-.4px;margin-bottom:4px">Optimal Approval Policy, ECL Provision &amp; Capital Reserve</p>
+<p style="font-size:12px;color:#7A96B2;margin-bottom:24px">Efficient frontier analysis · ECL vs simulation baseline · LGD sensitivity · Objective: maximise portfolio net income subject to positive loan-level RAROC</p>
+
+<!-- POLICY CONTEXT -->
+<div style="background:#131920;border:1px solid #1A2433;border-left:3px solid #EAB308;border-radius:8px;padding:22px 24px;margin-bottom:14px">
+  <p class="sl" style="color:#EAB308;margin-bottom:11px">Policy Context — Why the Existing 14% Hurdle Differs from the Simulation Optimum</p>
+  <div class="g3">
+    <div>
+      <p style="font-size:10px;color:#EAB308;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px">What the 14% Hurdle Represents</p>
+      <p style="font-size:11.5px;color:#B0C4D8;line-height:1.85">The 14% hurdle reflects a policy choice based on historical capital allocation objectives — cost of capital, target ROE, strategic risk appetite, and regulatory capital constraints. It is not mathematically incorrect; it embeds a conservative premium above breakeven to maintain a buffer against estimation error, macro deterioration, and concentration risk. It is an economically and strategically chosen threshold.</p>
+    </div>
+    <div>
+      <p style="font-size:10px;color:#EAB308;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px">What the Simulation Finds</p>
+      <p style="font-size:11.5px;color:#B0C4D8;line-height:1.85">Under the current modelling assumptions (LGD 0.45, cost of capital 17%, Basel risk weights, product-rate revenue), the efficient frontier for portfolio net income peaks at <span class="pos">17–18% approval</span>. The legacy hurdle, calibrated to a different objective function (RAROC maximisation with capital buffer), produces 12.2% approval — the same portfolio at lower NI and higher capital efficiency. Both are valid depending on the committee's stated objective.</p>
+    </div>
+    <div>
+      <p style="font-size:10px;color:#22C55E;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px">The Analytical Recommendation</p>
+      <p style="font-size:11.5px;color:#B0C4D8;line-height:1.85">Under the stated objective — <em>maximise portfolio net income with every approved loan carrying positive RAROC</em> — the frontier peaks at <span class="pos">≈17% approval</span>. This is presented as the <strong style="color:#E2EAF4">Portfolio Economic Optimum (Current Assumptions)</strong>, not as a definitive replacement for institution-level capital policy. Committees optimising for different objectives may rationally select a different point on the frontier.</p>
+    </div>
+  </div>
+</div>
+
+<!-- RECOMMENDATION -->
+<div style="background:#0C2218;border:1.5px solid #22C55E;border-radius:8px;padding:20px 24px;margin-bottom:14px">
+  <p style="font-size:9px;color:#22C55E;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px">Recommended Approval Policy</p>
+  <div style="display:flex;gap:20px;align-items:flex-start">
+    <div style="flex:1">
+      <p style="font-size:22px;font-weight:700;color:#22C55E;margin-bottom:4px">RAROC Gate ≥ 2.5%</p>
+      <p style="font-size:13px;color:#7A96B2;margin-bottom:11px">Portfolio Economic Optimum (Current Assumptions) · ≈17% approval · 10,456 loans</p>
+      <p style="font-size:12px;color:#B0C4D8;line-height:1.85;margin-bottom:13px">Approve borrowers satisfying the recommended RAROC threshold — approximately 17% of applicants under current portfolio assumptions. The RAROC threshold is the policy; the 17% approval rate is a consequence of applying that threshold to this portfolio. As the portfolio composition changes, the approval rate will shift while the threshold remains fixed.</p>
+      <div class="g3">
+        <div style="background:#0A1A12;border-radius:6px;padding:10px 12px;border:1px solid #1A4028"><p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">vs Legacy Hurdle (~12%)</p><p style="font-size:13px;font-weight:700;color:#22C55E">+3,076 loans</p><p style="font-size:9.5px;color:#5A7090;margin-top:3px">Approx. 3,076 economically profitable loans included under current assumptions · +₹18M NI</p></div>
+        <div style="background:#0A1A12;border-radius:6px;padding:10px 12px;border:1px solid #1A4028"><p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">vs NI Peak (~18%)</p><p style="font-size:13px;font-weight:700;color:#22C55E">20 fewer exp. defaults</p><p style="font-size:9.5px;color:#5A7090;margin-top:3px">₹42M less capital · only ₹0.6M less NI · cleaner risk profile</p></div>
+        <div style="background:#0A1A12;border-radius:6px;padding:10px 12px;border:1px solid #1A4028"><p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">vs Aggressive (45.7%)</p><p style="font-size:13px;font-weight:700;color:#22C55E">+₹352M net income</p><p style="font-size:9.5px;color:#5A7090;margin-top:3px">-573 exp. defaults · -87.7% capital reserve</p></div>
+      </div>
+    </div>
+    <div style="flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;width:275px">
+      <div style="background:#0A0E13;border-radius:7px;padding:12px 10px"><p style="font-size:7.5px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Net Income</p><p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1">+₹183M</p><p style="font-size:9px;color:#5A7090;margin-top:3px">Frontier peak</p></div>
+      <div style="background:#0A0E13;border-radius:7px;padding:12px 10px"><p style="font-size:7.5px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Portfolio RAROC</p><p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1">27.8%</p><p style="font-size:9px;color:#5A7090;margin-top:3px">vs 14% hurdle</p></div>
+      <div style="background:#0A0E13;border-radius:7px;padding:12px 10px"><p style="font-size:7.5px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">ECL Provision</p><p style="font-size:22px;font-weight:700;color:#56CCF2;line-height:1">₹409M</p><p style="font-size:9px;color:#5A7090;margin-top:3px">6.22% ECL rate</p></div>
+      <div style="background:#0A0E13;border-radius:7px;padding:12px 10px"><p style="font-size:7.5px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Capital Reserve</p><p style="font-size:22px;font-weight:700;color:#56CCF2;line-height:1">₹658M</p><p style="font-size:9px;color:#5A7090;margin-top:3px">vs ₹5,365M baseline</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="g2" style="margin-bottom:14px">
+  <div class="pn">
+    <p class="sh">Net Income vs ECL Provision (12–22%)</p><div class="shd"></div>
+    <p style="font-size:10px;color:#7A96B2;margin-bottom:8px">Green line: Portfolio Economic Optimum (Current Assumptions, 17%) · Blue dashed: Legacy Hurdle policy (~12%)</p>
+    <div style="position:relative;height:210px"><canvas id="ni_ecl"></canvas></div>
+  </div>
+  <div class="pn">
+    <p class="sh">Portfolio RAROC vs ECL Rate (12–22%)</p><div class="shd"></div>
+    <p style="font-size:10px;color:#7A96B2;margin-bottom:8px">RAROC remains strongly positive across the full range under LGD 0.45 base case</p>
+    <div style="position:relative;height:210px"><canvas id="raroc_ecl"></canvas></div>
+  </div>
+</div>
+
+<!-- ECL COMPARISON -->
+<div class="hr"></div>
+<p class="sl" style="margin-bottom:12px">ECL & Capital Reserve · Simulation Baseline (No Risk Segmentation) vs Risk-Segmented Model</p>
+
+<div class="pn" style="margin-bottom:14px">
+  <p class="sh">ECL Provision & Capital Reserve — Three-Way Comparison</p><div class="shd"></div>
+  <p style="font-size:10.5px;color:#7A96B2;margin-bottom:14px">Simulation Baseline assumes no credit risk segmentation — all applicants approved at portfolio-average PD. Not an industry benchmark; used here as a computational reference to quantify the value of risk-based selection. ECL = EAD × PD × LGD (LGD 0.45 throughout).</p>
+  <div class="g3" style="margin-bottom:14px">
+    <div style="background:#1F0808;border:1px solid #3A1A1A;border-radius:8px;padding:15px 13px">
+      <p style="font-size:9px;color:#EF4444;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px">Simulation Baseline<br>(No Risk Segmentation)</p>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:11px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Loans</span><span class="neg">61,503</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">EAD</span><span style="color:#B0C4D8">₹36,597M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">ECL provision</span><span class="neg">₹6,404M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">ECL rate</span><span class="neg">17.50%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital reserve</span><span class="neg">₹5,365M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital / EAD</span><span class="neg">14.66%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Exp. default rate</span><span class="neg">8.07%</span></div>
+        <div style="height:1px;background:#3A1A1A;margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Portfolio NI</span><span class="neg">-₹3,110M</span></div>
+      </div>
+    </div>
+    <div style="background:#1F1008;border:1px solid #3A2A1A;border-radius:8px;padding:15px 13px">
+      <p style="font-size:9px;color:#EAB308;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px">Aggressive Policy<br>(current — legacy model)</p>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:11px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Loans</span><span style="color:#EAB308;font-weight:600">28,079</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">EAD</span><span style="color:#B0C4D8">₹17,694M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">ECL provision</span><span style="color:#EAB308;font-weight:600">₹1,762M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">ECL rate</span><span style="color:#EAB308;font-weight:600">9.96%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital reserve</span><span style="color:#EAB308;font-weight:600">₹2,388M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital / EAD</span><span style="color:#EAB308;font-weight:600">13.50%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Exp. default rate</span><span style="color:#EAB308;font-weight:600">2.62%</span></div>
+        <div style="height:1px;background:#3A2A1A;margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Portfolio NI</span><span class="neg">-₹169M</span></div>
+      </div>
+    </div>
+    <div style="background:#0C2218;border:1.5px solid #22C55E;border-radius:8px;padding:15px 13px">
+      <p style="font-size:9px;color:#22C55E;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px">Portfolio Economic Optimum<br>(Current Assumptions · ≈17% · RAROC ≥ 2.5%)</p>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:11px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Loans</span><span class="pos">10,456</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">EAD</span><span style="color:#B0C4D8">₹6,570M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">ECL provision</span><span class="pos">₹409M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">ECL rate</span><span class="pos">6.22%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital reserve</span><span class="pos">₹658M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital / EAD</span><span class="pos">10.02%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Exp. default rate</span><span class="pos">1.57%</span></div>
+        <div style="height:1px;background:#1A4028;margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Portfolio NI</span><span class="pos">+₹183M</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div style="background:#0A0E13;border-radius:7px;padding:13px 14px">
+      <p style="font-size:9px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">ECL Provision Required (₹M)</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#EF4444">Simulation Baseline (No Segmentation)</span><span style="font-size:10.5px;color:#EF4444;font-weight:700">₹6,404M · 17.50%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#EF4444,#C02020);height:13px;border-radius:2px;width:100%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#EAB308">Aggressive (current)</span><span style="font-size:10.5px;color:#EAB308;font-weight:700">₹1,762M · 9.96%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#EAB308,#C09000);height:13px;border-radius:2px;width:27.5%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#3B82F6">Legacy hurdle (~12% appr)</span><span style="font-size:10.5px;color:#3B82F6;font-weight:700">₹248M · 5.41%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#3B82F6,#2050C0);height:13px;border-radius:2px;width:3.9%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#22C55E;font-weight:600">Portfolio Optimum (≈17%) ★</span><span style="font-size:10.5px;color:#22C55E;font-weight:700">₹409M · 6.22%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#22C55E,#1A9A48);height:13px;border-radius:2px;width:6.4%"></div></div></div>
+      </div>
+      <div style="margin-top:10px;padding:8px 10px;background:#131920;border-radius:5px"><p style="font-size:10.5px;color:#7A96B2;line-height:1.7">Risk-segmented model requires <span class="pos">93.6% less ECL provision</span> than the no-segmentation baseline. ₹5,995M in provisioning capital available for redeployment.</p></div>
+    </div>
+    <div style="background:#0A0E13;border-radius:7px;padding:13px 14px">
+      <p style="font-size:9px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Economic Capital Reserve (₹M)</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#EF4444">Simulation Baseline (No Segmentation)</span><span style="font-size:10.5px;color:#EF4444;font-weight:700">₹5,365M · 14.66%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#EF4444,#C02020);height:13px;border-radius:2px;width:100%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#EAB308">Aggressive (current)</span><span style="font-size:10.5px;color:#EAB308;font-weight:700">₹2,388M · 13.50%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#EAB308,#C09000);height:13px;border-radius:2px;width:44.5%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#3B82F6">Legacy hurdle (~12% appr)</span><span style="font-size:10.5px;color:#3B82F6;font-weight:700">₹450M · 9.81%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#3B82F6,#2050C0);height:13px;border-radius:2px;width:8.4%"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#22C55E;font-weight:600">Portfolio Optimum (≈17%) ★</span><span style="font-size:10.5px;color:#22C55E;font-weight:700">₹658M · 10.02%</span></div><div style="background:#0D1520;border-radius:2px;height:13px"><div style="background:linear-gradient(90deg,#22C55E,#1A9A48);height:13px;border-radius:2px;width:12.3%"></div></div></div>
+      </div>
+      <div style="margin-top:10px;padding:8px 10px;background:#131920;border-radius:5px"><p style="font-size:10.5px;color:#7A96B2;line-height:1.7">Risk-segmented model holds <span class="pos">87.7% less capital</span> than no-segmentation baseline. ₹4,707M freed for other deployments or Tier-1 capital ratio improvement.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL TABLE -->
+<div class="pn" style="margin-bottom:14px">
+  <p class="sh">Policy Efficient Frontier — Full Breakdown (12–22% Approval)</p><div class="shd"></div>
+  <p style="font-size:10.5px;color:#7A96B2;margin-bottom:12px">All rows deliver positive portfolio NI and positive RAROC under base LGD (0.45). The RAROC gate is the policy; approval rate is a consequence. <span style="color:#22C55E">★ Portfolio Economic Optimum (Current Assumptions)</span> · <span style="color:#EAB308">◆ NI peak</span> · <span style="color:#3B82F6">◇ Legacy hurdle equivalent</span></p>
+  <table>
+    <thead>
+      <tr><th>Appr.</th><th class="r">Loans</th><th class="r">EAD (₹M)</th><th class="r">ECL Prov.</th><th class="r">ECL Rate</th><th class="r">Capital</th><th class="r">Cap/EAD</th><th class="r">Exp. Def.</th><th class="r">Def. Rate</th><th class="r">RAROC</th><th class="r">Net Income</th><th class="r">NI vs 12%</th><th>RAROC Gate</th></tr>
+    </thead>
+    <tbody>
+      <tr class="leg"><td class="fw" style="color:#3B82F6">12% ◇</td><td class="r">7,380</td><td class="r">4,592</td><td class="r">₹248M</td><td class="r">5.41%</td><td class="r">₹450M</td><td class="r">9.81%</td><td class="r">95</td><td class="r">1.29%</td><td class="r pos">36.6%</td><td class="r pos">+₹165M</td><td class="r" style="color:#7A96B2">baseline</td><td><span class="tag" style="background:rgba(59,130,246,.15);color:#3B82F6">&gt;14.5%</span></td></tr>
+      <tr><td class="fw">13%</td><td class="r">7,995</td><td class="r">4,993</td><td class="r">₹279M</td><td class="r">5.59%</td><td class="r">₹493M</td><td class="r">9.86%</td><td class="r">100</td><td class="r">1.25%</td><td class="r pos">34.6%</td><td class="r pos">+₹171M</td><td class="r pos">+₹6M</td><td><span class="tag" style="background:rgba(34,197,94,.08);color:#22C55E">&gt;12.2%</span></td></tr>
+      <tr><td class="fw">14%</td><td class="r">8,610</td><td class="r">5,395</td><td class="r">₹310M</td><td class="r">5.75%</td><td class="r">₹535M</td><td class="r">9.91%</td><td class="r">116</td><td class="r">1.35%</td><td class="r pos">32.8%</td><td class="r pos">+₹175M</td><td class="r pos">+₹10M</td><td><span class="tag" style="background:rgba(34,197,94,.08);color:#22C55E">&gt;9.7%</span></td></tr>
+      <tr><td class="fw">15%</td><td class="r">9,225</td><td class="r">5,799</td><td class="r">₹343M</td><td class="r">5.92%</td><td class="r">₹577M</td><td class="r">9.95%</td><td class="r">134</td><td class="r">1.45%</td><td class="r pos">31.0%</td><td class="r pos">+₹179M</td><td class="r pos">+₹14M</td><td><span class="tag" style="background:rgba(34,197,94,.08);color:#22C55E">&gt;7.3%</span></td></tr>
+      <tr><td class="fw">16%</td><td class="r">9,840</td><td class="r">6,179</td><td class="r">₹375M</td><td class="r">6.07%</td><td class="r">₹617M</td><td class="r">9.99%</td><td class="r">151</td><td class="r">1.53%</td><td class="r pos">29.4%</td><td class="r pos">+₹181M</td><td class="r pos">+₹16M</td><td><span class="tag" style="background:rgba(34,197,94,.08);color:#22C55E">&gt;4.9%</span></td></tr>
+      <tr class="opt"><td class="fw" style="color:#22C55E;font-size:13.5px">17% ★</td><td class="r">10,456</td><td class="r">6,570</td><td class="r pos">₹409M</td><td class="r pos">6.22%</td><td class="r pos">₹658M</td><td class="r">10.02%</td><td class="r">164</td><td class="r">1.57%</td><td class="r pos">27.8%</td><td class="r pos">+₹183M</td><td class="r pos">+₹18M</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">&gt;2.5% ★</span></td></tr>
+      <tr class="peak"><td class="fw warn">18% ◆</td><td class="r">11,071</td><td class="r">6,969</td><td class="r">₹444M</td><td class="r">6.37%</td><td class="r">₹700M</td><td class="r">10.04%</td><td class="r">184</td><td class="r">1.66%</td><td class="r pos">26.2%</td><td class="r warn">+₹183M</td><td class="r warn">+₹18M</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">&gt;0.1% ◆</span></td></tr>
+      <tr><td class="fw">19%</td><td class="r">11,686</td><td class="r">7,358</td><td class="r">₹480M</td><td class="r">6.52%</td><td class="r">₹760M</td><td class="r">10.33%</td><td class="r">198</td><td class="r">1.69%</td><td class="r pos">24.0%</td><td class="r pos">+₹183M</td><td class="r pos">+₹18M</td><td><span class="tag" style="background:rgba(239,68,68,.08);color:#EF4444">&gt;-1.5%</span></td></tr>
+      <tr><td class="fw">20%</td><td class="r">12,301</td><td class="r">7,741</td><td class="r">₹515M</td><td class="r">6.66%</td><td class="r">₹820M</td><td class="r">10.60%</td><td class="r">214</td><td class="r">1.74%</td><td class="r pos">22.1%</td><td class="r pos">+₹181M</td><td class="r pos">+₹16M</td><td><span class="tag" style="background:rgba(239,68,68,.08);color:#EF4444">&gt;-2.9%</span></td></tr>
+      <tr><td class="fw">21%</td><td class="r">12,916</td><td class="r">8,127</td><td class="r">₹552M</td><td class="r">6.80%</td><td class="r">₹881M</td><td class="r">10.84%</td><td class="r">231</td><td class="r">1.79%</td><td class="r pos">20.3%</td><td class="r pos">+₹179M</td><td class="r pos">+₹14M</td><td><span class="tag" style="background:rgba(239,68,68,.08);color:#EF4444">&gt;-4.4%</span></td></tr>
+      <tr><td class="fw">22%</td><td class="r">13,531</td><td class="r">8,517</td><td class="r">₹591M</td><td class="r">6.93%</td><td class="r">₹943M</td><td class="r">11.07%</td><td class="r">249</td><td class="r">1.84%</td><td class="r pos">18.7%</td><td class="r pos">+₹176M</td><td class="r pos">+₹11M</td><td><span class="tag" style="background:rgba(239,68,68,.08);color:#EF4444">&gt;-5.8%</span></td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:9.5px;color:#3A5068;font-style:italic;margin-top:8px">★ Portfolio Economic Optimum (Current Assumptions) · ◆ NI peak (18%) · ◇ Legacy hurdle equivalent (~12%). Negative gate rows (19%+): individual loans have negative RAROC; portfolio RAROC remains positive due to high-quality base. Policy judgment for the committee.</p>
+</div>
+
+<!-- LGD SENSITIVITY -->
+<div class="pn" style="margin-bottom:14px">
+  <p class="sh">LGD Sensitivity Analysis — Portfolio Economic Optimum (≈17% Approval Gate)</p><div class="shd"></div>
+  <p style="font-size:10.5px;color:#7A96B2;margin-bottom:13px">Net income is positive across all LGD assumptions from 30% to 60%. The simulation optimum shifts with LGD — a key result for understanding the relationship between the conservative legacy hurdle and LGD uncertainty.</p>
+  <div class="g2">
+    <table>
+      <thead><tr><th>LGD Assumption</th><th class="r">ECL Provision</th><th class="r">Net Income</th><th class="r">Portfolio RAROC</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="fw pos">30% (optimistic)</td><td class="r">₹272M</td><td class="r pos">+₹319M</td><td class="r pos">72.7%</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Positive</span></td></tr>
+        <tr><td class="fw pos">35%</td><td class="r">₹318M</td><td class="r pos">+₹274M</td><td class="r pos">53.4%</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Positive</span></td></tr>
+        <tr><td class="fw pos">40%</td><td class="r">₹363M</td><td class="r pos">+₹228M</td><td class="r pos">39.0%</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Positive</span></td></tr>
+        <tr class="opt"><td class="fw" style="color:#22C55E">45% (base case) ★</td><td class="r">₹409M</td><td class="r pos">+₹183M</td><td class="r pos">27.8%</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">Base case ★</span></td></tr>
+        <tr><td class="fw warn">50%</td><td class="r">₹454M</td><td class="r pos">+₹137M</td><td class="r pos">18.8%</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Positive</span></td></tr>
+        <tr><td class="fw neg">55%</td><td class="r">₹499M</td><td class="r pos">+₹92M</td><td class="r pos">11.4%</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Positive</span></td></tr>
+        <tr><td class="fw neg">60% (severe stress)</td><td class="r">₹545M</td><td class="r pos">+₹46M</td><td class="r pos">5.3%</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Positive</span></td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:#0A0E13;border-radius:7px;padding:13px 14px">
+        <p style="font-size:9px;color:#22C55E;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Robustness</p>
+        <p style="font-size:11.5px;color:#B0C4D8;line-height:1.85">Net income at the ≈17% approval gate remains <span class="pos">positive across all LGD assumptions from 30% to 60%</span>. At LGD=60%, portfolio NI is still +₹46M and RAROC 5.3%. The direction of the recommendation is robust to LGD estimation error.</p>
+      </div>
+      <div style="background:#0A0E13;border-radius:7px;padding:13px 14px">
+        <p style="font-size:9px;color:#EAB308;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Simulation Optimum Shifts with LGD</p>
+        <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;color:#B0C4D8;line-height:1.7">
+          <p>LGD = 35%: frontier peaks at <span class="pos">~29% approval</span> (+₹325M NI)</p>
+          <p>LGD = 45%: frontier peaks at <span class="warn">~17–18% approval</span> (+₹183M NI)</p>
+          <p>LGD = 55%: frontier peaks at <span class="neg">~12% approval</span> (+₹110M NI)</p>
+          <p style="font-size:10px;color:#5A7090;margin-top:4px">The conservative 14% hurdle (producing ~12% approval) is implicitly consistent with a pessimistic LGD assumption of ~55%. This is one valid interpretation of why the legacy hurdle was set where it was.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OBJECTIVE FUNCTION STATEMENT -->
+<div style="background:#0C1520;border:1px solid #1A3050;border-left:3px solid #3B82F6;border-radius:7px;padding:16px 18px;margin-bottom:24px">
+  <p style="font-size:9px;color:#3B82F6;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px">Scope &amp; Objective Function</p>
+  <p style="font-size:12px;color:#C8D8E8;line-height:1.85">Under the current assumptions and objective function — <em>portfolio net income maximisation subject to positive loan-level RAROC, LGD 0.45, cost of capital 17%</em> — the efficient frontier peaks at approximately 17–18% approval. This is the Portfolio Economic Optimum (Current Assumptions), not a universal optimum. The legacy 14% RAROC hurdle reflects a different, equally valid objective: RAROC maximisation with a conservative buffer above estimated cost of capital, implicitly consistent with a more pessimistic LGD assumption. Committees optimising for shareholder return targets, concentration limits, regulatory capital ratios, or multi-period growth objectives may rationally select a different point on the frontier. The analysis quantifies the tradeoffs; the policy choice remains with the committee.</p>
+</div>
+
+<div style="border-top:1px solid #161D27;padding-top:13px">
+  <p style="font-size:9px;color:#3A5068;font-style:italic;margin-bottom:4px">ECL = EAD × PD × LGD. Economic Capital = Basel risk-weight formula scaled by LGD. LGD sensitivity: gross income held constant, ECL and capital scaled linearly with LGD ratio. Simulation Baseline = all 61,503 applicants approved, used as a computational reference for the value of risk-based selection — not an industry benchmark. Approval rate at each threshold is a consequence of applying that RAROC gate to this specific portfolio; rates will differ on other portfolios.</p>
+  <p style="font-size:9px;color:#3A5068;font-style:italic">CRC-2026-09 · Risk Analytics · Portfolio Management · June 2026 · Classification: Board Restricted</p>
+</div>
+
+<script>
+Chart.defaults.color='#7A96B2';Chart.defaults.borderColor='#1E2A38';Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";Chart.defaults.font.size=10;
+
+const labels=['12% ◇','13%','14%','15%','16%','17% ★','18% ◆','19%','20%','21%','22%'];
+const ni=[164.9,170.5,175.1,178.7,181.1,182.6,183.2,182.7,181.4,179.2,176.0];
+const ecl=[248,279,310,343,375,409,444,480,515,552,591];
+const raroc=[36.6,34.6,32.8,31.0,29.4,27.8,26.2,24.0,22.1,20.3,18.7];
+const eclRate=[5.41,5.59,5.75,5.92,6.07,6.22,6.37,6.52,6.66,6.80,6.93];
+
+const annots={
+  optLine:{type:'line',xMin:5,xMax:5,borderColor:'rgba(34,197,94,.75)',borderWidth:2,label:{content:'Portfolio Economic Optimum (Current Assumptions, 17%)',display:true,position:'start',backgroundColor:'rgba(34,197,94,.13)',color:'#22C55E',font:{size:9,weight:'bold'},padding:4}},
+  legLine:{type:'line',xMin:0,xMax:0,borderColor:'rgba(59,130,246,.6)',borderWidth:2,borderDash:[5,4],label:{content:'Legacy Hurdle Policy (~12%)',display:true,position:'end',backgroundColor:'rgba(59,130,246,.1)',color:'#3B82F6',font:{size:9},padding:4}}
+};
+
+new Chart(document.getElementById('ni_ecl'),{type:'line',data:{labels,datasets:[
+  {label:'Net Income (₹M)',data:ni,borderColor:'rgba(34,197,94,.9)',backgroundColor:'rgba(34,197,94,.08)',borderWidth:2,pointRadius:ni.map((_,i)=>i===5?9:i===6?7:i===0?7:4),pointBackgroundColor:ni.map((_,i)=>i===5?'#22C55E':i===6?'#EAB308':i===0?'#3B82F6':'rgba(34,197,94,.5)'),tension:.4,fill:true,yAxisID:'y'},
+  {label:'ECL Provision (₹M)',data:ecl,borderColor:'rgba(239,68,68,.65)',borderWidth:1.5,borderDash:[4,3],pointRadius:3,pointBackgroundColor:'rgba(239,68,68,.5)',tension:.4,yAxisID:'y2'}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:11,font:{size:9.5}}},annotation:{annotations:annots},tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?' NI: ₹'+ctx.raw+'M':' ECL: ₹'+ctx.raw+'M'}}},scales:{x:{grid:{color:'#0D1520'},ticks:{color:'#7A96B2',font:{size:9}}},y:{title:{display:true,text:'NI (₹M)',font:{size:9},color:'#22C55E'},grid:{color:'#0D1520'},ticks:{color:'#7A96B2',callback:v=>'₹'+v+'M'},min:155,max:190},y2:{title:{display:true,text:'ECL (₹M)',font:{size:9},color:'#EF4444'},position:'right',grid:{drawOnChartArea:false},ticks:{color:'#EF4444',callback:v=>'₹'+v+'M'}}}}});
+
+new Chart(document.getElementById('raroc_ecl'),{type:'line',data:{labels,datasets:[
+  {label:'Portfolio RAROC (%)',data:raroc,borderColor:'rgba(34,197,94,.9)',backgroundColor:'rgba(34,197,94,.07)',borderWidth:2,pointRadius:raroc.map((_,i)=>i===5?9:i===0?7:4),pointBackgroundColor:raroc.map((_,i)=>i===5?'#22C55E':i===0?'#3B82F6':'rgba(34,197,94,.5)'),tension:.4,fill:true,yAxisID:'y'},
+  {label:'ECL Rate (%)',data:eclRate,borderColor:'rgba(239,68,68,.65)',borderWidth:1.5,borderDash:[4,3],pointRadius:3,pointBackgroundColor:'rgba(239,68,68,.5)',tension:.4,yAxisID:'y2'}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:11,font:{size:9.5}}},annotation:{annotations:annots},tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?' RAROC: '+ctx.raw+'%':' ECL rate: '+ctx.raw+'%'}}},scales:{x:{grid:{color:'#0D1520'},ticks:{color:'#7A96B2',font:{size:9}}},y:{title:{display:true,text:'Portfolio RAROC (%)',font:{size:9},color:'#22C55E'},grid:{color:'#0D1520'},ticks:{color:'#7A96B2',callback:v=>v+'%'}},y2:{title:{display:true,text:'ECL Rate (%)',font:{size:9},color:'#EF4444'},position:'right',grid:{drawOnChartArea:false},ticks:{color:'#EF4444',callback:v=>v+'%'},min:5,max:7.5}}}});
+</script>
+</body></html>

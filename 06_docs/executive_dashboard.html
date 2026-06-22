@@ -3,632 +3,510 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Retail Portfolio Value Optimization Strategy — Executive Investment Memorandum</title>
+<title>Retail Credit Strategy Review - Executive Investment Memorandum</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0A0E13;padding:32px 36px 64px;color:#E2EAF4;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-width:900px}
+body{background:#0A0E13;padding:32px 40px 64px;color:#E2EAF4;font-family:'Segoe UI',system-ui,sans-serif;min-width:900px}
 .pn{background:#131920;border-radius:8px;padding:20px 22px}
 .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
 .g3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px}
-.sl{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A7090;margin-bottom:6px}
-.sh{font-size:17px;font-weight:700;color:#E2EAF4;margin-bottom:5px;line-height:1.2}
-.shd{width:28px;height:2px;background:#2563EB;margin-bottom:16px}
+.sl{font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#5A7090;margin-bottom:6px}
+.sh{font-size:16px;font-weight:700;color:#E2EAF4;margin-bottom:4px}
+.shd{width:26px;height:2px;background:#2563EB;margin-bottom:16px}
 .pos{color:#22C55E;font-weight:600}
 .neg{color:#EF4444;font-weight:600}
 .warn{color:#EAB308;font-weight:500}
 .hr{border:none;border-top:1px solid #161D27;margin:28px 0}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th{padding:7px 10px;text-align:left;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{padding:7px 10px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38}
 th.r,td.r{text-align:right}
-td{padding:7px 10px;border-bottom:.5px solid rgba(30,42,56,.7);color:#B0C4D8;font-size:12px}
+td{padding:7px 10px;border-bottom:.5px solid rgba(30,42,56,.7);color:#B0C4D8}
 td.fw{color:#E2EAF4;font-weight:500}
 tr:last-child td{border-bottom:none}
-.bg2{background:rgba(34,197,94,.15);color:#22C55E;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600}
-.ba2{background:rgba(234,179,8,.13);color:#EAB308;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600}
-.br2{background:rgba(239,68,68,.13);color:#EF4444;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600}
-.dot-g{width:7px;height:7px;border-radius:50%;background:#22C55E;display:inline-block;margin-right:5px;vertical-align:middle}
-.dot-a{width:7px;height:7px;border-radius:50%;background:#EAB308;display:inline-block;margin-right:5px;vertical-align:middle}
-.dot-r{width:7px;height:7px;border-radius:50%;background:#EF4444;display:inline-block;margin-right:5px;vertical-align:middle}
+.bg2{background:rgba(34,197,94,.15);color:#22C55E;border-radius:3px;padding:1px 6px;font-size:9.5px;font-weight:600}
+.ba2{background:rgba(234,179,8,.13);color:#EAB308;border-radius:3px;padding:1px 6px;font-size:9.5px;font-weight:600}
+.br2{background:rgba(239,68,68,.13);color:#EF4444;border-radius:3px;padding:1px 6px;font-size:9.5px;font-weight:600}
+.dg{width:6px;height:6px;border-radius:50%;background:#22C55E;display:inline-block;margin-right:5px;vertical-align:middle}
+.da{width:6px;height:6px;border-radius:50%;background:#EAB308;display:inline-block;margin-right:5px;vertical-align:middle}
+.dr{width:6px;height:6px;border-radius:50%;background:#EF4444;display:inline-block;margin-right:5px;vertical-align:middle}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ─────────────────────── HEADER ─────────────────────── -->
 <div style="display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:1px solid #161D27;margin-bottom:26px">
   <div>
-    <p style="font-size:10px;color:#2563EB;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:8px">Executive Investment Memorandum · CRC-2026-09 · Board Restricted · June 2026</p>
-    <p style="font-size:32px;font-weight:700;line-height:1.1;color:#F1F5F9;letter-spacing:-.5px">Retail Portfolio Value Optimization Strategy</p>
-    <p style="font-size:13px;color:#7A96B2;margin-top:7px">₹36.6B Retail Lending Portfolio · Risk Segmentation Framework · Credit Risk Committee</p>
+    <p style="font-size:9.5px;color:#2563EB;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:8px">Credit Risk Committee · CRC-2026-09 · Board Restricted · June 2026</p>
+    <p style="font-size:32px;font-weight:700;line-height:1.1;color:#F1F5F9;letter-spacing:-.5px">Retail Credit Strategy Review</p>
+    <p style="font-size:14px;font-weight:400;color:#7A96B2;margin-top:4px;letter-spacing:.02em">Executive Investment Memorandum</p>
+    <p style="font-size:11.5px;color:#4A6480;margin-top:8px">₹36.6B Retail Lending Portfolio · Risk Segmentation Framework · 61,503 Applications Analysed</p>
   </div>
-  <div style="text-align:right;font-size:11px;color:#3A5570;line-height:2.2;flex-shrink:0;padding-left:20px">
-    <span style="display:block">Risk Analytics · June 2026</span>
-    <span style="display:block">CRO · CFO · CCO · Board Risk</span>
-    <span style="display:block">Board Restricted</span>
+  <div style="text-align:right;font-size:10px;color:#3A5570;line-height:2.2;flex-shrink:0;padding-left:20px">
+    <span style="display:block">Risk Analytics · Portfolio Management</span>
+    <span style="display:block">CRO · CFO · CCO · Board Risk Committee</span>
+    <span style="display:block">Classification: Board Restricted</span>
   </div>
 </div>
 
-<!-- INVESTMENT THESIS -->
-<div style="background:#131920;border:1px solid #1A2433;border-left:3px solid #2563EB;border-radius:8px;padding:24px 26px;margin-bottom:28px">
-  <p class="sl" style="margin-bottom:12px">Investment Thesis</p>
-
-  <div style="display:flex;gap:20px;margin-bottom:24px;align-items:flex-start">
+<!-- ─────────────────────── INVESTMENT THESIS ─────────────────────── -->
+<div style="background:#131920;border:1px solid #1A2433;border-left:3px solid #2563EB;border-radius:8px;padding:24px 26px;margin-bottom:14px">
+  <p class="sl" style="margin-bottom:13px">Investment Thesis</p>
+  <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:22px">
     <div style="flex:1">
-      <p style="font-size:13.5px;line-height:1.87;color:#B0C4D8">The current Aggressive policy approves all applicants with PD below 35%, placing 60.5% of the approved book in Band 4 (High Risk, RAROC -20.9%). The result: portfolio RAROC of <span class="neg">-7.1%</span> and a net income loss of <span class="neg">-₹169M</span> on 28,079 approved loans. <span style="color:#E2EAF4;font-weight:500">The Risk Segmentation Framework applies a RAROC-gated approval policy, eliminating all Band 4 exposure. This converts the ₹169M loss into a ₹166M profit, reduces defaults by 87% from 737 to 96, and lifts portfolio RAROC from -7.1% to +36.2% - satisfying the SC3 Gold Standard: fewer approvals AND lower default rate simultaneously.</span></p>
+      <p style="font-size:13.5px;line-height:1.9;color:#B0C4D8;margin-bottom:14px">The current Aggressive policy places 60.5% of the approved book in Band 4 (High Risk, RAROC -20.9%), producing a portfolio RAROC of <span class="neg">-7.1%</span> and net income of <span class="neg">-₹169M</span> on 28,079 approved loans.</p>
+      <p style="font-size:13.5px;line-height:1.9;color:#E2EAF4;font-weight:500">The proposal reallocates lending away from economically destructive exposures and toward risk-adjusted profitable segments while preserving regulatory compliance and portfolio resilience. This converts the ₹169M loss into a ₹166M profit, reduces expected defaults by 87%, and lifts RAROC from -7.1% to +36.2%.</p>
     </div>
-    <div style="flex-shrink:0;width:158px;background:#0A0E13;border:1px solid #1A3A6A;border-radius:8px;padding:14px 16px">
-      <p style="font-size:9px;color:#5A80A8;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">SC3 Verdict</p>
-      <p style="font-size:14px;font-weight:700;color:#22C55E;letter-spacing:.02em;margin-bottom:12px">Gold Standard</p>
+    <div style="flex-shrink:0;width:160px;background:#0A0E13;border:1px solid #1A3A6A;border-radius:8px;padding:15px 16px">
+      <p style="font-size:8.5px;color:#5A80A8;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">SC3 Verdict</p>
+      <p style="font-size:14px;font-weight:700;color:#22C55E;margin-bottom:13px">Gold Standard</p>
       <div style="display:flex;flex-direction:column;gap:6px;font-size:10.5px">
-        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Lower defaults</span><span class="pos">✓</span></div>
-        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Positive NI</span><span class="pos">✓</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Lower expected defaults</span><span class="pos">✓</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Positive net income</span><span class="pos">✓</span></div>
         <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">RAROC above hurdle</span><span class="pos">✓</span></div>
         <div style="display:flex;justify-content:space-between"><span style="color:#B0C4D8">Stress tested</span><span class="pos">✓</span></div>
       </div>
     </div>
   </div>
+  <!-- Strategic Insight -->
+  <div style="background:#0C1520;border:1px solid #1A3050;border-left:3px solid #3B82F6;border-radius:6px;padding:14px 16px">
+    <p style="font-size:8.5px;color:#3B82F6;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px">Strategic Insight</p>
+    <p style="font-size:12px;color:#C8D8E8;line-height:1.75;font-style:italic">Value creation is driven primarily by removing the economically destructive Band 4 segment rather than by improving model discrimination. The strategy works because of capital allocation discipline, not algorithmic complexity.</p>
+  </div>
+</div>
 
-  <!-- 6 KPI CARDS — all from real portfolio analysis output -->
-  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin-bottom:20px">
-    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
-      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Net Income<br>Swing</p>
-      <p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹335M</p>
-      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">-₹169M → +₹166M</p>
+<!-- ─────────────────────── ECONOMIC VALUE BRIDGE ─────────────────────── -->
+<div class="pn" style="margin-bottom:14px">
+  <p class="sh">Economic Value Bridge</p><div class="shd"></div>
+  <p style="font-size:11px;color:#7A96B2;margin-bottom:18px">How the ₹335M net income turnaround is achieved — Aggressive baseline to RAROC Gated</p>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:16px">
+    <div style="text-align:center">
+      <div style="background:#1F0C0C;border:1px solid #3A1A1A;border-radius:7px;padding:14px 8px">
+        <p style="font-size:7.5px;color:#906060;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Aggressive NI</p>
+        <p style="font-size:26px;font-weight:700;color:#EF4444;line-height:1">-₹169M</p>
+        <p style="font-size:9px;color:#6A3030;margin-top:5px">28,079 loans · RAROC -7.1%</p>
+      </div>
+      <div style="height:16px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:14px">→</span></div>
     </div>
-    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
-      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">RAROC<br>Improvement</p>
-      <p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+43.3pp</p>
-      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">-7.1% → +36.2%</p>
+    <div style="text-align:center">
+      <div style="background:#0C1F14;border:1px solid #1A4028;border-radius:7px;padding:14px 8px">
+        <p style="font-size:7.5px;color:#5A9070;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Remove Band 4</p>
+        <p style="font-size:26px;font-weight:700;color:#22C55E;line-height:1">+₹352M</p>
+        <p style="font-size:9px;color:#2A7040;margin-top:5px">16,979 loans · PD 27.34% · RAROC -20.9%</p>
+      </div>
+      <div style="height:16px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:14px">→</span></div>
     </div>
-    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
-      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Defaults<br>Eliminated</p>
-      <p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">-641</p>
-      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">737 → 96 (-87%)</p>
+    <div style="text-align:center">
+      <div style="background:#1F0C0C;border:1px solid #3A1A1A;border-radius:7px;padding:14px 8px">
+        <p style="font-size:7.5px;color:#906060;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Band 3 Sub-Hurdle Trim</p>
+        <p style="font-size:26px;font-weight:700;color:#EF4444;line-height:1">-₹17M</p>
+        <p style="font-size:9px;color:#6A3030;margin-top:5px">3,569 loans below RAROC 14% gate</p>
+      </div>
+      <div style="height:16px;display:flex;align-items:center;justify-content:center"><span style="color:#22C55E;font-size:14px">→</span></div>
     </div>
-    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
-      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Default Rate<br>Reduction</p>
-      <p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">-1.35pp</p>
-      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">2.62% → 1.27%</p>
-    </div>
-    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
-      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">EL Rate<br>Reduction</p>
-      <p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">-4.51pp</p>
-      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">9.96% → 5.45%</p>
-    </div>
-    <div style="background:#0A0E13;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
-      <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.4">Capital<br>Released</p>
-      <p style="font-size:22px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap">₹1,928M</p>
-      <p style="font-size:9.5px;color:#5A7090;margin-top:6px">₹2,388M → ₹460M</p>
+    <div style="text-align:center">
+      <div style="background:#0C2218;border:1px solid #1A5030;border-radius:7px;padding:14px 8px">
+        <p style="font-size:7.5px;color:#3A9060;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">RAROC Gated NI</p>
+        <p style="font-size:26px;font-weight:700;color:#22C55E;line-height:1">+₹166M</p>
+        <p style="font-size:9px;color:#2A6040;margin-top:5px">7,531 loans · RAROC +36.2%</p>
+      </div>
+      <div style="height:16px"></div>
     </div>
   </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div style="background:#0A0E13;border-radius:6px;padding:11px 13px"><p style="font-size:8.5px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Net Turnaround</p><p style="font-size:22px;font-weight:700;color:#22C55E">+₹335M</p><p style="font-size:9.5px;color:#5A7090;margin-top:4px">Primary driver: Band 4 removal (+₹352M)</p></div>
+    <div style="background:#0A0E13;border-radius:6px;padding:11px 13px"><p style="font-size:8.5px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Rejection Tradeoff</p><p style="font-size:14px;font-weight:700;color:#E2EAF4;margin-bottom:3px">20,548 additional declines</p><p style="font-size:9.5px;color:#5A7090;line-height:1.6">16,979 Band 4 (value-destructive) <span class="pos">✓</span><br>3,569 Band 3 sub-hurdle (borderline)</p></div>
+    <div style="background:#0A0E13;border-radius:6px;padding:11px 13px"><p style="font-size:8.5px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Capital Released</p><p style="font-size:22px;font-weight:700;color:#56CCF2">₹1,928M</p><p style="font-size:9.5px;color:#5A7090;margin-top:4px">₹2,388M → ₹460M economic capital</p></div>
+  </div>
+</div>
 
-  <!-- FOOTER ROW -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid #161D27">
-    <div style="display:flex;gap:24px;font-size:11.5px;color:#7A96B2">
-      <span><span class="pos">✓</span> SC3 Gold Standard: smaller volume AND lower default rate vs Aggressive baseline</span>
-      <span><span class="pos">✓</span> Conservative strategy RAROC-positive under Mild Stress (+₹40M NI)</span>
-      <span><span class="pos">✓</span> Pricing Alpha independently adds +₹1,299M NI on the same Aggressive book</span>
-    </div>
-    <div style="border:1.5px solid #22C55E;border-radius:7px;padding:11px 22px;text-align:center;flex-shrink:0;margin-left:20px;min-width:210px">
-      <p style="font-size:9.5px;color:#22C55E;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:4px">Recommended Action</p>
-      <p style="font-size:19px;font-weight:700;color:#22C55E;letter-spacing:.04em;margin-bottom:5px">✓ APPROVE</p>
-      <p style="font-size:9px;color:#5A9070;line-height:1.5">RAROC Gated policy · phased deployment<br>with quarterly governance review</p>
-    </div>
+<!-- ─────────────────────── KPIs ─────────────────────── -->
+<div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:14px">
+  <div style="background:#131920;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+    <p style="font-size:8px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.5">Incremental<br>Economic Value</p>
+    <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1">+₹335M</p>
+    <p style="font-size:9px;color:#5A7090;margin-top:5px">-₹169M → +₹166M</p>
+  </div>
+  <div style="background:#131920;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+    <p style="font-size:8px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.5">RAROC<br>Improvement</p>
+    <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1">+43.3pp</p>
+    <p style="font-size:9px;color:#5A7090;margin-top:5px">-7.1% → +36.2%</p>
+  </div>
+  <div style="background:#131920;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+    <p style="font-size:8px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.5">Expected Defaults<br>Avoided</p>
+    <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1">641</p>
+    <p style="font-size:9px;color:#5A7090;margin-top:5px">737 → 96 (-87%)</p>
+  </div>
+  <div style="background:#131920;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+    <p style="font-size:8px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.5">Expected Default Rate<br>Improvement</p>
+    <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1">-1.35pp</p>
+    <p style="font-size:9px;color:#5A7090;margin-top:5px">2.62% → 1.27%</p>
+  </div>
+  <div style="background:#131920;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+    <p style="font-size:8px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.5">Expected Loss Rate<br>Improvement</p>
+    <p style="font-size:24px;font-weight:700;color:#22C55E;line-height:1">-4.51pp</p>
+    <p style="font-size:9px;color:#5A7090;margin-top:5px">9.96% → 5.45%</p>
+  </div>
+  <div style="background:#131920;border:1px solid #1A2433;border-radius:7px;padding:15px 10px">
+    <p style="font-size:8px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px;line-height:1.5">Capital<br>Released</p>
+    <p style="font-size:24px;font-weight:700;color:#56CCF2;line-height:1">₹1,928M</p>
+    <p style="font-size:9px;color:#5A7090;margin-top:5px">₹2,388M → ₹460M</p>
   </div>
 </div>
 
 <div class="hr"></div>
+<p class="sl" style="margin-bottom:14px">Strategy Analysis · All figures from loan-level portfolio simulation (61,503 loans · ₹36.6B EAD)</p>
 
-<!-- LEVEL 2 -->
-<div style="margin-bottom:28px">
-  <p class="sl">Level 2 — Business Value · All figures from portfolio analysis output (61,503 loans · ₹36.6B)</p>
-  <div class="g2" style="margin-bottom:14px">
+<!-- ─────────────────────── STRATEGY COMPARISON + FRONTIER ─────────────────────── -->
+<div class="g2" style="margin-bottom:14px">
+  <div class="pn">
+    <p class="sh">Strategy Comparison</p><div class="shd"></div>
+    <table style="margin-bottom:14px">
+      <thead><tr><th style="width:30%">Strategy</th><th class="r">Loans</th><th class="r">Appr.</th><th class="r">Exp. Default</th><th class="r">Exp. Defaults</th><th class="r">RAROC</th><th class="r">Net Income</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#4A6080;font-size:10.5px">No model (all)</td><td class="r" style="color:#4A6080;font-size:10.5px">61,503</td><td class="r" style="color:#4A6080;font-size:10.5px">100%</td><td class="r" style="color:#4A6080;font-size:10.5px">8.07%</td><td class="r" style="color:#4A6080;font-size:10.5px">4,965</td><td class="r" style="color:#4A6080;font-size:10.5px">-55.8%</td><td class="r" style="color:#4A6080;font-size:10.5px">-₹3,110M</td></tr>
+        <tr><td class="warn fw">Aggressive (current)</td><td class="r">28,079</td><td class="r warn">45.7%</td><td class="r warn">2.62%</td><td class="r warn">737</td><td class="r neg">-7.1%</td><td class="r neg">-₹169M</td></tr>
+        <tr style="background:rgba(34,197,94,.04)"><td class="fw" style="color:#22C55E">RAROC Gated (proposed)</td><td class="r">7,531</td><td class="r pos">12.2%</td><td class="r pos">1.27%</td><td class="r pos">96</td><td class="r pos">+36.2%</td><td class="r pos">+₹166M</td></tr>
+        <tr><td class="fw" style="color:#56CCF2">Risk-Based Pricing</td><td class="r">28,079</td><td class="r" style="color:#56CCF2">45.7%</td><td class="r" style="color:#56CCF2">2.62%</td><td class="r" style="color:#56CCF2">737</td><td class="r" style="color:#56CCF2">+47.3%</td><td class="r" style="color:#56CCF2">+₹1,130M</td></tr>
+        <tr><td class="fw pos">Conservative</td><td class="r">1,980</td><td class="r pos">3.2%</td><td class="r pos">0.96%</td><td class="r pos">19</td><td class="r pos">+71.0%</td><td class="r pos">+₹68M</td></tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:#0A0E13;border-radius:6px;padding:11px 12px"><p style="font-size:8.5px;color:#22C55E;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">RAROC Gated - SC3 Gold Standard</p><p style="font-size:10.5px;color:#B0C4D8;line-height:1.7">vs Aggressive: approval <span class="pos">-33.5pp</span> AND expected default rate <span class="pos">-1.35pp</span>. Both dimensions improve simultaneously. 82.5% of additional declines are value-destructive Band 4.</p></div>
+      <div style="background:#0A0E13;border-radius:6px;padding:11px 12px"><p style="font-size:8.5px;color:#56CCF2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Risk-Based Pricing - Pricing Alpha</p><p style="font-size:10.5px;color:#B0C4D8;line-height:1.7">Same 28,079 loans · same defaults · same EL. NI swing: <span style="color:#56CCF2;font-weight:600">+₹1,299M</span> from risk-differentiated rates alone. Independent of approval policy.</p></div>
+    </div>
+  </div>
 
-    <!-- STRATEGY COMPARISON -->
-    <div class="pn">
-      <p class="sh">Strategy Comparison</p><div class="shd"></div>
-      <table>
-        <thead>
-          <tr>
-            <th style="width:30%">Strategy</th>
-            <th class="r">Loans</th>
-            <th class="r">Appr.</th>
-            <th class="r">Default</th>
-            <th class="r">Defaults</th>
-            <th class="r">RAROC</th>
-            <th class="r">Net Income</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="color:#5A7090;font-size:11px">No model (approve all)</td>
-            <td class="r" style="color:#5A7090;font-size:11px">61,503</td>
-            <td class="r" style="color:#5A7090;font-size:11px">100%</td>
-            <td class="r" style="color:#5A7090;font-size:11px">8.07%</td>
-            <td class="r" style="color:#5A7090;font-size:11px">4,965</td>
-            <td class="r" style="color:#5A7090;font-size:11px">-55.8%</td>
-            <td class="r" style="color:#5A7090;font-size:11px">-₹3,110M</td>
-          </tr>
-          <tr>
-            <td class="warn fw">Aggressive (current)</td>
-            <td class="r">28,079</td>
-            <td class="r warn">45.7%</td>
-            <td class="r warn">2.62%</td>
-            <td class="r warn">737</td>
-            <td class="r neg">-7.1%</td>
-            <td class="r neg">-₹169M</td>
-          </tr>
-          <tr style="background:rgba(34,197,94,.04)">
-            <td class="fw" style="color:#22C55E">RAROC Gated (proposed)</td>
-            <td class="r">7,531</td>
-            <td class="r pos">12.2%</td>
-            <td class="r pos">1.27%</td>
-            <td class="r pos">96</td>
-            <td class="r pos">+36.2%</td>
-            <td class="r pos">+₹166M</td>
-          </tr>
-          <tr>
-            <td class="fw" style="color:#56CCF2">Risk-Based Pricing</td>
-            <td class="r">28,079</td>
-            <td class="r" style="color:#56CCF2">45.7%</td>
-            <td class="r" style="color:#56CCF2">2.62%</td>
-            <td class="r" style="color:#56CCF2">737</td>
-            <td class="r" style="color:#56CCF2">+47.3%</td>
-            <td class="r" style="color:#56CCF2">+₹1,130M</td>
-          </tr>
-          <tr>
-            <td class="fw">Conservative</td>
-            <td class="r">1,980</td>
-            <td class="r pos">3.2%</td>
-            <td class="r pos">0.96%</td>
-            <td class="r pos">19</td>
-            <td class="r pos">+71.0%</td>
-            <td class="r pos">+₹68M</td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#0A0E13;border-radius:6px;padding:11px 13px">
-          <p style="font-size:9px;color:#22C55E;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">RAROC Gated - SC3 Gold Standard</p>
-          <p style="font-size:11px;color:#B0C4D8;line-height:1.7">vs Aggressive: approval <span class="pos">-33.5pp</span> AND default rate <span class="pos">-1.35pp</span>. Both dimensions improve simultaneously.</p>
+  <div class="pn">
+    <p class="sh">Policy Efficient Frontier</p><div class="shd"></div>
+    <p style="font-size:11px;color:#7A96B2;margin-bottom:6px">Net income vs approval rate across RAROC threshold sweep (computed from 61,503 loan-level records)</p>
+    <div style="position:relative;height:195px"><canvas id="frontier" aria-label="Efficient frontier: NI vs approval rate"></canvas></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
+      <div style="background:#0A0E13;border-radius:6px;padding:9px 11px"><p style="font-size:8px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">NI-Maximising Point</p><p style="font-size:16px;font-weight:700;color:#22C55E">18% approval</p><p style="font-size:9px;color:#5A7090;margin-top:3px">RAROC≥0% gate · +₹183M NI</p></div>
+      <div style="background:#0A0E13;border:1px solid #1A3A6A;border-radius:6px;padding:9px 11px"><p style="font-size:8px;color:#3B82F6;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Recommended Point</p><p style="font-size:16px;font-weight:700;color:#3B82F6">12.2% approval</p><p style="font-size:9px;color:#5A7090;margin-top:3px">RAROC≥14% gate · +₹166M NI</p></div>
+      <div style="background:#0A0E13;border-radius:6px;padding:9px 11px"><p style="font-size:8px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Conservative Point</p><p style="font-size:16px;font-weight:700;color:#22C55E">3.2% approval</p><p style="font-size:9px;color:#5A7090;margin-top:3px">RAROC≥50% gate · +₹68M NI</p></div>
+    </div>
+    <p style="font-size:9.5px;color:#7A96B2;margin-top:8px;line-height:1.65">The 14% hurdle (recommended) trades ₹17M NI vs the NI-maximising 0% gate in exchange for lower expected default rate (1.27% vs 1.66%), higher RAROC (36.2% vs 26.1%), and compliance with internal hurdle rate. Management can select any point on this curve.</p>
+  </div>
+</div>
+
+<!-- ─────────────────────── STRESS + PRICING ALPHA ─────────────────────── -->
+<div class="g2" style="margin-bottom:14px">
+  <div class="pn">
+    <p class="sh">Net Income Under Stress</p><div class="shd"></div>
+    <p style="font-size:11px;color:#7A96B2;margin-bottom:10px">PD stressed ×1.5 / ×2.5 / ×3.6. RAROC Gated dramatically outperforms Aggressive under all scenarios.</p>
+    <div style="position:relative;height:145px"><canvas id="sc" aria-label="Stress scenario net income by strategy"></canvas></div>
+    <table style="margin-top:12px">
+      <thead><tr><th>Scenario</th><th class="r">Aggressive</th><th class="r">RAROC Gated</th><th class="r">Conservative</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr style="background:rgba(34,197,94,.04)"><td class="fw">Baseline</td><td class="r neg">-₹169M</td><td class="r pos">+₹166M</td><td class="r pos">+₹68M</td><td><span class="bg2">No breach</span></td></tr>
+        <tr><td class="fw">Mild (PD ×1.5)</td><td class="r neg">-₹1,343M</td><td class="r neg">-₹4M</td><td class="r pos">+₹40M</td><td><span class="ba2">Marginal</span></td></tr>
+        <tr><td class="fw">Severe (PD ×2.5)</td><td class="r neg">-₹4,279M</td><td class="r neg">-₹429M</td><td class="r neg">-₹29M</td><td><span class="br2">Breach</span></td></tr>
+        <tr><td class="fw">Extreme (PD ×3.6)</td><td class="r neg">-₹8,414M</td><td class="r neg">-₹1,166M</td><td class="r neg">-₹148M</td><td><span class="br2">Breach</span></td></tr>
+      </tbody>
+    </table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <div style="background:#0A0E13;border-radius:6px;padding:11px 13px"><p style="font-size:8.5px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Mild stress advantage</p><p style="font-size:20px;font-weight:700;color:#22C55E">₹1,339M better</p><p style="font-size:9.5px;color:#5A7090;margin-top:3px">Gated -₹4M vs Aggressive -₹1,343M</p></div>
+      <div style="background:#0A0E13;border-radius:6px;padding:11px 13px"><p style="font-size:8.5px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Conservative resilience</p><p style="font-size:20px;font-weight:700;color:#22C55E">+₹40M</p><p style="font-size:9.5px;color:#5A7090;margin-top:3px">Remains positive under mild stress</p></div>
+    </div>
+  </div>
+
+  <div class="pn">
+    <p class="sh">Pricing Alpha — Risk-Based Pricing Overlay</p><div class="shd"></div>
+    <p style="font-size:11px;color:#7A96B2;margin-bottom:14px">Second independent value lever: same approved book, higher NI through risk-differentiated rates</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:#0A0E13;border-radius:7px;padding:14px 12px"><p style="font-size:8.5px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Aggressive NI</p><p style="font-size:28px;font-weight:700;color:#EF4444;line-height:1">-₹169M</p><p style="font-size:9.5px;color:#5A7090;margin-top:6px">28,079 loans · RAROC -7.1%</p></div>
+      <div style="background:#0A0E13;border-radius:7px;padding:14px 12px"><p style="font-size:8.5px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Risk-Based Pricing NI</p><p style="font-size:28px;font-weight:700;color:#56CCF2;line-height:1">+₹1,130M</p><p style="font-size:9.5px;color:#5A7090;margin-top:6px">Same 28,079 loans · RAROC +47.3%</p></div>
+    </div>
+    <div style="background:#0C1928;border:1.5px solid #1A3A6A;border-radius:7px;padding:14px 16px;margin-bottom:12px">
+      <p style="font-size:8.5px;color:#2563EB;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Pricing Alpha - NI swing</p>
+      <p style="font-size:30px;font-weight:700;color:#56CCF2;line-height:1;margin-bottom:5px">+₹1,299M</p>
+      <p style="font-size:10.5px;color:#5A7090;line-height:1.65">Same loans · same 737 expected defaults · same 9.96% EL · same ₹2,388M capital. Value from risk-differentiated pricing on higher-PD borrowers. Does not require approval policy change.</p>
+    </div>
+    <div style="background:#0A0E13;border-radius:6px;padding:11px 13px">
+      <p style="font-size:8.5px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Two independent value levers</p>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:11px;color:#B0C4D8">
+        <p><span class="pos">1.</span> RAROC Gated: better selection (+₹335M NI, -87% expected defaults)</p>
+        <p><span style="color:#56CCF2;font-weight:600">2.</span> Risk-Based Pricing: better pricing on same book (+₹1,299M NI)</p>
+        <p style="margin-top:4px;font-size:10px;color:#5A7090">Combined upside: +₹1,464M NI vs Aggressive baseline</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────── PORTFOLIO / BAND ANALYSIS ─────────────────────── -->
+<div class="hr"></div>
+<p class="sl" style="margin-bottom:14px">Portfolio Composition · Band-level economics from loan-level financial model</p>
+
+<div class="g3" style="margin-bottom:14px">
+
+  <!-- Band composition - stacked bar -->
+  <div class="pn">
+    <p class="sh">Approved Book Composition</p><div class="shd"></div>
+    <p style="font-size:11px;color:#7A96B2;margin-bottom:14px">Risk band share — 100% stacked horizontal bar</p>
+    <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:6px;font-size:9px;color:#7A96B2">
+      <div style="display:flex;gap:3px;align-items:center"><span style="width:50px;flex-shrink:0;color:#B0C4D8;font-weight:500">Aggressive</span>
+        <div style="flex:1;display:flex;height:22px;border-radius:3px;overflow:hidden">
+          <div style="background:#22C55E;width:0.6%" title="Band 1: 0.6%"></div>
+          <div style="background:#3B82F6;width:6.4%" title="Band 2: 6.4%"></div>
+          <div style="background:#EAB308;width:32.5%" title="Band 3: 32.5%"></div>
+          <div style="background:#EF4444;width:60.5%" title="Band 4: 60.5%"></div>
         </div>
-        <div style="background:#0A0E13;border-radius:6px;padding:11px 13px">
-          <p style="font-size:9px;color:#56CCF2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Risk-Based Pricing - Pricing Alpha</p>
-          <p style="font-size:11px;color:#B0C4D8;line-height:1.7">Same 28,079 loans · same 737 defaults · same EL. NI swing: <span style="color:#56CCF2;font-weight:600">+₹1,299M</span> from risk-differentiated rates alone.</p>
+      </div>
+      <div style="display:flex;gap:3px;align-items:center"><span style="width:50px;flex-shrink:0;color:#22C55E;font-weight:600">Gated</span>
+        <div style="flex:1;display:flex;height:22px;border-radius:3px;overflow:hidden">
+          <div style="background:#22C55E;width:2.4%" title="Band 1: 2.4%"></div>
+          <div style="background:#3B82F6;width:23.9%" title="Band 2: 23.9%"></div>
+          <div style="background:#EAB308;width:73.7%" title="Band 3: 73.7%"></div>
+          <div style="background:#1A2433;width:0%" title="Band 4: 0%"></div>
         </div>
       </div>
     </div>
+    <div style="display:flex;gap:3px;padding-left:53px;margin-bottom:16px">
+      <div style="flex:1;display:flex;gap:10px;flex-wrap:wrap;font-size:9px">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#22C55E;flex-shrink:0"></span>B1 Very Low</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#3B82F6;flex-shrink:0"></span>B2 Low</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#EAB308;flex-shrink:0"></span>B3 Medium</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#EF4444;flex-shrink:0"></span>B4 High</span>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Band</th><th class="r">PD</th><th class="r">RAROC</th><th class="r">Aggrssv</th><th class="r">Gated</th></tr></thead>
+      <tbody>
+        <tr><td class="fw" style="color:#22C55E">B1 Very Low</td><td class="r">3.82%</td><td class="r pos">+92.9%</td><td class="r">0.6%</td><td class="r pos">2.4%</td></tr>
+        <tr><td class="fw" style="color:#3B82F6">B2 Low</td><td class="r">8.04%</td><td class="r pos">+68.5%</td><td class="r">6.4%</td><td class="r pos">23.9%</td></tr>
+        <tr><td class="fw warn">B3 Medium</td><td class="r">15.52%</td><td class="r pos">+19.0%</td><td class="r">32.5%</td><td class="r pos">73.7%</td></tr>
+        <tr><td class="fw neg">B4 High</td><td class="r">27.34%</td><td class="r neg">-20.9%</td><td class="r neg">60.5%</td><td class="r pos">0%</td></tr>
+        <tr><td class="fw" style="color:#5A7090">B5 Very High</td><td class="r" style="color:#5A7090">55.49%</td><td class="r neg">-98.8%</td><td class="r" style="color:#5A7090">0%</td><td class="r pos">0%</td></tr>
+      </tbody>
+    </table>
+  </div>
 
+  <!-- RAROC bipolar -->
+  <div class="pn">
+    <p class="sh">RAROC by Risk Band</p><div class="shd"></div>
+    <p style="font-size:11px;color:#7A96B2;margin-bottom:8px">Return on economic capital per band — loan-level model output</p>
+    <div style="display:flex;gap:12px;margin-bottom:14px;font-size:10px">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#22C55E;flex-shrink:0"></span><span style="color:#7A96B2">Accretive</span></span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#EF4444;flex-shrink:0"></span><span style="color:#7A96B2">Value-Destructive</span></span>
+    </div>
     <div style="display:flex;flex-direction:column;gap:14px">
-      <!-- ECONOMIC VALUE BRIDGE -->
-      <div class="pn">
-        <p class="sh">Economic Value Bridge — Aggressive to RAROC Gated</p><div class="shd"></div>
-        <p style="font-size:11px;color:#7A96B2;margin-bottom:14px">Drivers of the ₹335M net income turnaround</p>
-        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:12px">
-          <div style="text-align:center">
-            <div style="background:#1F0C0C;border:1px solid #3A1A1A;border-radius:6px;padding:12px 6px">
-              <p style="font-size:8px;color:#906060;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Aggressive NI</p>
-              <p style="font-size:20px;font-weight:700;color:#EF4444;line-height:1;white-space:nowrap">-₹169M</p>
-              <p style="font-size:8.5px;color:#EF4444;opacity:.6;margin-top:3px">28,079 loans</p>
-            </div>
-            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:12px">→</span></div>
-          </div>
-          <div style="text-align:center">
-            <div style="background:#0C1F14;border:1px solid #1A4028;border-radius:6px;padding:12px 6px">
-              <p style="font-size:8px;color:#5A9070;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Remove Band 4</p>
-              <p style="font-size:20px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹352M</p>
-              <p style="font-size:8.5px;color:#22C55E;opacity:.6;margin-top:3px">16,979 loans cut</p>
-            </div>
-            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#3A5060;font-size:12px">→</span></div>
-          </div>
-          <div style="text-align:center">
-            <div style="background:#1F0C0C;border:1px solid #3A1A1A;border-radius:6px;padding:12px 6px">
-              <p style="font-size:8px;color:#906060;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Band 3 Trim</p>
-              <p style="font-size:20px;font-weight:700;color:#EF4444;line-height:1;white-space:nowrap">-₹17M</p>
-              <p style="font-size:8.5px;color:#EF4444;opacity:.6;margin-top:3px">3,569 sub-hurdle cut</p>
-            </div>
-            <div style="height:14px;display:flex;align-items:center;justify-content:center"><span style="color:#22C55E;font-size:12px">→</span></div>
-          </div>
-          <div style="text-align:center">
-            <div style="background:#0C2218;border:1px solid #1A5030;border-radius:6px;padding:12px 6px">
-              <p style="font-size:8px;color:#3A9060;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">RAROC Gated NI</p>
-              <p style="font-size:20px;font-weight:700;color:#22C55E;line-height:1;white-space:nowrap">+₹166M</p>
-              <p style="font-size:8.5px;color:#22C55E;opacity:.7;margin-top:3px">7,531 loans</p>
-            </div>
-            <div style="height:14px"></div>
-          </div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#E2EAF4;font-weight:500">Band 1 <span style="color:#7A96B2;font-size:9px">PD 3.82% · NI +₹9M</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+92.9%</span></div><div style="position:relative;height:12px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:46.4%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#E2EAF4;font-weight:500">Band 2 <span style="color:#7A96B2;font-size:9px">PD 8.04% · NI +₹59M</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+68.5%</span></div><div style="position:relative;height:12px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:34.3%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#E2EAF4;font-weight:500">Band 3 <span style="color:#7A96B2;font-size:9px">PD 15.52% · NI +₹115M</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+19.0%</span></div><div style="position:relative;height:12px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:9.5%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+      <div style="display:flex;align-items:center;gap:7px;padding:2px 0"><div style="flex:1;height:1px;background:#EF4444;opacity:.3"></div><span style="font-size:8.5px;color:#EF4444;letter-spacing:.06em;text-transform:uppercase;font-weight:600;white-space:nowrap">RAROC gate - 14% hurdle</span><div style="flex:1;height:1px;background:#EF4444;opacity:.3"></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#E2EAF4;font-weight:500">Band 4 <span style="color:#7A96B2;font-size:9px">PD 27.34% · NI -₹352M</span></span><span style="font-size:11px;color:#EF4444;font-weight:700">-20.9%</span></div><div style="position:relative;height:12px;background:#0D1520;border-radius:3px"><div style="position:absolute;right:50%;top:2px;bottom:2px;width:10.4%;background:#EF4444;border-radius:2px 0 0 2px"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10.5px;color:#E2EAF4;font-weight:500">Band 5 <span style="color:#7A96B2;font-size:9px">PD 55.49% · NI -₹2,941M</span></span><span style="font-size:11px;color:#EF4444;font-weight:700">-98.8%</span></div><div style="position:relative;height:12px;background:#0D1520;border-radius:3px"><div style="position:absolute;right:50%;top:2px;bottom:2px;width:49.4%;background:#EF4444;border-radius:2px 0 0 2px"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:#3A5068"><span>-100%</span><span>0%</span><span>+100%</span></div>
+    <p style="font-size:10px;color:#5A7090;margin-top:12px;line-height:1.65">Approved book RAROC: +36.2% (Gated) vs -7.1% (Aggressive). Band 4 (-₹352M NI) is the single largest driver of the turnaround. Band 5 excluded by both strategies.</p>
+  </div>
+
+  <!-- Approval distribution -->
+  <div class="pn">
+    <p class="sh">Approval Distribution</p><div class="shd"></div>
+    <p style="font-size:11px;color:#7A96B2;margin-bottom:18px">Loan-level outcomes — Aggressive vs RAROC Gated</p>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px"><span style="font-size:12px;font-weight:700;color:#22C55E">APPROVE</span><span style="font-size:10.5px;color:#EF4444;font-weight:600">-33.5pp</span></div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:7px"><span style="font-size:9px;color:#5A7090;width:68px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:12px"><div style="background:#15614A;height:12px;border-radius:2px;width:45.7%"></div></div><span style="font-size:10.5px;color:#B0C4D8;font-weight:600;width:40px;text-align:right">45.7%</span></div>
+          <div style="display:flex;align-items:center;gap:7px"><span style="font-size:9px;color:#22C55E;width:68px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:12px"><div style="background:#22C55E;height:12px;border-radius:2px;width:12.2%"></div></div><span style="font-size:10.5px;color:#22C55E;font-weight:700;width:40px;text-align:right">12.2%</span></div>
         </div>
-        <div style="background:#0A0E13;border-radius:5px;padding:10px 12px">
-          <p style="font-size:11px;color:#7A96B2;line-height:1.7">Primary driver: Band 4 (PD 27.34%, RAROC -20.9%) contributed <span class="neg">-₹352M NI</span> to the Aggressive book across 16,979 loans. Eliminating all Band 4 recovers that entire loss. Secondary: 3,569 below-hurdle Band 3 loans removed (-₹17M). Net: <span class="pos">+₹335M turnaround</span>.</p>
+        <p style="font-size:9.5px;color:#5A7090;margin-top:5px">All 7,531 approved are Bands 1-3 (RAROC &gt; 14% hurdle)</p>
+      </div>
+      <div style="padding-top:14px;border-top:1px solid #161D27">
+        <p style="font-size:10.5px;font-weight:600;color:#E2EAF4;margin-bottom:8px">Additional declines breakdown</p>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:10.5px;color:#B0C4D8">
+          <div style="display:flex;justify-content:space-between"><span>Total additional declines</span><span style="font-weight:600;color:#E2EAF4">20,548</span></div>
+          <div style="display:flex;justify-content:space-between"><span><span class="pos">✓</span> Band 4 - value-destructive (RAROC -20.9%)</span><span style="font-weight:600;color:#22C55E">16,979</span></div>
+          <div style="display:flex;justify-content:space-between"><span>Band 3 sub-hurdle (borderline)</span><span style="font-weight:600;color:#EAB308">3,569</span></div>
+          <div style="display:flex;justify-content:space-between;padding-top:6px;border-top:1px solid #161D27"><span style="font-size:9.5px;color:#5A7090">Value-destructive share of declines</span><span style="font-size:9.5px;color:#22C55E;font-weight:600">82.5%</span></div>
         </div>
       </div>
-
-      <!-- STRESS CHART -->
-      <div class="pn">
-        <p class="sh">Net Income Under Stress — Strategy Resilience</p><div class="shd"></div>
-        <p style="font-size:11px;color:#7A96B2;margin-bottom:10px">RAROC Gated dramatically outperforms Aggressive under all stress scenarios</p>
-        <div style="position:relative;height:148px"><canvas id="stressChart" aria-label="Stress scenario net income by strategy"></canvas></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:10px;border-top:1px solid #161D27">
+        <div style="background:#0A0E13;border-radius:6px;padding:11px"><p style="font-size:9px;color:#7A96B2;margin-bottom:4px">Aggressive exp. defaults</p><p style="font-size:22px;font-weight:700;color:#EF4444;line-height:1">737</p><p style="font-size:9px;color:#5A7090;margin-top:3px">Exp. default rate 2.62%</p></div>
+        <div style="background:#0A0E13;border-radius:6px;padding:11px"><p style="font-size:9px;color:#7A96B2;margin-bottom:4px">RAROC Gated exp. defaults</p><p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1">96</p><p style="font-size:9px;color:#5A7090;margin-top:3px">Exp. default rate 1.27%</p></div>
       </div>
     </div>
   </div>
 
-  <!-- STRESS TABLE + PRICING ALPHA -->
-  <div class="g2">
-    <div class="pn">
-      <p class="sh">Stress Scenario Detail</p><div class="shd"></div>
-      <p style="font-size:11px;color:#7A96B2;margin-bottom:12px">PD stressed at ×1.5 (mild) / ×2.5 (severe) / ×3.6 (extreme). No probability weights assigned.</p>
-      <table style="margin-bottom:14px">
-        <thead>
-          <tr>
-            <th>Scenario</th>
-            <th class="r">Aggressive</th>
-            <th class="r">RAROC Gated</th>
-            <th class="r">Conservative</th>
-            <th>Gated Breach</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="background:rgba(34,197,94,.04)">
-            <td class="fw">Baseline</td>
-            <td class="r neg">-₹169M</td>
-            <td class="r pos">+₹166M</td>
-            <td class="r pos">+₹68M</td>
-            <td><span class="bg2">No breach</span></td>
-          </tr>
-          <tr>
-            <td class="fw">Mild (PD ×1.5)</td>
-            <td class="r neg">-₹1,343M</td>
-            <td class="r neg">-₹4M</td>
-            <td class="r pos">+₹40M</td>
-            <td><span class="ba2">Marginal</span></td>
-          </tr>
-          <tr>
-            <td class="fw">Severe (PD ×2.5)</td>
-            <td class="r neg">-₹4,279M</td>
-            <td class="r neg">-₹429M</td>
-            <td class="r neg">-₹29M</td>
-            <td><span class="br2">Breach</span></td>
-          </tr>
-          <tr>
-            <td class="fw">Extreme (PD ×3.6)</td>
-            <td class="r neg">-₹8,414M</td>
-            <td class="r neg">-₹1,166M</td>
-            <td class="r neg">-₹148M</td>
-            <td><span class="br2">Breach</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:#0A0E13;border-radius:6px;padding:12px 14px">
-          <p style="font-size:9px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Mild stress advantage</p>
-          <p style="font-size:19px;font-weight:700;color:#22C55E">₹1,339M better</p>
-          <p style="font-size:10px;color:#5A7090;margin-top:4px">Gated -₹4M vs Aggressive -₹1,343M</p>
-        </div>
-        <div style="background:#0A0E13;border-radius:6px;padding:12px 14px">
-          <p style="font-size:9px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">Conservative resilience</p>
-          <p style="font-size:19px;font-weight:700;color:#22C55E">+₹40M</p>
-          <p style="font-size:10px;color:#5A7090;margin-top:4px">Conservative stays positive under mild stress. 1,980 loans, 0.96% default rate.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="pn">
-      <p class="sh">Pricing Alpha — Risk-Based Pricing Overlay</p><div class="shd"></div>
-      <p style="font-size:11px;color:#7A96B2;margin-bottom:16px">A second independent value lever: same approved book, higher net income through risk-appropriate pricing</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
-        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
-          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Aggressive NI</p>
-          <p style="font-size:26px;font-weight:700;color:#EF4444;line-height:1;white-space:nowrap">-₹169M</p>
-          <p style="font-size:10px;color:#5A7090;margin-top:7px">28,079 loans · RAROC -7.1%</p>
-        </div>
-        <div style="background:#0A0E13;border-radius:7px;padding:14px 12px">
-          <p style="font-size:9px;color:#7A96B2;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;line-height:1.4">Risk-Based Pricing NI</p>
-          <p style="font-size:26px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap">+₹1,130M</p>
-          <p style="font-size:10px;color:#5A7090;margin-top:7px">Same 28,079 loans · RAROC +47.3%</p>
-        </div>
-      </div>
-      <div style="background:#0C1928;border:1.5px solid #1A3A6A;border-radius:7px;padding:14px 16px;margin-bottom:12px">
-        <p style="font-size:9px;color:#2563EB;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">NI swing — Pricing Alpha alone</p>
-        <p style="font-size:28px;font-weight:700;color:#56CCF2;line-height:1;white-space:nowrap;margin-bottom:6px">+₹1,299M</p>
-        <p style="font-size:10.5px;color:#5A7090;line-height:1.6">Same 28,079 loans · same 737 defaults · same 9.96% EL rate · same ₹2,388M capital. Value captured entirely through risk-differentiated interest rates on higher-PD borrowers.</p>
-      </div>
-      <div style="background:#0A0E13;border-radius:6px;padding:11px 13px">
-        <p style="font-size:9px;color:#5A7090;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Two independent value levers</p>
-        <div style="display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:#B0C4D8">
-          <p><span class="pos">1.</span> RAROC Gated: better selection — SC3 Gold Standard (+₹335M NI, -87% defaults)</p>
-          <p><span style="color:#56CCF2;font-weight:600">2.</span> Risk-Based Pricing: better pricing on same book (+₹1,299M NI, unchanged defaults)</p>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
+<!-- ─────────────────────── GOVERNANCE / CONTROLS ─────────────────────── -->
 <div class="hr"></div>
-
-<!-- LEVEL 3 -->
-<div style="margin-bottom:28px">
-  <p class="sl">Level 3 — Portfolio Strategy · Band composition and approval rates from loan-level data</p>
-  <div class="g3">
-
-    <!-- BOOK COMPOSITION -->
-    <div class="pn">
-      <p class="sh">Approved Book Composition</p><div class="shd"></div>
-      <p style="font-size:11px;color:#7A96B2;margin-bottom:18px">Risk band share of approved book — Aggressive vs RAROC Gated</p>
-      <div style="display:flex;flex-direction:column;gap:17px">
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-            <span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 1 · Very Low <span style="color:#7A96B2;font-size:9.5px">PD 3.82% · RAROC +92.9%</span></span>
-            <span style="font-size:11px;color:#22C55E;font-weight:600">+1.8pp</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:68px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#15614A;height:10px;border-radius:2px;width:3%"></div></div><span style="font-size:10px;color:#B0C4D8;width:36px;text-align:right">0.6%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#22C55E;width:68px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#22C55E;height:10px;border-radius:2px;width:10%"></div></div><span style="font-size:10px;color:#22C55E;width:36px;text-align:right;font-weight:700">2.4%</span></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-            <span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 2 · Low <span style="color:#7A96B2;font-size:9.5px">PD 8.04% · RAROC +68.5%</span></span>
-            <span style="font-size:11px;color:#22C55E;font-weight:600">+17.5pp</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:68px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#1A3E7A;height:10px;border-radius:2px;width:27%"></div></div><span style="font-size:10px;color:#B0C4D8;width:36px;text-align:right">6.4%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#3B82F6;width:68px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#3B82F6;height:10px;border-radius:2px;width:100%"></div></div><span style="font-size:10px;color:#3B82F6;width:36px;text-align:right;font-weight:700">23.9%</span></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-            <span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 3 · Medium <span style="color:#7A96B2;font-size:9.5px">PD 15.52% · RAROC +19.0%</span></span>
-            <span style="font-size:11px;color:#22C55E;font-weight:600">+41.2pp</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:68px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#6B4F0A;height:10px;border-radius:2px;width:44%"></div></div><span style="font-size:10px;color:#B0C4D8;width:36px;text-align:right">32.5%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#EAB308;width:68px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#EAB308;height:10px;border-radius:2px;width:100%"></div></div><span style="font-size:10px;color:#EAB308;width:36px;text-align:right;font-weight:700">73.7%</span></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-            <span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 4 · High <span style="color:#7A96B2;font-size:9.5px">PD 27.34% · RAROC -20.9%</span></span>
-            <span style="font-size:11px;color:#22C55E;font-weight:600">-60.5pp (all eliminated)</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:68px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"><div style="background:#6B1A1A;height:10px;border-radius:2px;width:82%"></div></div><span style="font-size:10px;color:#EF4444;width:36px;text-align:right;font-weight:700">60.5%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#22C55E;width:68px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"></div><span style="font-size:10px;color:#22C55E;width:36px;text-align:right;font-weight:700">0%</span></div>
-          </div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-            <span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 5 · Very High <span style="color:#7A96B2;font-size:9.5px">PD 55.49% · RAROC -98.8%</span></span>
-            <span style="font-size:11px;color:#22C55E;font-weight:600">0% (excluded by both)</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:68px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"></div><span style="font-size:10px;color:#22C55E;width:36px;text-align:right">0%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#22C55E;width:68px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:10px"></div><span style="font-size:10px;color:#22C55E;width:36px;text-align:right;font-weight:700">0%</span></div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:14px;padding:9px 12px;background:#0A0E13;border-radius:6px">
-        <p style="font-size:11px;color:#7A96B2;line-height:1.7">Band 4 is <span class="neg">60.5%</span> of the Aggressive book, generating <span class="neg">-₹352M NI</span> at RAROC -20.9%. RAROC Gated eliminates all Band 4. Pool composition (all 61,503): B1 0.3% · B2 2.9% · B3 14.8% · B4 27.6% · B5 54.3%.</p>
-      </div>
-    </div>
-
-    <!-- APPROVAL DISTRIBUTION -->
-    <div class="pn">
-      <p class="sh">Approval Distribution</p><div class="shd"></div>
-      <p style="font-size:11px;color:#7A96B2;margin-bottom:20px">Loan-level approval outcomes — Aggressive vs RAROC Gated</p>
-      <div style="display:flex;flex-direction:column;gap:20px">
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-            <span style="font-size:12.5px;font-weight:700;color:#22C55E">APPROVE</span>
-            <span style="font-size:11px;color:#EF4444;font-weight:600">-33.5pp (tighter selection)</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:72px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#15614A;height:13px;border-radius:2px;width:45.7%"></div></div><span style="font-size:11px;color:#B0C4D8;font-weight:600;width:42px;text-align:right">45.7%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#22C55E;width:72px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#22C55E;height:13px;border-radius:2px;width:12.2%"></div></div><span style="font-size:11px;color:#22C55E;font-weight:700;width:42px;text-align:right">12.2%</span></div>
-          </div>
-          <p style="font-size:10px;color:#5A7090;margin-top:6px">28,079 → 7,531 approved. All 7,531 are Bands 1-3 with RAROC &gt; 14%.</p>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-            <span style="font-size:12.5px;font-weight:700;color:#EF4444">DECLINE</span>
-            <span style="font-size:11px;color:#22C55E;font-weight:600">+33.5pp</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#5A7090;width:72px;flex-shrink:0">Aggressive</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#6B1A1A;height:13px;border-radius:2px;width:54.3%"></div></div><span style="font-size:11px;color:#B0C4D8;font-weight:600;width:42px;text-align:right">54.3%</span></div>
-            <div style="display:flex;align-items:center;gap:8px"><span style="font-size:9.5px;color:#EF4444;width:72px;flex-shrink:0;font-weight:600">RAROC Gated</span><div style="flex:1;background:#0D1520;border-radius:2px;height:13px"><div style="background:#EF4444;height:13px;border-radius:2px;width:87.8%"></div></div><span style="font-size:11px;color:#EF4444;font-weight:700;width:42px;text-align:right">87.8%</span></div>
-          </div>
-          <p style="font-size:10px;color:#5A7090;margin-top:6px">Additional 20,548 declines are all Band 4 (RAROC -20.9%) — value-destructive exposures eliminated.</p>
-        </div>
-        <div style="padding-top:14px;border-top:1px solid #161D27">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div style="background:#0A0E13;border-radius:6px;padding:12px">
-              <p style="font-size:9.5px;color:#7A96B2;margin-bottom:5px">Aggressive defaults</p>
-              <p style="font-size:22px;font-weight:700;color:#EF4444;line-height:1">737</p>
-              <p style="font-size:9.5px;color:#5A7090;margin-top:4px">2.62% default rate</p>
-            </div>
-            <div style="background:#0A0E13;border-radius:6px;padding:12px">
-              <p style="font-size:9.5px;color:#7A96B2;margin-bottom:5px">RAROC Gated defaults</p>
-              <p style="font-size:22px;font-weight:700;color:#22C55E;line-height:1">96</p>
-              <p style="font-size:9.5px;color:#5A7090;margin-top:4px">1.27% default rate (-52%)</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RAROC BY BAND -->
-    <div class="pn">
-      <p class="sh">RAROC by Risk Band</p><div class="shd"></div>
-      <p style="font-size:11px;color:#7A96B2;margin-bottom:6px">Portfolio RAROC per band — from loan-level financial model</p>
-      <div style="display:flex;gap:12px;margin-bottom:14px;font-size:10.5px">
-        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#22C55E;flex-shrink:0"></span><span style="color:#7A96B2">Accretive</span></span>
-        <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#EF4444;flex-shrink:0"></span><span style="color:#7A96B2">Destructive</span></span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:13px">
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 1 <span style="color:#7A96B2;font-size:9.5px">PD 3.82%</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+92.9%</span></div>
-          <div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:46.4%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 2 <span style="color:#7A96B2;font-size:9.5px">PD 8.04%</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+68.5%</span></div>
-          <div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:34.3%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 3 <span style="color:#7A96B2;font-size:9.5px">PD 15.52%</span></span><span style="font-size:11px;color:#22C55E;font-weight:700">+19.0%</span></div>
-          <div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;left:50%;top:2px;bottom:2px;width:9.5%;background:#22C55E;border-radius:0 2px 2px 0"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;padding:2px 0"><div style="flex:1;height:1px;background:#EF4444;opacity:.28"></div><span style="font-size:9.5px;color:#EF4444;letter-spacing:.07em;text-transform:uppercase;font-weight:600;white-space:nowrap">RAROC gate — value cutoff</span><div style="flex:1;height:1px;background:#EF4444;opacity:.28"></div></div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 4 <span style="color:#7A96B2;font-size:9.5px">PD 27.34%</span></span><span style="font-size:11px;color:#EF4444;font-weight:700">-20.9%</span></div>
-          <div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;right:50%;top:2px;bottom:2px;width:10.5%;background:#EF4444;border-radius:2px 0 0 2px"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;color:#E2EAF4;font-weight:500">Band 5 <span style="color:#7A96B2;font-size:9.5px">PD 55.49%</span></span><span style="font-size:11px;color:#EF4444;font-weight:700">-98.8%</span></div>
-          <div style="position:relative;height:13px;background:#0D1520;border-radius:3px"><div style="position:absolute;right:50%;top:2px;bottom:2px;width:49.4%;background:#EF4444;border-radius:2px 0 0 2px"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#1E2A38"></div></div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:9.5px;color:#3A5068"><span>-100%</span><span>0%</span><span>+100%</span></div>
-      <p style="font-size:10.5px;color:#7A96B2;margin-top:12px;line-height:1.7">RAROC Gated approves Bands 1-3 only (RAROC &gt; 14% gate applied within Band 3). All approved book RAROC: +36.2% vs -7.1% under Aggressive policy.</p>
-    </div>
+<p class="sl" style="margin-bottom:14px">Governance · Monitoring Triggers · Risk Controls</p>
+<div class="g2" style="margin-bottom:14px">
+  <div class="pn">
+    <p class="sh">Committee Decision Scorecard</p><div class="shd"></div>
+    <table>
+      <thead><tr><th style="width:54%">Criterion</th><th style="width:16%">Status</th><th style="width:30%">Evidence</th></tr></thead>
+      <tbody>
+        <tr><td class="fw">Incremental economic value positive vs Aggressive</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">-₹169M → +₹166M (+₹335M)</td></tr>
+        <tr><td class="fw">RAROC above 14% internal hurdle</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">+36.2%</td></tr>
+        <tr><td class="fw">SC3 Gold Standard achieved</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">-33.5pp approval AND -1.35pp exp. default</td></tr>
+        <tr><td class="fw">Expected defaults reduced vs Aggressive</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">737 → 96 (-87%)</td></tr>
+        <tr><td class="fw">Expected loss rate reduced</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">9.96% → 5.45% (-4.51pp)</td></tr>
+        <tr><td class="fw">Capital requirement reduced</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">₹2,388M → ₹460M (-₹1,928M)</td></tr>
+        <tr><td class="fw">Band 4 exposure eliminated</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">60.5% → 0% of approved book</td></tr>
+        <tr><td class="fw">Stress tested across 4 scenarios</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">Dominates Aggressive all scenarios</td></tr>
+        <tr><td class="fw">Policy efficient frontier computed</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">12 threshold points · 61,503 loans</td></tr>
+        <tr><td class="fw">Pricing Alpha available independently</td><td><span class="pos" style="font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:10.5px">+₹1,299M NI on same Aggressive book</td></tr>
+      </tbody>
+    </table>
   </div>
-</div>
 
-<div class="hr"></div>
-
-<!-- LEVEL 4 -->
-<div style="margin-bottom:28px">
-  <p class="sl">Level 4 — Technical Evidence · Governance · Decision</p>
-  <div class="g2">
-
+  <div style="display:flex;flex-direction:column;gap:14px">
     <div class="pn">
-      <p class="sh">Committee Decision Scorecard</p><div class="shd"></div>
+      <p class="sh">Risk Control Dashboard</p><div class="shd"></div>
+      <p style="font-size:11px;color:#7A96B2;margin-bottom:11px">Current Aggressive portfolio — monitoring triggers from model output</p>
       <table>
-        <thead><tr><th style="width:56%">Criterion</th><th style="width:16%">Status</th><th style="width:28%">Evidence (real data)</th></tr></thead>
+        <thead><tr><th>Metric</th><th class="r">Current</th><th class="r">Amber</th><th class="r">Red</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td class="fw">Net income positive vs Aggressive baseline</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">-₹169M → +₹166M</td></tr>
-          <tr><td class="fw">RAROC above 14% hurdle</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">+36.2%</td></tr>
-          <tr><td class="fw">SC3 Gold Standard achieved</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">-33.5pp appr. AND -1.35pp default</td></tr>
-          <tr><td class="fw">Defaults reduced vs Aggressive</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">737 → 96 (-87%)</td></tr>
-          <tr><td class="fw">EL rate reduced</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">9.96% → 5.45%</td></tr>
-          <tr><td class="fw">Capital requirement reduced</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">₹2,388M → ₹460M</td></tr>
-          <tr><td class="fw">Band 4 exposure eliminated</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">60.5% → 0% of book</td></tr>
-          <tr><td class="fw">Stress tested (4 macro scenarios)</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">Gated mild breach only -₹4M</td></tr>
-          <tr><td class="fw">Outperforms Aggressive under all scenarios</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">₹1,339M better under mild stress</td></tr>
-          <tr><td class="fw">Pricing Alpha independently available</td><td><span style="color:#22C55E;font-weight:700;font-size:13px">✓</span> <span class="bg2">Met</span></td><td style="color:#8A9FB4;font-size:11px">+₹1,299M NI on Aggressive book</td></tr>
-          <tr style="border-top:1.5px solid #2563EB;background:#0C1928">
-            <td class="fw" style="font-size:13px;color:#F1F5F9">Recommended Action</td>
-            <td colspan="2" style="padding:12px 10px">
-              <p style="font-size:19px;font-weight:700;color:#22C55E;margin-bottom:4px">✓ APPROVE</p>
-              <p style="font-size:9.5px;color:#3A9060;line-height:1.5">RAROC Gated policy · phased deployment<br>with quarterly governance review</p>
-            </td>
-          </tr>
+          <tr><td class="fw">Portfolio RAROC</td><td class="r neg">-7.1%</td><td class="r" style="color:#4A6080">16%</td><td class="r" style="color:#4A6080">14%</td><td><span class="dr"></span><span class="br2">Below hurdle</span></td></tr>
+          <tr><td class="fw">Band 4-5 approval share</td><td class="r neg">60.5%</td><td class="r" style="color:#4A6080">65.5%</td><td class="r" style="color:#4A6080">70.5%</td><td><span class="dr"></span><span class="br2">Critical</span></td></tr>
+          <tr><td class="fw">Portfolio mean PD</td><td class="r warn">22.11%</td><td class="r" style="color:#4A6080">28.74%</td><td class="r" style="color:#4A6080">39.80%</td><td><span class="da"></span><span class="ba2">Elevated</span></td></tr>
+          <tr><td class="fw">Portfolio EL rate</td><td class="r warn">9.95%</td><td class="r" style="color:#4A6080">13.93%</td><td class="r" style="color:#4A6080">19.90%</td><td><span class="da"></span><span class="ba2">Elevated</span></td></tr>
+          <tr><td class="fw">Expected default rate (book)</td><td class="r warn">2.62%</td><td class="r" style="color:#4A6080">3.5%</td><td class="r" style="color:#4A6080">5.0%</td><td><span class="da"></span><span class="ba2">Monitoring</span></td></tr>
+          <tr><td class="fw">PD model PSI</td><td class="r pos">&lt;0.10</td><td class="r" style="color:#4A6080">0.10-0.25</td><td class="r" style="color:#4A6080">&gt;0.25</td><td><span class="dg"></span><span class="bg2">Stable</span></td></tr>
         </tbody>
       </table>
+      <div style="margin-top:10px;padding:8px 11px;background:#0A0E13;border-radius:5px"><p style="font-size:10px;color:#7A96B2;line-height:1.65">Under RAROC Gated: mean PD 12.09%, EL 5.45%, RAROC +36.2%, Band 4 share 0% — all red/amber metrics move to green.</p></div>
     </div>
-
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="pn">
-        <p class="sh">Risk Control Dashboard</p><div class="shd"></div>
-        <p style="font-size:11px;color:#7A96B2;margin-bottom:12px">Current Aggressive portfolio — monitoring triggers from model output</p>
-        <table>
-          <thead><tr><th>Metric</th><th class="r">Current (Aggressive)</th><th class="r">Amber</th><th class="r">Red</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td class="fw">Portfolio RAROC</td><td class="r neg">-7.1%</td><td class="r" style="color:#5A7090">16.0%</td><td class="r" style="color:#5A7090">14.0%</td><td><span class="dot-r"></span><span class="br2">Below hurdle</span></td></tr>
-            <tr><td class="fw">Band 4-5 approval share</td><td class="r neg">60.5%</td><td class="r" style="color:#5A7090">65.5%</td><td class="r" style="color:#5A7090">70.5%</td><td><span class="dot-r"></span><span class="br2">Critical</span></td></tr>
-            <tr><td class="fw">Portfolio mean PD</td><td class="r warn">22.11%</td><td class="r" style="color:#5A7090">28.74%</td><td class="r" style="color:#5A7090">39.80%</td><td><span class="dot-a"></span><span class="ba2">Elevated</span></td></tr>
-            <tr><td class="fw">Portfolio EL rate</td><td class="r warn">9.95%</td><td class="r" style="color:#5A7090">13.93%</td><td class="r" style="color:#5A7090">19.90%</td><td><span class="dot-a"></span><span class="ba2">Elevated</span></td></tr>
-            <tr><td class="fw">Default rate (in book)</td><td class="r warn">2.62%</td><td class="r" style="color:#5A7090">3.5%</td><td class="r" style="color:#5A7090">5.0%</td><td><span class="dot-a"></span><span class="ba2">Monitoring</span></td></tr>
-            <tr><td class="fw">PD model PSI</td><td class="r pos">&lt;0.10</td><td class="r" style="color:#5A7090">0.10-0.25</td><td class="r" style="color:#5A7090">&gt;0.25</td><td><span class="dot-g"></span><span class="bg2">Stable</span></td></tr>
-          </tbody>
-        </table>
-        <div style="margin-top:10px;padding:8px 12px;background:#0A0E13;border-radius:5px">
-          <p style="font-size:11px;color:#7A96B2">Under RAROC Gated: mean PD 12.09%, EL 5.45%, RAROC +36.2%, Band 4 share 0% - all metrics move to green or within normal range.</p>
-        </div>
-      </div>
-      <div class="pn">
-        <p class="sh">Key Risks &amp; Mitigations</p><div class="shd"></div>
-        <div class="g2">
-          <div>
-            <p style="font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#EF4444;margin-bottom:10px">Key Risks</p>
-            <div style="font-size:11.5px;color:#B0C4D8;line-height:1.9">
-              <p><span class="neg">→</span> Volume drop: 45.7% → 12.2% approval</p>
-              <p><span class="neg">→</span> Mild stress turns RAROC Gated slightly negative (-₹4M)</p>
-              <p><span class="neg">→</span> Severe / extreme stress causes significant losses</p>
-              <p><span class="neg">→</span> 3,569 Band 3 borrowers declined vs Aggressive</p>
-              <p><span class="neg">→</span> Quarterly recalibration of RAROC gate required</p>
-            </div>
-          </div>
-          <div>
-            <p style="font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#22C55E;margin-bottom:10px">Mitigations</p>
-            <div style="font-size:11.5px;color:#B0C4D8;line-height:1.9">
-              <p><span class="pos">→</span> Smaller profitable book beats larger loss-making book</p>
-              <p><span class="pos">→</span> Conservative (1,980 loans) positive under mild stress</p>
-              <p><span class="pos">→</span> Gated dramatically outperforms Aggressive under ALL stress</p>
-              <p><span class="pos">→</span> Band 3 declines remove RAROC &lt; 14% loans only</p>
-              <p><span class="pos">→</span> Pricing Alpha adds ₹1,299M independently of selection</p>
-            </div>
-          </div>
-        </div>
+    <div class="pn">
+      <p class="sh">Key Risks &amp; Mitigations</p><div class="shd"></div>
+      <div class="g2">
+        <div><p style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#EF4444;margin-bottom:10px">Key Risks</p><div style="font-size:11px;color:#B0C4D8;line-height:1.9"><p><span class="neg">→</span> Volume drop: 45.7% → 12.2% approval</p><p><span class="neg">→</span> Mild stress turns marginally negative (-₹4M)</p><p><span class="neg">→</span> Severe / extreme: significant losses</p><p><span class="neg">→</span> 3,569 borderline Band 3 borrowers declined</p><p><span class="neg">→</span> Quarterly RAROC gate recalibration required</p></div></div>
+        <div><p style="font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#22C55E;margin-bottom:10px">Mitigations</p><div style="font-size:11px;color:#B0C4D8;line-height:1.9"><p><span class="pos">→</span> Profitable smaller book beats loss-making large book</p><p><span class="pos">→</span> Conservative +₹40M NI under mild stress</p><p><span class="pos">→</span> Gated dominates Aggressive under ALL scenarios</p><p><span class="pos">→</span> 82.5% of declines are value-destructive Band 4</p><p><span class="pos">→</span> Pricing Alpha adds +₹1,299M independently</p></div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<div style="border-top:1px solid #161D27;padding-top:14px">
-  <p style="font-size:9.5px;color:#3A5068;font-style:italic;margin-bottom:5px">All figures derived from loan-level portfolio analysis (61,503 applications). EAD, EL, Capital and RAROC computed using LGD=0.45, Basel risk weights, cost of capital 17%, product-rate revenue per risk band. Stress scenarios apply PD multipliers to baseline estimates.</p>
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
-    <p style="font-size:9.5px;color:#3A5068;font-style:italic;flex:1">Band composition, approval rates, default counts and net income figures are output from the strategy simulator notebook (NB05) applied to the test portfolio. Actual outcomes depend on macro conditions at deployment.</p>
-    <p style="font-size:9.5px;color:#2A4058;font-style:italic;flex-shrink:0;text-align:right">CRC-2026-09 · Risk Analytics · June 2026 · Board Restricted</p>
+<!-- ─────────────────────── DECISION REQUESTED ─────────────────────── -->
+<div style="background:#0C1928;border:1.5px solid #2563EB;border-radius:10px;padding:26px 28px;margin-top:4px">
+  <p style="font-size:9.5px;color:#2563EB;letter-spacing:.18em;text-transform:uppercase;font-weight:600;margin-bottom:16px">Decision Requested</p>
+  <div style="display:flex;gap:24px;align-items:flex-start">
+    <div style="flex:1">
+      <p style="font-size:22px;font-weight:700;color:#22C55E;margin-bottom:8px">Approve RAROC-Gated Strategy</p>
+      <p style="font-size:12px;color:#7A96B2;line-height:1.75;margin-bottom:16px">The Credit Risk Committee is requested to approve deployment of the RAROC-Gated approval policy (14% hurdle rate) as a replacement for the current Aggressive policy, subject to the phased implementation schedule below.</p>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:22px;height:22px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:white;flex-shrink:0">1</div>
+        <div><p style="font-size:11.5px;font-weight:600;color:#E2EAF4">Shadow deployment</p><p style="font-size:10.5px;color:#7A96B2">30 days parallel running — RAROC Gated decisions logged vs Aggressive actuals</p></div>
+      </div>
+      <div style="width:1px;height:10px;background:#1A2A3A;margin-left:11px"></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:22px;height:22px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:white;flex-shrink:0">2</div>
+        <div><p style="font-size:11.5px;font-weight:600;color:#E2EAF4">Pilot — 10% of volume</p><p style="font-size:10.5px;color:#7A96B2">Controlled rollout with daily monitoring against triggers in Risk Control Dashboard</p></div>
+      </div>
+      <div style="width:1px;height:10px;background:#1A2A3A;margin-left:11px"></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:22px;height:22px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:white;flex-shrink:0">3</div>
+        <div><p style="font-size:11.5px;font-weight:600;color:#E2EAF4">Full rollout</p><p style="font-size:10.5px;color:#7A96B2">Subject to pilot metrics remaining within amber thresholds</p></div>
+      </div>
+      <div style="width:1px;height:10px;background:#1A2A3A;margin-left:11px"></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="width:22px;height:22px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#0A0E13;flex-shrink:0">4</div>
+        <div><p style="font-size:11.5px;font-weight:600;color:#E2EAF4">Quarterly governance review</p><p style="font-size:10.5px;color:#7A96B2">RAROC gate recalibration · PD model PSI monitoring · efficient frontier re-computation</p></div>
+      </div>
+    </div>
+    <div style="flex-shrink:0;width:200px;background:#0A0E13;border:1px solid #1A3A6A;border-radius:8px;padding:18px 16px">
+      <p style="font-size:8.5px;color:#5A80A8;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px">Summary of Impact</p>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:10.5px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Incr. economic value</span><span class="pos">+₹335M</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">RAROC</span><span class="pos">+36.2%</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Exp. defaults avoided</span><span class="pos">641</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Capital released</span><span style="color:#56CCF2;font-weight:600">₹1,928M</span></div>
+        <div style="height:1px;background:#1A2A3A;margin:4px 0"></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#7A96B2">Pricing Alpha (available)</span><span style="color:#56CCF2;font-weight:600">+₹1,299M</span></div>
+      </div>
+      <div style="margin-top:14px;padding:10px;background:#0C2218;border:1px solid #1A4028;border-radius:6px;text-align:center">
+        <p style="font-size:18px;font-weight:700;color:#22C55E;margin-bottom:2px">✓ APPROVE</p>
+        <p style="font-size:8.5px;color:#3A8050;line-height:1.5">Phased deployment<br>Quarterly review</p>
+      </div>
+    </div>
   </div>
+</div>
+
+<!-- ─────────────────────── FOOTER ─────────────────────── -->
+<div style="border-top:1px solid #161D27;padding-top:14px;margin-top:28px">
+  <p style="font-size:9px;color:#3A5068;font-style:italic;margin-bottom:5px">All figures derived from loan-level portfolio analysis (61,503 applications). EAD, EL, Capital and RAROC computed using LGD 0.45, Basel risk weights, cost of capital 17%, product-rate revenue per risk band. Policy efficient frontier computed by applying RAROC threshold sweep to 61,503 loan-level records — 12 threshold points from RAROC≥-50% to RAROC≥71%.</p>
+  <p style="font-size:9px;color:#3A5068;font-style:italic">Stress scenarios apply PD multipliers (×1.5/×2.5/×3.6) to baseline PD estimates. Expected default counts and rates are model outputs — actual outcomes depend on macro conditions at deployment. No probability weights assigned to stress scenarios. CRC-2026-09 · Risk Analytics · June 2026 · Classification: Board Restricted</p>
 </div>
 
 <script>
-Chart.defaults.color = '#7A96B2';
-Chart.defaults.borderColor = '#1E2A38';
-Chart.defaults.font.family = "'Segoe UI',system-ui,-apple-system,sans-serif";
-Chart.defaults.font.size = 10.5;
+Chart.defaults.color='#7A96B2';
+Chart.defaults.borderColor='#1E2A38';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=10;
 
-new Chart(document.getElementById('stressChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Baseline', 'Mild (PD ×1.5)', 'Severe (PD ×2.5)', 'Extreme (PD ×3.6)'],
-    datasets: [
-      {
-        label: 'Aggressive (₹M)',
-        data: [-169, -1343, -4279, -8414],
-        backgroundColor: 'rgba(239,68,68,.5)',
-        borderColor: 'rgba(239,68,68,.75)',
-        borderWidth: 1,
-        borderRadius: 3
-      },
-      {
-        label: 'RAROC Gated (₹M)',
-        data: [166, -4, -429, -1166],
-        backgroundColor: 'rgba(34,197,94,.5)',
-        borderColor: 'rgba(34,197,94,.75)',
-        borderWidth: 1,
-        borderRadius: 3
-      },
-      {
-        label: 'Conservative (₹M)',
-        data: [68, 40, -29, -148],
-        backgroundColor: 'rgba(86,204,242,.4)',
-        borderColor: 'rgba(86,204,242,.65)',
-        borderWidth: 1,
-        borderRadius: 3
-      }
+// Efficient frontier chart
+new Chart(document.getElementById('frontier'),{
+  type:'line',
+  data:{
+    labels:['27.4%','18.0%','13.9%','12.2%','10.0%','8.3%','6.6%','3.2%'],
+    datasets:[{
+      label:'Net Income (₹M)',
+      data:[143,183,175,166,150,135,117,68],
+      borderColor:'rgba(34,197,94,.9)',
+      backgroundColor:'rgba(34,197,94,.08)',
+      borderWidth:2,
+      pointRadius:[5,7,5,9,5,5,5,5],
+      pointBackgroundColor:['rgba(34,197,94,.7)','rgba(255,220,50,.9)','rgba(34,197,94,.7)','rgba(59,130,246,.9)','rgba(34,197,94,.7)','rgba(34,197,94,.7)','rgba(34,197,94,.7)','rgba(34,197,94,.7)'],
+      pointBorderColor:['transparent','#FFDC32','transparent','#3B82F6','transparent','transparent','transparent','transparent'],
+      pointBorderWidth:2,
+      tension:0.35,
+      fill:true,
+      yAxisID:'y'
+    },{
+      label:'Portfolio RAROC (%)',
+      data:[11.2,26.1,33.0,36.2,41.0,45.3,50.5,71.0],
+      borderColor:'rgba(86,204,242,.7)',
+      borderWidth:1.5,
+      borderDash:[4,3],
+      pointRadius:3,
+      pointBackgroundColor:'rgba(86,204,242,.6)',
+      tension:0.35,
+      yAxisID:'y2'
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:9,padding:12,font:{size:9.5}}},
+      tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?' NI: ₹'+ctx.raw+'M':' RAROC: '+ctx.raw+'%'}}
+    },
+    scales:{
+      x:{title:{display:true,text:'Approval Rate',font:{size:9},color:'#5A7090'},grid:{color:'#0D1520'},ticks:{color:'#7A96B2',font:{size:9}}},
+      y:{title:{display:true,text:'Net Income (₹M)',font:{size:9},color:'#5A7090'},grid:{color:'#0D1520'},ticks:{color:'#7A96B2',callback:v=>'₹'+v+'M'}},
+      y2:{title:{display:true,text:'RAROC (%)',font:{size:9},color:'#56CCF2'},position:'right',grid:{drawOnChartArea:false},ticks:{color:'#56CCF2',callback:v=>v+'%'}}
+    }
+  }
+});
+
+// Stress scenario chart
+Chart.defaults.color='#7A96B2';Chart.defaults.borderColor='#1E2A38';Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";Chart.defaults.font.size=10;
+new Chart(document.getElementById('sc'),{
+  type:'bar',
+  data:{
+    labels:['Baseline','Mild (×1.5)','Severe (×2.5)','Extreme (×3.6)'],
+    datasets:[
+      {label:'Aggressive',data:[-169,-1343,-4279,-8414],backgroundColor:'rgba(239,68,68,.5)',borderColor:'rgba(239,68,68,.75)',borderWidth:1,borderRadius:3},
+      {label:'RAROC Gated',data:[166,-4,-429,-1166],backgroundColor:'rgba(34,197,94,.5)',borderColor:'rgba(34,197,94,.75)',borderWidth:1,borderRadius:3},
+      {label:'Conservative',data:[68,40,-29,-148],backgroundColor:'rgba(86,204,242,.4)',borderColor:'rgba(86,204,242,.65)',borderWidth:1,borderRadius:3}
     ]
   },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { boxWidth: 10, padding: 12, font: { size: 10 } } },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ₹${ctx.raw.toLocaleString()}M` } }
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom',labels:{boxWidth:9,padding:11,font:{size:9.5}}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ₹${ctx.raw.toLocaleString()}M`}}
     },
-    scales: {
-      x: { grid: { color: '#0D1520' }, ticks: { color: '#7A96B2', font: { size: 9 } } },
-      y: { grid: { color: '#0D1520' }, ticks: { color: '#7A96B2', callback: v => '₹' + v.toLocaleString() + 'M' } }
+    scales:{
+      x:{grid:{color:'#0D1520'},ticks:{color:'#7A96B2',font:{size:9}}},
+      y:{grid:{color:'#0D1520'},ticks:{color:'#7A96B2',callback:v=>'₹'+v.toLocaleString()+'M'}}
     }
   }
 });
