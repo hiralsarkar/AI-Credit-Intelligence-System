@@ -24,3 +24,7 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local tooling / scratch
+.claude/
+_keystone_*.py
