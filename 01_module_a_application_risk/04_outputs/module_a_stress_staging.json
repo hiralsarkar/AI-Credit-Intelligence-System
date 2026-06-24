@@ -1,0 +1,53 @@
+{
+  "sc3_point": {
+    "approval": 0.619,
+    "default": 0.0361
+  },
+  "recommended_book": {
+    "loans": 38070,
+    "approval": 0.619,
+    "net_income_cr": 176.2,
+    "portfolio_raroc": 0.934,
+    "ecl_rate": 0.0164
+  },
+  "ifrs9_staging_approved": {
+    "1": {
+      "loans": 36697,
+      "share": 0.9639,
+      "mean_pd": 0.0368,
+      "ecl_rate": 0.0166
+    },
+    "2": {
+      "loans": 0,
+      "share": 0.0,
+      "mean_pd": 0.0,
+      "ecl_rate": 0.0
+    },
+    "3": {
+      "loans": 1373,
+      "share": 0.0361,
+      "mean_pd": 0.0455,
+      "ecl_rate": 0.0205
+    }
+  },
+  "ifrs9_staging_pool": {
+    "1": {
+      "loans": 53274,
+      "share": 0.8662,
+      "mean_pd": 0.0609,
+      "ecl_rate": 0.0274
+    },
+    "2": {
+      "loans": 3264,
+      "share": 0.0531,
+      "mean_pd": 0.2805,
+      "ecl_rate": 0.1262
+    },
+    "3": {
+      "loans": 4965,
+      "share": 0.0807,
+      "mean_pd": 0.1582,
+      "ecl_rate": 0.0712
+    }
+  }
+}

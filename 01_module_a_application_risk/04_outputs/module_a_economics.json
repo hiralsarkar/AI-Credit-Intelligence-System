@@ -1,0 +1,88 @@
+{
+  "incumbent": {
+    "approval": 0.5,
+    "actual_default": 0.0369,
+    "model_pd": 0.0377,
+    "ecl_rate": 0.0167,
+    "total_ni_cr": 144.4,
+    "total_ead_cr": 1969.8,
+    "econ_capital_cr": 155.1,
+    "portfolio_raroc": 0.931,
+    "n_loans": 30752
+  },
+  "custom_same_volume": {
+    "approval": 0.5,
+    "actual_default": 0.0295,
+    "model_pd": 0.031,
+    "ecl_rate": 0.0138,
+    "total_ni_cr": 149.3,
+    "total_ead_cr": 1959.3,
+    "econ_capital_cr": 154.3,
+    "portfolio_raroc": 0.9675,
+    "n_loans": 30752
+  },
+  "custom_same_default": {
+    "approval": 0.636,
+    "actual_default": 0.0369,
+    "model_pd": 0.0381,
+    "ecl_rate": 0.0169,
+    "total_ni_cr": 179.8,
+    "total_ead_cr": 2457.8,
+    "econ_capital_cr": 193.6,
+    "portfolio_raroc": 0.9288,
+    "n_loans": 39116
+  },
+  "custom_raroc_gated": {
+    "approval": 0.8909,
+    "actual_default": 0.0575,
+    "model_pd": 0.0587,
+    "ecl_rate": 0.0254,
+    "total_ni_cr": 215.5,
+    "total_ead_cr": 3334.2,
+    "econ_capital_cr": 275.3,
+    "portfolio_raroc": 0.7829,
+    "n_loans": 54794
+  },
+  "band_economics": [
+    {
+      "band": 1,
+      "loans": 28399,
+      "mean_pd": 0.0293,
+      "actual_default": 0.0277,
+      "ecl_rate": 0.013,
+      "raroc": 0.9772
+    },
+    {
+      "band": 2,
+      "loans": 17507,
+      "mean_pd": 0.0712,
+      "actual_default": 0.0705,
+      "ecl_rate": 0.0319,
+      "raroc": 0.7377
+    },
+    {
+      "band": 3,
+      "loans": 10917,
+      "mean_pd": 0.138,
+      "actual_default": 0.1399,
+      "ecl_rate": 0.0619,
+      "raroc": 0.2675
+    },
+    {
+      "band": 4,
+      "loans": 4158,
+      "mean_pd": 0.2679,
+      "actual_default": 0.2802,
+      "ecl_rate": 0.1198,
+      "raroc": -0.1892
+    },
+    {
+      "band": 5,
+      "loans": 522,
+      "mean_pd": 0.4763,
+      "actual_default": 0.4808,
+      "ecl_rate": 0.2135,
+      "raroc": -0.7839
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "incumbent": {
+    "auc": 0.718,
+    "ks": 0.3235,
+    "gini": 0.436
+  },
+  "custom": {
+    "auc": 0.7563,
+    "ks": 0.3791,
+    "gini": 0.5125
+  },
+  "swap_set": {
+    "anchor_incumbent_approval": 0.5,
+    "anchor_incumbent_default": 0.0369,
+    "sc1_custom_default_same_approval": 0.0295,
+    "sc1_default_reduction_pp": 0.0074,
+    "sc1_default_reduction_rel": 0.2018,
+    "sc2_custom_approval_same_default": 0.636,
+    "sc2_approval_gain_pp": 0.136,
+    "sc2_approval_gain_rel": 0.272,
+    "sc3_custom_approval": 0.626,
+    "sc3_custom_default": 0.0363
+  }
+}
