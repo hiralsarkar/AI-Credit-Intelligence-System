@@ -1,0 +1,23 @@
+# Normalise line endings across platforms
+* text=auto eol=lf
+
+# Explicit text types
+*.py    text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.csv   text eol=lf
+
+# Binary types (never normalise)
+*.pkl   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gz    binary
+*.zip   binary
+*.ipynb text eol=lf
+
+# Mark notebooks and large data as not language-classified on GitHub
+*.ipynb linguist-documentation
+**/01_data/** linguist-generated
