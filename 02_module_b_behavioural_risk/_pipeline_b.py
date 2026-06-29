@@ -8,6 +8,9 @@ same budget = catch more at the same cost.
 """
 import warnings, json; warnings.filterwarnings("ignore")
 import numpy as np, pandas as pd
+import os
+from pathlib import Path
+_HERE = Path(__file__).resolve().parent
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.impute import SimpleImputer
@@ -15,7 +18,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
 
-BASE = r"C:\Users\hiral\Downloads\AI-Credit-Intelligence-System\02_module_b_behavioural_risk"
+BASE = str(_HERE)
 P = BASE + r"\01_data\processed"
 Xtr = pd.read_csv(P + r"\X_train_b.csv"); ytr = pd.read_csv(P + r"\y_train_b.csv").iloc[:, 0].values
 Xte = pd.read_csv(P + r"\X_test_b.csv"); yte = pd.read_csv(P + r"\y_test_b.csv").iloc[:, 0].values
