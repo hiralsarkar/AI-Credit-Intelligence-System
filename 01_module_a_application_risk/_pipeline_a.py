@@ -7,6 +7,9 @@ All fitting on train only. Stratified 80/20, seed 42 (same split as keystone).
 """
 import warnings, json; warnings.filterwarnings("ignore")
 import numpy as np, pandas as pd
+import os
+from pathlib import Path
+_HERE = Path(__file__).resolve().parent
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
@@ -15,7 +18,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
 
-BASE = r"C:\Users\hiral\Downloads\AI-Credit-Intelligence-System\01_module_a_application_risk"
+BASE = str(_HERE)
 RAW = BASE + r"\01_data\raw\application_train.csv"
 PROC = BASE + r"\01_data\processed"
 OUT = BASE + r"\04_outputs"
