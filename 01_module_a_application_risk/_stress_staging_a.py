@@ -5,7 +5,10 @@ Same economic assumptions as _economics_a.py.
 import warnings, json; warnings.filterwarnings("ignore")
 import numpy as np, pandas as pd
 
-BASE = r"C:\Users\hiral\Downloads\AI-Credit-Intelligence-System\01_module_a_application_risk"
+import os
+from pathlib import Path
+_HERE = Path(__file__).resolve().parent
+BASE = str(_HERE)
 s = pd.read_csv(BASE + r"\01_data\processed\scored_test_a.csv")
 LGD, CAP, REV, OPEX_R = 0.45, 0.105, 0.12, 0.03
 RW_MAP = {1: .75, 2: .75, 3: 1.0, 4: 1.5, 5: 1.5}
