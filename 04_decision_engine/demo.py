@@ -6,19 +6,19 @@ A self-contained runnable demo of the complete three-signal decision engine.
 Usage
 -----
     # Run with default applicant profiles
-    python 05_demo.py
+    python demo.py
 
     # Run with a custom applicant (key=value pairs)
-    python 05_demo.py \\
+    python demo.py \\
         --pd_a 0.08 --credit_score 642 --ead 250000 --raroc 0.18 \\
         --pd_b 0.05 --brs 72 \\
         --market_pd 0.12 --grade B --rate 12.5 --pricing Fair
 
     # Run all preset profiles and show comparison
-    python 05_demo.py --all
+    python demo.py --all
 
     # Batch mode: process a scored output CSV
-    python 05_demo.py --batch path/to/scorecard_output.csv
+    python demo.py --batch path/to/scorecard_output.csv
 
 This demo works WITHOUT the trained model .pkl files. It uses pre-computed
 signal dictionaries directly. After running notebooks A1-C3, replace the
@@ -42,6 +42,14 @@ from datetime import datetime
 
 # Add the engine directory to path so imports work from any location
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Force UTF-8 stdout so the box-drawing / status glyphs render on Windows
+# consoles (cp1252) instead of raising UnicodeEncodeError.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
 
 from signal_aggregator import (
     build_module_a_signal,
@@ -305,11 +313,11 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python 05_demo.py                      # Run all 4 preset profiles
-  python 05_demo.py --profile ANAND_MEHTA  # Run one profile
-  python 05_demo.py --pd_a 0.12 --credit_score 610 --ead 200000 --pd_b 0.08 --brs 55
-  python 05_demo.py --batch ../01_module_a_application_risk/01_data/processed/scorecard_output.csv
-  python 05_demo.py --summary            # Show audit log summary
+  python demo.py                      # Run all 4 preset profiles
+  python demo.py --profile ANAND_MEHTA  # Run one profile
+  python demo.py --pd_a 0.12 --credit_score 610 --ead 200000 --pd_b 0.08 --brs 55
+  python demo.py --batch ../01_module_a_application_risk/01_data/processed/scorecard_output.csv
+  python demo.py --summary            # Show audit log summary
         """
     )
 
@@ -388,7 +396,7 @@ Examples:
         # Final summary
         print("\n" + "═" * 72)
         print("  DEMO COMPLETE - 4 applicants processed, 4 decisions logged")
-        print("  Run  python 05_demo.py --summary  to see the audit log")
+        print("  Run  python demo.py --summary  to see the audit log")
         print("═" * 72)
 
 

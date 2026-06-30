@@ -46,11 +46,11 @@ Module A Signal          Module B Signal          Module C Signal
 | File | Description |
 |------|-------------|
 | `constants.py` | Single source of truth - all thresholds, weights, regulatory parameters |
-| `01_engine.py` | Core decision logic - 5-layer rules, produces APPROVE/DECLINE/REPRICE/MANUAL REVIEW |
-| `02_signal_aggregator.py` | Loads and combines Module A/B/C signals, computes composite PD |
-| `03_explainability.py` | Signal attribution, SHAP reason codes, adverse action narrative generator |
-| `04_audit_logger.py` | Logs every decision as JSON + CSV with full model provenance |
-| `05_demo.py` | Runnable demo - 4 preset applicant profiles + custom input + batch mode |
+| `engine.py` | Core decision logic - 5-layer rules, produces APPROVE/DECLINE/REPRICE/MANUAL REVIEW |
+| `signal_aggregator.py` | Loads and combines Module A/B/C signals, computes composite PD |
+| `explainability.py` | Signal attribution, SHAP reason codes, adverse action narrative generator |
+| `audit_logger.py` | Logs every decision as JSON + CSV with full model provenance |
+| `demo.py` | Runnable demo - 4 preset applicant profiles + custom input + batch mode |
 
 ---
 
@@ -93,22 +93,22 @@ Module C does not enter the composite PD - it modifies the routing path.
 cd 04_decision_engine
 
 # Run all 4 preset applicant profiles
-python 05_demo.py
+python demo.py
 
 # Run a single preset profile
-python 05_demo.py --profile ANAND_MEHTA
+python demo.py --profile ANAND_MEHTA
 
 # Custom applicant
-python 05_demo.py \
+python demo.py \
     --pd_a 0.08 --credit_score 642 --ead 250000 \
     --pd_b 0.05 --brs 72 \
     --market_pd 0.12 --grade B --rate 12.5 --pricing Fair
 
 # Batch mode (process a scored CSV from Module A)
-python 05_demo.py --batch ../01_module_a_application_risk/01_data/processed/scorecard_output.csv
+python demo.py --batch ../01_module_a_application_risk/01_data/processed/scorecard_output.csv
 
 # Show audit log summary
-python 05_demo.py --summary
+python demo.py --summary
 ```
 
 ---
