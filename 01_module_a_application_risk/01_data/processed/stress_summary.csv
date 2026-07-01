@@ -1,0 +1,5 @@
+Scenario,PD_shock,NI_cr,RAROC,ECL_rate,Status
+Baseline,1.0x,176.2,93.4%,1.64%,Value accretive
+Mild,1.5x,156.5,83.0%,2.47%,Value accretive
+Severe,2.5x,117.1,62.1%,4.11%,Value accretive
+Extreme,3.6x,73.8,39.1%,5.92%,Value accretive
