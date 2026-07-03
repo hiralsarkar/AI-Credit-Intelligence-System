@@ -1,6 +1,6 @@
-Band,Risk Category,PD Range,Score Range,Aggressive,RAROC-Gated,Risk-Based Pricing,Suggested Rate,Expected RAROC,Population %,Actual Default %,Count
-1,Very Low,0-5%,N/A,APPROVE,APPROVE,APPROVE,10%,66.3%,0.3%,0.5%,182
-2,Low,5-10%,N/A,APPROVE,APPROVE,APPROVE,12%,67.1%,2.9%,1.0%,1798
-3,Medium,10-20%,N/A,APPROVE,APPROVE,APPROVE,16%,56.3%,14.8%,1.8%,9120
-4,High,20-35%,N/A,APPROVE,DECLINE,APPROVE,22%,42.6%,27.6%,3.3%,16979
-5,Very High,>35%,N/A,DECLINE,DECLINE,DECLINE,N/A,N/A,54.3%,12.6%,33424
+Band,Loans,Mean_PD,Actual_default,RAROC,ECL_rate,IFRS9,Decision
+B1 Very Low,28399,2.9%,2.8%,97.7%,1.30%,Stage 1,APPROVE
+B2 Low,17507,7.1%,7.1%,73.8%,3.19%,Stage 1,APPROVE
+B3 Medium,10917,13.8%,14.0%,26.7%,6.19%,Stage 1,APPROVE (review)
+B4 High,4158,26.8%,28.0%,-18.9%,11.98%,Stage 2/3,DECLINE
+B5 Very High,522,47.6%,48.1%,-78.4%,21.35%,Stage 2/3,DECLINE
