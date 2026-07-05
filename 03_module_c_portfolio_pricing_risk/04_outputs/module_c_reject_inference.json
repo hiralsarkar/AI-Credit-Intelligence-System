@@ -1,0 +1,12 @@
+{
+  "accepted": 299877,
+  "rejected_sample": 131305,
+  "accept_rate": 0.375,
+  "model_auc": 0.64,
+  "acc_mean_pd": 0.2018,
+  "rej_mean_pd": 0.4245,
+  "booked_bad_rate": 0.2018,
+  "ttd_bad_rate": 0.341,
+  "selection_bias_pct": 0.69,
+  "safe_rejects_share": 0.355
+}
