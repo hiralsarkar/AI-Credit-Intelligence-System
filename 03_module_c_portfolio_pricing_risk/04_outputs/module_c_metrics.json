@@ -1,0 +1,18 @@
+{
+  "incumbent": {
+    "auc": 0.7048,
+    "ks": 0.3031,
+    "gini": 0.4097
+  },
+  "custom": {
+    "auc": 0.7294,
+    "ks": 0.3352,
+    "gini": 0.4588
+  },
+  "swap_set": {
+    "incumbent_approval": 0.5006,
+    "incumbent_default": 0.1043,
+    "sc1_custom_default": 0.0992,
+    "sc2_custom_approval": 0.538
+  }
+}
