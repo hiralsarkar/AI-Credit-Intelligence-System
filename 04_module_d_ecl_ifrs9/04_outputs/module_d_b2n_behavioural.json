@@ -1,0 +1,21 @@
+{
+  "b2n_auc_origination": 0.555,
+  "b2n_auc_behavioural": 0.946,
+  "b2n_auc_combined": 0.945,
+  "drivers": {
+    "dpd_bucket": 2.681,
+    "months_in_spell": -0.429,
+    "prior_episodes": -0.251,
+    "ltv": 0.073,
+    "ever_modified": 0.049,
+    "rate": 0.031,
+    "dti": 0.018,
+    "loan_age": 0.013,
+    "upb_ratio": -0.012,
+    "fico": 0.009
+  },
+  "roll_by_bucket": {
+    "30dpd": 0.0012,
+    "60dpd": 0.3778
+  }
+}
