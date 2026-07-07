@@ -1,0 +1,34 @@
+{
+  "incumbent": {
+    "auc": 0.7678,
+    "ks": 0.4869,
+    "gini": 0.5357
+  },
+  "custom": {
+    "auc": 0.86,
+    "ks": 0.5672,
+    "gini": 0.72
+  },
+  "capture": {
+    "10pct": {
+      "incumbent": 0.498,
+      "custom": 0.5359,
+      "lift_pp": 0.038
+    },
+    "15pct": {
+      "incumbent": 0.5835,
+      "custom": 0.6427,
+      "lift_pp": 0.0592
+    },
+    "20pct": {
+      "incumbent": 0.6533,
+      "custom": 0.7161,
+      "lift_pp": 0.0628
+    },
+    "30pct": {
+      "incumbent": 0.708,
+      "custom": 0.8122,
+      "lift_pp": 0.1043
+    }
+  }
+}
