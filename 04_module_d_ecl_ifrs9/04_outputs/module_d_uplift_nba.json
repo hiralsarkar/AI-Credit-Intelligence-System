@@ -1,0 +1,51 @@
+{
+  "n_delinquent": 20615,
+  "treated_share": 0.1255,
+  "naive_ate": 0.0422,
+  "avoided_default_treated": 0.9053,
+  "avoided_default_control": 0.8631,
+  "uplift_mean": 0.1231,
+  "uplift_decile_gap": [
+    [
+      1,
+      -0.757
+    ],
+    [
+      2,
+      null
+    ],
+    [
+      3,
+      null
+    ],
+    [
+      4,
+      null
+    ],
+    [
+      5,
+      0.0
+    ],
+    [
+      6,
+      -0.039
+    ],
+    [
+      7,
+      -0.056
+    ],
+    [
+      8,
+      0.155
+    ],
+    [
+      9,
+      0.458
+    ],
+    [
+      10,
+      0.745
+    ]
+  ],
+  "top20_uplift": 0.522
+}
