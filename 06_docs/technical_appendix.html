@@ -2,411 +2,266 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Technical Appendix - AI Credit Intelligence System</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#070B12;font-family:'Segoe UI',system-ui,sans-serif;color:#E2EAF4;padding:40px 56px 80px;max-width:1200px;margin:0 auto}
-.doc-label{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#2563EB;margin-bottom:8px}
-h1{font-size:32px;font-weight:700;color:#F1F5F9;letter-spacing:-.4px;margin-bottom:6px}
-.doc-sub{font-size:13px;color:#7A96B2;margin-bottom:40px;line-height:1.7}
-h2{font-size:20px;font-weight:700;color:#E2EAF4;margin:40px 0 6px;padding-top:40px;border-top:1px solid #161D27}
-h2:first-of-type{margin-top:0;padding-top:0;border-top:none}
-h3{font-size:14px;font-weight:600;color:#B0C4D8;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.08em}
-.shd{width:32px;height:2px;background:#2563EB;margin-bottom:20px}
-p{font-size:13px;color:#B0C4D8;line-height:1.85;margin-bottom:12px}
-.panel{background:#0D1520;border:1px solid #1E2A38;border-radius:10px;padding:22px 24px;margin-bottom:16px}
-.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
-.three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px}
-.four-col{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
-th{padding:8px 12px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#5A7090;border-bottom:1px solid #1E2A38;background:#070B12}
-td{padding:8px 12px;border-bottom:.5px solid rgba(30,42,56,.7);color:#B0C4D8}
-td.fw{color:#E2EAF4;font-weight:500}
-th.r,td.r{text-align:right}
-tr.hi{background:rgba(34,197,94,.06)}
-.pos{color:#22C55E;font-weight:600}.neg{color:#EF4444;font-weight:600}.warn{color:#EAB308;font-weight:500}
-.tag{border-radius:3px;padding:2px 8px;font-size:9.5px;font-weight:600;white-space:nowrap;display:inline-block}
-.kpi-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.kpi{background:#0D1520;border:1px solid #1E2A38;border-radius:8px;padding:16px 18px;min-width:140px}
-.kpi-lbl{font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#5A7090;margin-bottom:6px}
-.kpi-val{font-size:26px;font-weight:700;line-height:1}
-.formula{background:#0A0E13;border:1px solid #1A2433;border-radius:6px;padding:14px 18px;font-family:'Courier New',monospace;font-size:12.5px;color:#60A5FA;margin:12px 0;line-height:1.9}
-.note-box{background:#0A1020;border-left:3px solid #2563EB;border-radius:0 6px 6px 0;padding:12px 16px;margin:12px 0}
-.note-box p{font-size:11.5px;color:#7A96B2;margin-bottom:0}
-.warn-box{background:#16130A;border-left:3px solid #EAB308;border-radius:0 6px 6px 0;padding:12px 16px;margin:12px 0}
-.warn-box p{font-size:11.5px;color:#9A8050;margin-bottom:0}
-.green-box{background:#091A0E;border-left:3px solid #22C55E;border-radius:0 6px 6px 0;padding:12px 16px;margin:12px 0}
-.green-box p{font-size:11.5px;color:#5A9070;margin-bottom:0}
-.toc{background:#0D1520;border:1px solid #1E2A38;border-radius:10px;padding:20px 24px;margin-bottom:36px}
-.toc-item{font-size:12.5px;color:#7A96B2;padding:5px 0;border-bottom:.5px solid rgba(30,42,56,.5);display:flex;justify-content:space-between}
-.toc-item:last-child{border-bottom:none}
-.toc-sec{font-size:9px;color:#3A5068;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:10px 0 4px;margin-top:4px}
-canvas{max-height:220px}
+:root{
+  --bg:#0A0A0F; --surface:#131119; --card:#1B1825; --card2:#211C2E; --border:#2C2838;
+  --purple:#8B5CF6; --purple-deep:#6D28D9; --purple-bright:#A78BFA;
+  --gold:#D4AF37; --gold-bright:#E6C260;
+  --white:#F5F4F8; --text:#C9C7D4; --muted:#A29FB2; --faint:#7C7990; --risk:#C45B5B; --good:#5EEAD4;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:13.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.accent-bar{height:3px;background:linear-gradient(90deg,var(--purple-deep),var(--purple) 40%,var(--gold) 100%)}
+.wrap{max-width:1000px;margin:0 auto;padding:46px 48px 80px}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:'';width:30px;height:1px;background:var(--gold)}
+h1{font-family:var(--disp);font-weight:700;font-size:32px;color:var(--white);letter-spacing:-.3px;margin-bottom:8px}
+.sub{font-size:13.5px;color:var(--muted);margin-bottom:8px;max-width:780px}
+h2{font-family:var(--disp);font-weight:600;font-size:20px;color:var(--white);margin:40px 0 4px;padding-top:28px;border-top:1px solid var(--border)}
+h2:first-of-type{border-top:none;padding-top:6px}
+.shd{width:28px;height:2px;background:var(--gold);margin-bottom:14px}
+h3{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-bright);margin:20px 0 8px}
+p{font-size:13.5px;color:var(--text);line-height:1.75;margin-bottom:12px;max-width:830px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:16px 0}
+.kpi{background:var(--card);padding:18px 16px}
+.kpi-v{font-family:var(--disp);font-weight:700;font-size:26px;line-height:1;margin-bottom:5px;color:var(--gold)}
+.kpi-v.p{color:var(--purple-bright)} .kpi-v.w{color:var(--white)}
+.kpi-l{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin:14px 0}
+thead tr{background:var(--card2)}
+th{padding:9px 12px;text-align:left;font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border)}
+td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+td.fw{color:var(--white);font-weight:500}
+th.r,td.rt{text-align:right;font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);font-size:12px}
+.win{color:var(--gold);font-weight:600}.pos{color:var(--purple-bright);font-weight:600}.neg{color:var(--risk);font-weight:600}
+tr.hl{background:rgba(212,175,55,.07)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0}
+.box{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:18px 20px}
+.box h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.fbar{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:11.5px}
+.fbar .nm{font-family:var(--mono);font-size:10.5px;color:var(--text);width:200px;flex-shrink:0}
+.fbar .track{flex:1;height:9px;background:var(--surface);border-radius:5px;overflow:hidden}
+.fbar .fill{height:100%;background:linear-gradient(90deg,var(--purple-deep),var(--purple-bright))}
+.formula{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:0 6px 6px 0;padding:13px 17px;font-family:var(--mono);font-size:12px;color:var(--purple-bright);margin:12px 0;line-height:1.85}
+.note{background:rgba(139,92,246,.06);border-left:3px solid var(--purple);border-radius:0 5px 5px 0;padding:12px 16px;margin:12px 0;font-size:12px;color:var(--muted)}
+.note strong{color:var(--purple-bright)}
+.good-note{background:rgba(94,234,212,.05);border-left:3px solid var(--good);border-radius:0 5px 5px 0;padding:12px 16px;margin:12px 0;font-size:12.5px;color:var(--text)}
+.good-note strong{color:var(--good)}
+.tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.05em;padding:2px 7px;border-radius:3px;font-weight:600}
+.t-pass{background:rgba(94,234,212,.13);color:var(--good);border:1px solid rgba(94,234,212,.3)}
+.t-amber{background:rgba(212,175,55,.13);color:var(--gold-bright);border:1px solid rgba(212,175,55,.3)}
+.t-red{background:rgba(196,91,91,.13);color:var(--risk);border:1px solid rgba(196,91,91,.3)}
+.foot{border-top:1px solid var(--border);margin-top:40px;padding-top:18px;font-family:var(--mono);font-size:10px;color:var(--faint);line-height:1.9}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 22px;margin:24px 0}
+.toc a{color:var(--text);text-decoration:none;font-size:12.5px;display:block;padding:4px 0;border-bottom:1px solid var(--border)}
+.toc a:last-child{border-bottom:none}
+.toc a:hover{color:var(--gold)}
+.toc span{color:var(--faint);font-family:var(--mono);font-size:10px}
 </style>
 </head>
 <body>
+<div class="accent-bar"></div>
+<div class="wrap">
+  <div class="eyebrow">Module A - Application Risk - Technical Appendix - Board Restricted</div>
+  <h1>Technical Appendix</h1>
+  <p class="sub">PD model development, validation, calibration, stability, and monitoring for the application-risk
+    model. All figures are from the executed pipeline on the held-out test set (61,503 loans). The custom model is
+    benchmarked throughout against the incumbent bureau-score process it replaces.</p>
 
-<p class="doc-label">Technical Appendix · CRC-2026-09 · Board Restricted · June 2026</p>
-<h1>Technical Appendix</h1>
-<p class="doc-sub">PD Model Development · Validation · Calibration · Population Stability · Monitoring Triggers<br>AI Credit Intelligence System - Module A Application Risk</p>
-
-<!-- TABLE OF CONTENTS -->
-<div class="toc">
-  <p class="toc-sec">Contents</p>
-  <div class="toc-item"><span>1. Dataset & Feature Engineering</span><span style="color:#3A5068">307,511 applications · 121 features → 24 selected</span></div>
-  <div class="toc-item"><span>2. PD Model Development</span><span style="color:#3A5068">Logistic regression · WoE encoding · regularisation</span></div>
-  <div class="toc-item"><span>3. Model Discrimination</span><span style="color:#3A5068">AUROC · KS statistic · Gini coefficient · lift curves</span></div>
-  <div class="toc-item"><span>4. Calibration</span><span style="color:#3A5068">Platt scaling · Brier score · reliability diagram · band-level PD ratio</span></div>
-  <div class="toc-item"><span>5. Scorecard Construction</span><span style="color:#3A5068">PDO · base score · integer score · band mapping</span></div>
-  <div class="toc-item"><span>6. Population Stability Index (PSI)</span><span style="color:#3A5068">Score distribution monitoring · Amber/Red thresholds</span></div>
-  <div class="toc-item"><span>7. Vintage & Survival Analysis</span><span style="color:#3A5068">Cohort default rates · survival curve · IFRS 9 lifetime PD</span></div>
-  <div class="toc-item"><span>8. Monitoring Dashboard Triggers</span><span style="color:#3A5068">RAROC · Band 4-5 share · PSI · ECL coverage</span></div>
-  <div class="toc-item"><span>9. Model Limitations & Future Work</span><span style="color:#3A5068">Known gaps · recommended enhancements</span></div>
-</div>
-
-<!-- ============================================================ -->
-<h2>1. Dataset & Feature Engineering</h2>
-<div class="shd"></div>
-
-<p>The model is trained on the Home Credit Group retail lending dataset comprising 307,511 applications with a 12-month default observation window. The target variable is binary: 1 = default within 12 months, 0 = performing.</p>
-
-<div class="kpi-row">
-  <div class="kpi"><div class="kpi-lbl">Total applications</div><div class="kpi-val" style="color:#60A5FA">307,511</div></div>
-  <div class="kpi"><div class="kpi-lbl">Default rate</div><div class="kpi-val" style="color:#EF4444">8.07%</div></div>
-  <div class="kpi"><div class="kpi-lbl">Raw features</div><div class="kpi-val" style="color:#60A5FA">121</div></div>
-  <div class="kpi"><div class="kpi-lbl">Selected features</div><div class="kpi-val" style="color:#22C55E">24</div></div>
-  <div class="kpi"><div class="kpi-lbl">Train / Test split</div><div class="kpi-val" style="color:#60A5FA">80/20</div></div>
-  <div class="kpi"><div class="kpi-lbl">Stratified</div><div class="kpi-val" style="color:#22C55E">Yes</div></div>
-</div>
-
-<h3>Feature Selection Pipeline</h3>
-<div class="two-col">
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:10px">Step 1 - Missing Value Threshold</p>
-    <p>Features with more than 40% missing values are excluded before imputation. 18 features removed at this stage.</p>
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin:10px 0 6px">Step 2 - Information Value (IV) Screening</p>
-    <table>
-      <thead><tr><th>IV Range</th><th>Predictive Power</th><th>Action</th></tr></thead>
-      <tbody>
-        <tr><td>&lt; 0.02</td><td>Useless</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">Remove</span></td></tr>
-        <tr><td>0.02-0.10</td><td>Weak</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Review</span></td></tr>
-        <tr><td>0.10-0.30</td><td>Medium</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Include</span></td></tr>
-        <tr><td>0.30-0.50</td><td>Strong</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">Include</span></td></tr>
-        <tr><td>&gt; 0.50</td><td>Suspicious</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Investigate</span></td></tr>
-      </tbody>
-    </table>
+  <div class="toc">
+    <a href="#s1">1. Dataset and feature engineering <span>307,511 applications, 8.07% default</span></a>
+    <a href="#s2">2. PD model and feature importance <span>incumbent 0.718 vs custom 0.756 AUC</span></a>
+    <a href="#s3">3. Discrimination <span>AUC, KS, Gini vs benchmarks</span></a>
+    <a href="#s4">4. Calibration and stability <span>decile calibration, PSI 0.0002</span></a>
+    <a href="#s5">5. Operating threshold: precision and recall <span>72.3% of defaults declined</span></a>
+    <a href="#s6">6. Scorecard and risk bands <span>band economics, RAROC by band</span></a>
+    <a href="#s7">7. IFRS 9 staging <span>handled in Module D (panel data)</span></a>
+    <a href="#s8">8. Monitoring triggers <span>recommended-book baselines</span></a>
+    <a href="#s9">9. Limitations and future work</a>
   </div>
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:10px">Step 3 - Multicollinearity (VIF)</p>
-    <p>Variance Inflation Factor threshold: VIF &lt; 5. Correlated pairs resolved by retaining higher-IV feature. 12 features removed at this stage.</p>
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin:10px 0 6px">Step 4 - WoE Encoding</p>
-    <p>Each feature binned into 5-10 monotone bins. Weight of Evidence transformation applied:</p>
-    <div class="formula">WoE_i = ln(Events_i / Non-Events_i)
-         × (Total Non-Events / Total Events)
 
-IV = Σ (Events_i% - Non-Events_i%) × WoE_i</div>
-    <p>Monotone binning enforced for regulatory interpretability. Non-monotone bins flagged for review.</p>
+  <h2 id="s1">1. Dataset and feature engineering</h2>
+  <div class="shd"></div>
+  <p>The model is trained on the Home Credit retail application dataset: 307,511 applications, 122 raw fields, with a
+    binary 12-month default target (8.07% base rate). The data is split 80/20, stratified on the target, seed 42.</p>
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-v w">307,511</div><div class="kpi-l">Applications</div></div>
+    <div class="kpi"><div class="kpi-v">8.07%</div><div class="kpi-l">Default rate</div></div>
+    <div class="kpi"><div class="kpi-v p">122</div><div class="kpi-l">Raw fields</div></div>
+    <div class="kpi"><div class="kpi-v p">61,503</div><div class="kpi-l">Test loans</div></div>
   </div>
-</div>
+  <p>Feature pipeline: drop fields above 40% missing; median or modal imputation; Weight-of-Evidence treatment for the
+    interpretable scorecard; gradient-boosted trees (NaN-native) for the deployed discriminator. Feature screening uses
+    Information Value, correlation, and VIF for the scorecard track.</p>
 
-<!-- ============================================================ -->
-<h2>2. PD Model Development</h2>
-<div class="shd"></div>
-
-<p>The primary PD model uses logistic regression on WoE-encoded features. A secondary XGBoost model is trained for challenger comparison and SHAP explainability. The logistic regression champion is used for scorecard construction and regulatory submission; XGBoost is used for feature importance validation.</p>
-
-<div class="formula">PD = σ(β₀ + β₁·WoE(EXT_SOURCE_2) + β₂·WoE(DAYS_BIRTH)
-      + β₃·WoE(DAYS_EMPLOYED) + β₄·WoE(AMT_CREDIT_INCOME_PCT)
-      + β₅·WoE(PAYMENT_RATE) + ... + β₂₄·WoE(feature_24))
-
-where σ(x) = 1 / (1 + exp(-x))</div>
-
-<div class="two-col">
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">Top 8 Features by Information Value</p>
-    <table>
-      <thead><tr><th>Feature</th><th>Category</th><th class="r">IV</th></tr></thead>
-      <tbody>
-        <tr><td class="fw">EXT_SOURCE_2</td><td>External bureau</td><td class="r pos">0.342</td></tr>
-        <tr><td class="fw">EXT_SOURCE_3</td><td>External bureau</td><td class="r pos">0.298</td></tr>
-        <tr><td class="fw">DAYS_BIRTH</td><td>Demographics</td><td class="r pos">0.187</td></tr>
-        <tr><td class="fw">DAYS_EMPLOYED</td><td>Employment</td><td class="r pos">0.162</td></tr>
-        <tr><td class="fw">AMT_CREDIT_INCOME_PCT</td><td>Affordability</td><td class="r" style="color:#EAB308">0.124</td></tr>
-        <tr><td class="fw">PAYMENT_RATE</td><td>Repayment</td><td class="r" style="color:#EAB308">0.118</td></tr>
-        <tr><td class="fw">DAYS_LAST_PHONE_CHANGE</td><td>Behaviour</td><td class="r" style="color:#EAB308">0.094</td></tr>
-        <tr><td class="fw">AMT_REQ_CREDIT_BUREAU_YEAR</td><td>Bureau enquiries</td><td class="r" style="color:#EAB308">0.086</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">Regularisation & Cross-Validation</p>
-    <table>
-      <thead><tr><th>Parameter</th><th>Value</th><th>Rationale</th></tr></thead>
-      <tbody>
-        <tr><td class="fw">Regularisation</td><td>L2 (Ridge)</td><td>Stable coefficient estimates</td></tr>
-        <tr><td class="fw">C (inverse λ)</td><td>0.1</td><td>Grid search CV optimised</td></tr>
-        <tr><td class="fw">CV strategy</td><td>5-fold stratified</td><td>Class-balanced folds</td></tr>
-        <tr><td class="fw">Solver</td><td>liblinear</td><td>Efficient for sparse WoE</td></tr>
-        <tr><td class="fw">Class weight</td><td>balanced</td><td>Handles 8% imbalance</td></tr>
-        <tr><td class="fw">Calibration</td><td>Platt scaling</td><td>Post-hoc probability alignment</td></tr>
-      </tbody>
-    </table>
-    <div class="note-box" style="margin-top:12px">
-      <p>XGBoost challenger (n_estimators=500, max_depth=5, learning_rate=0.05) achieves AUROC 0.76 vs 0.74 for logistic regression. Marginal gain deemed insufficient to justify interpretability sacrifice for regulatory purposes.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<h2>3. Model Discrimination</h2>
-<div class="shd"></div>
-
-<div class="kpi-row">
-  <div class="kpi"><div class="kpi-lbl">AUROC (test)</div><div class="kpi-val" style="color:#22C55E">0.742</div></div>
-  <div class="kpi"><div class="kpi-lbl">KS Statistic</div><div class="kpi-val" style="color:#22C55E">0.334</div></div>
-  <div class="kpi"><div class="kpi-lbl">Gini Coefficient</div><div class="kpi-val" style="color:#22C55E">0.484</div></div>
-  <div class="kpi"><div class="kpi-lbl">Brier Score</div><div class="kpi-val" style="color:#EAB308">0.068</div></div>
-  <div class="kpi"><div class="kpi-lbl">Log-Loss</div><div class="kpi-val" style="color:#EAB308">0.231</div></div>
-  <div class="kpi"><div class="kpi-lbl">Precision@top10%</div><div class="kpi-val" style="color:#22C55E">24.1%</div></div>
-</div>
-
-<div class="two-col">
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">Discrimination Benchmarks (Retail Credit, NBFC/Bank India)</p>
-    <table>
-      <thead><tr><th>Metric</th><th class="r">Our Model</th><th class="r">Industry Min</th><th class="r">Industry Target</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr class="hi"><td class="fw">AUROC</td><td class="r pos">0.742</td><td class="r">0.65</td><td class="r">0.70</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Pass ✓</span></td></tr>
-        <tr class="hi"><td class="fw">KS</td><td class="r pos">0.334</td><td class="r">0.25</td><td class="r">0.30</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Pass ✓</span></td></tr>
-        <tr class="hi"><td class="fw">Gini</td><td class="r pos">0.484</td><td class="r">0.30</td><td class="r">0.40</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Pass ✓</span></td></tr>
-        <tr><td class="fw">Brier Score</td><td class="r" style="color:#EAB308">0.068</td><td class="r"> - </td><td class="r">&lt;0.08</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Pass ✓</span></td></tr>
-      </tbody>
-    </table>
-    <div class="green-box">
-      <p>All discrimination metrics exceed regulatory minimums. AUROC 0.742 is consistent with industry-grade retail credit models trained on application-only data (no transaction history). Models with bureau + behavioural data typically achieve AUROC 0.78-0.85.</p>
-    </div>
-  </div>
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">ROC Curve (Approximate)</p>
-    <div style="position:relative;height:190px"><canvas id="roc_chart"></canvas></div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<h2>4. Calibration</h2>
-<div class="shd"></div>
-
-<p>A well-discriminating model is not necessarily well-calibrated. Calibration measures whether predicted PD = actual default rate. For IFRS 9 provisioning, ECL = PD × LGD × EAD - a systematically biased PD directly inflates or deflates the provision.</p>
-
-<h3>Band-Level PD Ratio (Actual DR / Model PD)</h3>
-<p>PD Ratio &lt; 1.0 = model overpredicts default (conservative). PD Ratio &gt; 1.0 = model underpredicts default (optimistic). Acceptable range: 0.7× - 1.3×.</p>
-
-<table style="margin-bottom:20px">
-  <thead><tr><th>Risk Band</th><th class="r">Loans</th><th class="r">Model Avg PD</th><th class="r">Actual Default Rate</th><th class="r">PD Ratio</th><th class="r">ECL Impact</th><th>Calibration</th></tr></thead>
-  <tbody>
-    <tr><td class="fw" style="color:#22C55E">B1 - Very Low</td><td class="r">182</td><td class="r">3.82%</td><td class="r">0.55%</td><td class="r" style="color:#EAB308">0.14×</td><td class="r">Provision ↑ vs actual</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Conservative</span></td></tr>
-    <tr><td class="fw" style="color:#4ADE80">B2 - Low</td><td class="r">1,798</td><td class="r">8.04%</td><td class="r">1.00%</td><td class="r" style="color:#EAB308">0.12×</td><td class="r">Provision ↑ vs actual</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Conservative</span></td></tr>
-    <tr><td class="fw" style="color:#EAB308">B3 - Medium</td><td class="r">9,120</td><td class="r">15.52%</td><td class="r">1.81%</td><td class="r" style="color:#EAB308">0.12×</td><td class="r">Provision ↑ vs actual</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Conservative</span></td></tr>
-    <tr><td class="fw" style="color:#F97316">B4 - High</td><td class="r">16,979</td><td class="r">27.34%</td><td class="r">3.26%</td><td class="r" style="color:#EAB308">0.12×</td><td class="r">Provision ↑ vs actual</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Conservative</span></td></tr>
-    <tr><td class="fw" style="color:#EF4444">B5 - Very High</td><td class="r">33,424</td><td class="r">55.49%</td><td class="r">12.65%</td><td class="r" style="color:#EAB308">0.23×</td><td class="r">Provision ↑ vs actual</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Conservative</span></td></tr>
-  </tbody>
-</table>
-
-<div class="two-col">
-  <div class="warn-box" style="margin-bottom:0">
-    <p><strong style="color:#EAB308">Consistent over-prediction:</strong> The model predicts default at 4-8× the actual observed rate across all bands. This is structurally conservative - suitable for regulatory ECL provisioning where over-statement of risk is preferable. However, for RAROC computation, over-stated PD inflates EL and deflates NI, potentially causing economically sound loans to appear marginally negative. The RAROC gate threshold (≥ 2.5%) partially accounts for this by filtering out only those loans where RAROC is substantially negative, not just marginally so.</p>
-  </div>
-  <div class="note-box" style="margin-bottom:0">
-    <p><strong style="color:#60A5FA">Recalibration schedule:</strong> Annual recalibration using Platt scaling on the most recent 12-month observed outcomes. If PD Ratio drifts above 1.3× or below 0.5× at the portfolio level, trigger off-cycle recalibration. PSI &gt; 0.25 on score distribution also triggers recalibration review. Next scheduled recalibration: Q1 2027.</p>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<h2>5. Scorecard Construction</h2>
-<div class="shd"></div>
-
-<p>The logistic regression output is converted into an integer credit scorecard using the standard PDO (Points to Double the Odds) framework for underwriter interpretability.</p>
-
-<div class="formula">Score = Base_Score + Σ (WoE_i × Coefficient_i × Factor)
-
-Factor = PDO / ln(2)
-Offset = Base_Score - Factor × ln(Base_Odds)
-
-PDO = 20 points  |  Base_Score = 600  |  Base_Odds = 1:10 (Default:Non-Default)</div>
-
-<div class="two-col">
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">Score-to-Risk Band Mapping</p>
-    <table>
-      <thead><tr><th>Band</th><th>Score Range</th><th class="r">Avg PD</th><th class="r">RAROC</th><th>Decision</th></tr></thead>
-      <tbody>
-        <tr class="hi"><td class="fw" style="color:#22C55E">B1 Very Low</td><td>488-493</td><td class="r pos">3.82%</td><td class="r pos">+92.9%</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">Approve</span></td></tr>
-        <tr class="hi"><td class="fw" style="color:#4ADE80">B2 Low</td><td>487-488</td><td class="r pos">8.04%</td><td class="r pos">+68.5%</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">Approve</span></td></tr>
-        <tr class="hi"><td class="fw" style="color:#EAB308">B3 Medium</td><td>486-487</td><td class="r" style="color:#EAB308">15.52%</td><td class="r pos">+19.0%</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Approve (review)</span></td></tr>
-        <tr><td class="fw" style="color:#F97316">B4 High</td><td>480-486</td><td class="r neg">27.34%</td><td class="r neg">-20.9%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">Decline</span></td></tr>
-        <tr><td class="fw" style="color:#EF4444">B5 Very High</td><td>459-480</td><td class="r neg">55.49%</td><td class="r neg">-98.8%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">Decline</span></td></tr>
-      </tbody>
-    </table>
-    <div class="note-box">
-      <p>B3 loans (RAROC +19%) require RAROC gate evaluation. B3 borrowers with RAROC ≥ 2.5% are approved under the Portfolio Economic Optimum policy; B3 borrowers below the gate are declined. The gate operates on loan-level RAROC, not band alone.</p>
-    </div>
-  </div>
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">Score Distribution (61,503 Loan Evaluation Set)</p>
-    <div style="position:relative;height:190px"><canvas id="score_dist"></canvas></div>
-    <p style="font-size:10px;color:#5A7090;margin-top:8px">Score range 459-493. Narrow distribution reflects WoE binning normalization. B5 dominates lower bands (54.3% of book).</p>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<h2>6. Population Stability Index (PSI)</h2>
-<div class="shd"></div>
-
-<p>PSI measures the shift in score distribution between a reference population (training time) and a monitoring population (deployment time). A shift signals that the model's input population has changed, potentially invalidating the model's predictions.</p>
-
-<div class="formula">PSI = Σ (Actual_i% - Expected_i%) × ln(Actual_i% / Expected_i%)
-
-Threshold:  PSI &lt; 0.10  →  Stable (no action)
-            PSI 0.10-0.25 →  Amber (investigate)
-            PSI &gt; 0.25   →  Red (recalibrate or rebuild)</div>
-
-<div class="two-col">
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">PSI by Risk Band - Current Period</p>
-    <table>
-      <thead><tr><th>Band</th><th class="r">Expected %</th><th class="r">Actual %</th><th class="r">PSI Component</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td class="fw" style="color:#22C55E">B1 Very Low</td><td class="r">0.30%</td><td class="r">0.30%</td><td class="r">0.000</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw" style="color:#4ADE80">B2 Low</td><td class="r">2.92%</td><td class="r">2.90%</td><td class="r">0.000</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw" style="color:#EAB308">B3 Medium</td><td class="r">14.83%</td><td class="r">14.80%</td><td class="r">0.000</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw" style="color:#F97316">B4 High</td><td class="r">27.61%</td><td class="r">27.60%</td><td class="r">0.000</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw" style="color:#EF4444">B5 Very High</td><td class="r">54.35%</td><td class="r">54.40%</td><td class="r">0.000</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr style="background:rgba(34,197,94,.04)"><td class="fw" colspan="3">Total PSI</td><td class="r pos">0.001</td><td><span class="tag" style="background:rgba(34,197,94,.2);color:#22C55E">Stable ✓</span></td></tr>
-      </tbody>
-    </table>
-    <p style="font-size:10px;color:#5A7090;font-style:italic;margin-top:6px">Current PSI = 0.001 (train vs test on same dataset - expected near-zero). Production PSI should be computed quarterly against origination-period score distribution.</p>
-  </div>
-  <div class="panel">
-    <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">CSI - Characteristic Stability Index</p>
-    <p>CSI applies the PSI formula to individual input features rather than the score output. A feature with CSI &gt; 0.25 suggests the feature's distribution has shifted significantly - it may no longer be predictive in the same way as at training time.</p>
-    <table>
-      <thead><tr><th>Feature</th><th class="r">CSI</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td class="fw">EXT_SOURCE_2</td><td class="r pos">0.003</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw">EXT_SOURCE_3</td><td class="r pos">0.004</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw">DAYS_BIRTH</td><td class="r pos">0.002</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw">DAYS_EMPLOYED</td><td class="r pos">0.006</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-        <tr><td class="fw">AMT_CREDIT_INCOME_PCT</td><td class="r pos">0.008</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Stable</span></td></tr>
-      </tbody>
-    </table>
-    <div class="note-box" style="margin-top:10px">
-      <p>CSI monitoring should be run on each scoring feature monthly in production. Elevated CSI on EXT_SOURCE features (bureau-sourced) warrants bureau data quality checks - bureau distribution shifts are a common trigger for model drift.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<h2>7. Vintage & Survival Analysis</h2>
-<div class="shd"></div>
-
-<table>
-  <thead><tr><th>Cohort Year</th><th class="r">Loans</th><th class="r">Defaults</th><th class="r">Default Rate</th><th class="r">EAD (₹M)</th><th class="r">ECL Provision (₹M)</th><th>Trend</th></tr></thead>
-  <tbody>
-    <tr><td class="fw">2016</td><td class="r">1,415</td><td class="r">65</td><td class="r pos">4.59%</td><td class="r">1,067</td><td class="r">22</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Low risk</span></td></tr>
-    <tr><td class="fw">2017</td><td class="r">4,192</td><td class="r">189</td><td class="r pos">4.51%</td><td class="r">2,951</td><td class="r">60</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Low risk</span></td></tr>
-    <tr><td class="fw">2018</td><td class="r">8,293</td><td class="r">449</td><td class="r" style="color:#EAB308">5.41%</td><td class="r">5,344</td><td class="r">130</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Moderate</span></td></tr>
-    <tr><td class="fw">2019</td><td class="r">15,192</td><td class="r">855</td><td class="r" style="color:#EAB308">5.63%</td><td class="r">9,784</td><td class="r">248</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Moderate</span></td></tr>
-    <tr><td class="fw">2020</td><td class="r">22,080</td><td class="r">1,334</td><td class="r" style="color:#EAB308">6.04%</td><td class="r">13,916</td><td class="r">378</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Moderate</span></td></tr>
-    <tr><td class="fw">2021</td><td class="r">38,070</td><td class="r">2,448</td><td class="r" style="color:#F97316">6.43%</td><td class="r">24,054</td><td class="r">696</td><td><span class="tag" style="background:rgba(249,115,22,.15);color:#F97316">Elevated</span></td></tr>
-    <tr><td class="fw">2022</td><td class="r">29,929</td><td class="r">2,115</td><td class="r" style="color:#F97316">7.07%</td><td class="r">18,154</td><td class="r">577</td><td><span class="tag" style="background:rgba(249,115,22,.15);color:#F97316">Elevated</span></td></tr>
-    <tr><td class="fw">2023</td><td class="r">37,876</td><td class="r">3,132</td><td class="r neg">8.27%</td><td class="r">22,986</td><td class="r">855</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">High risk</span></td></tr>
-    <tr><td class="fw">2024</td><td class="r">57,621</td><td class="r">5,357</td><td class="r neg">9.30%</td><td class="r">33,287</td><td class="r">1,393</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">High risk</span></td></tr>
-    <tr><td class="fw">2025</td><td class="r">54,948</td><td class="r">5,229</td><td class="r neg">9.52%</td><td class="r">31,464</td><td class="r">1,347</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">High risk</span></td></tr>
-    <tr><td class="fw">2026</td><td class="r">37,672</td><td class="r">3,641</td><td class="r neg">9.67%</td><td class="r">21,046</td><td class="r">915</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">High risk</span></td></tr>
-  </tbody>
-</table>
-
-<div class="panel">
-  <p style="font-size:11px;font-weight:600;color:#B0C4D8;margin-bottom:12px">Survival Curve - Loan Age Buckets</p>
+  <h2 id="s2">2. PD model and feature importance</h2>
+  <div class="shd"></div>
+  <p>Two models are benchmarked: the <strong>incumbent</strong> - a logistic model on the bureau scores only
+    (<span class="mono">EXT_SOURCE_1/2/3</span>), representing what a lender uses before a custom model - and the
+    <strong>custom challenger</strong>, a gradient-boosted model on the full feature set. A logistic WoE scorecard is
+    retained as the interpretable, deployable artefact.</p>
   <table>
-    <thead><tr><th>Loan Age (MOB)</th><th class="r">Loans</th><th class="r">Period DR</th><th class="r">Survival S(t)</th><th class="r">Cumulative DR</th><th>IFRS 9 Use</th></tr></thead>
+    <thead><tr><th>Model</th><th>Role</th><th class="r">AUC</th><th class="r">KS</th><th class="r">Gini</th></tr></thead>
     <tbody>
-      <tr><td class="fw">0-3 months</td><td class="r">55,121</td><td class="r neg">9.35%</td><td class="r">0.9065</td><td class="r">9.35%</td><td> - </td></tr>
-      <tr><td class="fw">3-6 months</td><td class="r">8,789</td><td class="r neg">9.99%</td><td class="r">0.8160</td><td class="r">18.40%</td><td> - </td></tr>
-      <tr class="hi"><td class="fw" style="color:#60A5FA">6-12 months</td><td class="r">28,710</td><td class="r" style="color:#EAB308">9.89%</td><td class="r" style="color:#60A5FA">0.7353</td><td class="r" style="color:#60A5FA">26.47%</td><td><span class="tag" style="background:rgba(59,130,246,.15);color:#3B82F6">12M PD = 26.47%</span></td></tr>
-      <tr><td class="fw">12-24 months</td><td class="r">57,621</td><td class="r" style="color:#EAB308">9.30%</td><td class="r">0.6669</td><td class="r">33.31%</td><td> - </td></tr>
-      <tr><td class="fw">24-36 months</td><td class="r">37,876</td><td class="r" style="color:#EAB308">8.27%</td><td class="r">0.6118</td><td class="r">38.82%</td><td> - </td></tr>
-      <tr class="hi"><td class="fw" style="color:#22C55E">36M+ (full lifetime)</td><td class="r">119,393</td><td class="r" style="color:#22C55E">6.25%</td><td class="r" style="color:#22C55E">0.5735</td><td class="r" style="color:#22C55E">42.65%</td><td><span class="tag" style="background:rgba(34,197,94,.15);color:#22C55E">Lifetime PD = 42.65%</span></td></tr>
+      <tr><td class="fw">Bureau score only</td><td>Incumbent</td><td class="rt mono">0.7180</td><td class="rt mono">0.3235</td><td class="rt mono">0.4361</td></tr>
+      <tr class="hl"><td class="fw">Custom (full features)</td><td>Challenger</td><td class="rt win">0.7563</td><td class="rt win">0.3791</td><td class="rt win">0.5125</td></tr>
     </tbody>
   </table>
-  <div class="note-box">
-    <p>Lifetime PD per loan = 1 − (1 − PD_12m)^T where T = 3 years. This constant hazard assumption is validated by the empirical survival curve: model-implied S(36M) ≈ 0.574, empirical S(36M) = 0.5735. Scale factor: 1.614×.</p>
+  <h3>Top features by gain (custom model)</h3>
+  <div class="box">
+    <div class="fbar"><span class="nm">EXT_SOURCE_2 (bureau)</span><span class="track"><span class="fill" style="width:100%"></span></span></div>
+    <div class="fbar"><span class="nm">EXT_SOURCE_3 (bureau)</span><span class="track"><span class="fill" style="width:98%"></span></span></div>
+    <div class="fbar"><span class="nm">FLAG_EMP_PHONE</span><span class="track"><span class="fill" style="width:82%"></span></span></div>
+    <div class="fbar"><span class="nm">FLAG_DOCUMENT_3</span><span class="track"><span class="fill" style="width:49%"></span></span></div>
+    <div class="fbar"><span class="nm">EXT_SOURCE_1 (bureau)</span><span class="track"><span class="fill" style="width:36%"></span></span></div>
+    <div class="fbar"><span class="nm">REGION_RATING_CLIENT</span><span class="track"><span class="fill" style="width:30%"></span></span></div>
+    <div class="fbar"><span class="nm">AMT_GOODS_PRICE</span><span class="track"><span class="fill" style="width:29%"></span></span></div>
+    <div class="fbar"><span class="nm">AMT_REQ_BUREAU_DAY</span><span class="track"><span class="fill" style="width:26%"></span></span></div>
+    <div class="fbar"><span class="nm">DAYS_BIRTH (age)</span><span class="track"><span class="fill" style="width:26%"></span></span></div>
+  </div>
+  <p class="note"><strong>Read:</strong> the bureau scores (EXT_SOURCE_2/3/1) are the strongest predictors - which is
+    exactly why the incumbent bureau-score model is a respectable baseline. The custom model's lift comes from layering
+    document, employment, region, affordability, and bureau-enquiry signals on top of those scores.</p>
+
+  <h2 id="s3">3. Discrimination</h2>
+  <div class="shd"></div>
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-v">0.7563</div><div class="kpi-l">AUC (test)</div></div>
+    <div class="kpi"><div class="kpi-v">0.3791</div><div class="kpi-l">KS statistic</div></div>
+    <div class="kpi"><div class="kpi-v">0.5125</div><div class="kpi-l">Gini</div></div>
+    <div class="kpi"><div class="kpi-v p">+0.038</div><div class="kpi-l">AUC lift vs incumbent</div></div>
+  </div>
+  <table>
+    <thead><tr><th>Metric</th><th class="r">Our model</th><th class="r">Industry min</th><th class="r">Industry target</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="fw">AUC</td><td class="rt win">0.756</td><td class="rt mono">0.65</td><td class="rt mono">0.70</td><td><span class="tag t-pass">Pass</span></td></tr>
+      <tr><td class="fw">KS</td><td class="rt win">0.379</td><td class="rt mono">0.25</td><td class="rt mono">0.30</td><td><span class="tag t-pass">Pass</span></td></tr>
+      <tr><td class="fw">Gini</td><td class="rt win">0.513</td><td class="rt mono">0.30</td><td class="rt mono">0.40</td><td><span class="tag t-pass">Pass</span></td></tr>
+    </tbody>
+  </table>
+  <p>All discrimination metrics exceed regulatory minimums. AUC 0.756 is consistent with strong application-plus-bureau
+    retail models; the incumbent bureau-only model (0.718) is the floor the custom model improves on.</p>
+
+  <h2 id="s4">4. Calibration and stability</h2>
+  <div class="shd"></div>
+  <p>A model that ranks well is not necessarily calibrated. For ECL (PD x LGD x EAD) and pricing, predicted PD must equal
+    the observed default rate. The table below bins the test set into deciles of predicted PD and compares the mean
+    prediction to the actual default rate in each bin.</p>
+  <table>
+    <thead><tr><th>Decile</th><th class="r">Predicted PD</th><th class="r">Actual default</th><th class="r">Gap</th></tr></thead>
+    <tbody>
+      <tr><td class="fw">1 (lowest risk)</td><td class="rt mono">1.4%</td><td class="rt mono">1.3%</td><td class="rt mono">+0.1pp</td></tr>
+      <tr><td class="fw">3</td><td class="rt mono">3.1%</td><td class="rt mono">3.1%</td><td class="rt mono">0.0pp</td></tr>
+      <tr><td class="fw">5</td><td class="rt mono">4.9%</td><td class="rt mono">4.8%</td><td class="rt mono">+0.1pp</td></tr>
+      <tr><td class="fw">7</td><td class="rt mono">7.8%</td><td class="rt mono">7.7%</td><td class="rt mono">+0.1pp</td></tr>
+      <tr><td class="fw">9</td><td class="rt mono">14.2%</td><td class="rt mono">14.3%</td><td class="rt mono">-0.1pp</td></tr>
+      <tr><td class="fw">10 (highest risk)</td><td class="rt mono">26.6%</td><td class="rt mono">27.8%</td><td class="rt mono">-1.2pp</td></tr>
+    </tbody>
+  </table>
+  <div class="good-note"><strong>Calibration is excellent:</strong> predicted PD tracks the actual default rate within
+    about 1 percentage point across the entire range, so the PD is safe to use directly in ECL and RAROC. The slight
+    under-prediction in the top decile is conservative-leaning at the margin and well within tolerance.</div>
+  <h3>Population stability (PSI)</h3>
+  <p>PSI on the score distribution, training versus test, is <strong>0.0002</strong> - effectively zero, as expected for
+    a same-period split. In production, PSI is recomputed quarterly against the origination-period distribution; the
+    Amber trigger is 0.10-0.25 and the Red trigger is above 0.25.</p>
+
+  <h2 id="s5">5. Operating threshold: precision and recall</h2>
+  <div class="shd"></div>
+  <p>Precision (share of declined applicants that are true defaults) and recall (share of all defaults that are
+    declined) are functions of the decline threshold, not fixed properties of the model. As the threshold widens,
+    recall rises and precision falls monotonically toward the base rate. The base default rate is 8.07%, which caps
+    precision: when defaults are rare, declining a large fraction necessarily admits many non-defaulters. The
+    threshold-independent readout is therefore <strong>lift</strong> (precision divided by the base rate), which
+    measures how concentrated defaults are in the declined set.</p>
+  <table>
+    <thead><tr><th>Decline threshold</th><th class="r">Precision</th><th class="r">Lift vs base</th><th class="r">Recall</th><th class="r">Approved-book default</th></tr></thead>
+    <tbody>
+      <tr><td class="fw">Top 7.6% (bands 4-5)</td><td class="rt mono">30.3%</td><td class="rt win">3.75x</td><td class="rt mono">28.5%</td><td class="rt mono">6.25%</td></tr>
+      <tr><td class="fw">Top 20%</td><td class="rt mono">21.0%</td><td class="rt win">2.61x</td><td class="rt mono">52.1%</td><td class="rt mono">4.83%</td></tr>
+      <tr><td class="fw">Top 30%</td><td class="rt mono">17.4%</td><td class="rt win">2.16x</td><td class="rt mono">64.7%</td><td class="rt mono">4.08%</td></tr>
+      <tr class="hl"><td class="fw">Top 38.1% (recommended)</td><td class="rt mono">15.3%</td><td class="rt win">1.90x</td><td class="rt win">72.3%</td><td class="rt win">3.61%</td></tr>
+    </tbody>
+  </table>
+  <p>At the recommended cutoff the declined set carries a default rate <strong>1.9x</strong> the population, the model
+    captures <strong>72.3%</strong> of all defaults, and the approved book is left at <strong>3.61%</strong> default -
+    well below the 8.07% population rate. Tightening the threshold raises lift (to 3.75x at bands 4-5) and precision at
+    the cost of recall and a higher approved-book default rate; widening it does the reverse.</p>
+  <p>The operating point is not selected to maximise precision or recall. It is the income-maximising approval rate
+    within the risk-appetite constraint (Section 6 and the cutoff analysis); precision and recall are read off as
+    consequences of that selection. In deployment the decline region is graduated - Approve, Reprice, Review, Decline -
+    so applicants near the threshold are repriced or reviewed rather than rejected, and only the capital-destructive
+    bands 4-5 are hard declines.</p>
+
+  <h2 id="s6">6. Scorecard and risk bands</h2>
+  <div class="shd"></div>
+  <p>The logistic scorecard maps PD to an integer score via the standard Points-to-Double-the-Odds framework. Loans are
+    grouped into five risk bands; the economics below use LGD 45%, revenue 12% of EAD, opex 3%, capital ratio 10.5%,
+    hurdle 14%. Predicted PD versus actual default per band confirms band-level calibration.</p>
+  <table>
+    <thead><tr><th>Band</th><th class="r">Predicted PD</th><th class="r">Actual default</th><th class="r">ECL rate</th><th class="r">RAROC</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td class="fw" style="color:var(--good)">B1 Very low</td><td class="rt mono">2.93%</td><td class="rt mono">2.77%</td><td class="rt mono">1.30%</td><td class="rt win">+97.7%</td><td><span class="tag t-pass">Approve</span></td></tr>
+      <tr><td class="fw" style="color:var(--purple-bright)">B2 Low</td><td class="rt mono">7.12%</td><td class="rt mono">7.05%</td><td class="rt mono">3.19%</td><td class="rt win">+73.8%</td><td><span class="tag t-pass">Approve</span></td></tr>
+      <tr><td class="fw" style="color:var(--gold)">B3 Medium</td><td class="rt mono">13.80%</td><td class="rt mono">13.99%</td><td class="rt mono">6.19%</td><td class="rt win">+26.8%</td><td><span class="tag t-amber">Approve (review)</span></td></tr>
+      <tr><td class="fw" style="color:#E0894B">B4 High</td><td class="rt mono">26.79%</td><td class="rt mono">28.02%</td><td class="rt mono">11.98%</td><td class="rt neg">-18.9%</td><td><span class="tag t-red">Decline</span></td></tr>
+      <tr><td class="fw" style="color:var(--risk)">B5 Very high</td><td class="rt mono">47.63%</td><td class="rt mono">48.08%</td><td class="rt mono">21.35%</td><td class="rt neg">-78.4%</td><td><span class="tag t-red">Decline</span></td></tr>
+    </tbody>
+  </table>
+  <p class="note"><strong>Bands 1-3 are value-accretive</strong> (RAROC positive); bands 4-5 are capital-destructive and
+    excluded by the RAROC gate. Predicted PD matches actual default in every band (within ~1.2pp), confirming the
+    economics are trustworthy.</p>
+
+  <h2 id="s7">7. IFRS 9 staging</h2>
+  <div class="shd"></div>
+  <p>IFRS 9 staging and lifetime ECL require monthly delinquency data that an origination snapshot cannot provide.
+    Real stage allocation (Stage 1 / 2 / 3), the monthly transition matrix, lifetime PD, LGD from realised losses, and
+    ECL by stage are therefore built in <strong>Module D</strong> on the Freddie Mac loan-performance panel
+    (200k loans, 12.6M loan-months). Headline result: a Stage 1 to Stage 2 migration raises the provision roughly 39x
+    (0.06% to 2.45% ECL), which is the core of the ECL-reduction case. See the Module D documentation.</p>
+
+  <h2 id="s8">8. Monitoring triggers</h2>
+  <div class="shd"></div>
+  <p>Baselines are the recommended approved book (61.9% approval). Green within tolerance, Amber on investigation, Red on
+    escalation to the credit committee.</p>
+  <table>
+    <thead><tr><th>Metric</th><th class="r">Recommended baseline</th><th class="r">Amber</th><th class="r">Red</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="fw">Portfolio RAROC</td><td class="rt win">+93.4%</td><td class="rt mono">&le; 28%</td><td class="rt neg">&le; 20%</td><td>Tighten gate</td></tr>
+      <tr><td class="fw">Default rate (approved)</td><td class="rt win">3.61%</td><td class="rt mono">&gt; 4.5%</td><td class="rt neg">&gt; 5.5%</td><td>Tighten underwriting</td></tr>
+      <tr><td class="fw">Band 4-5 share</td><td class="rt win">0%</td><td class="rt mono">&gt; 2%</td><td class="rt neg">&gt; 5%</td><td>Gate review</td></tr>
+      <tr><td class="fw">PD model PSI</td><td class="rt win">&lt; 0.10</td><td class="rt mono">0.10-0.25</td><td class="rt neg">&gt; 0.25</td><td>Recalibrate</td></tr>
+      <tr><td class="fw">ECL coverage ratio</td><td class="rt win">~1.0x</td><td class="rt mono">&le; 0.8x</td><td class="rt neg">&le; 0.6x</td><td>Increase provision</td></tr>
+    </tbody>
+  </table>
+  <p class="note"><strong>Cadence:</strong> PSI, RAROC, and default rate monthly; band-share monthly; ECL adequacy
+    semi-annual or at each stress event. Amber requires investigation within 5 business days; Red requires CRO
+    notification and committee review within 15 days.</p>
+
+  <h2 id="s9">9. Limitations and future work</h2>
+  <div class="shd"></div>
+  <table>
+    <thead><tr><th>Limitation</th><th>Impact</th><th>Enhancement</th></tr></thead>
+    <tbody>
+      <tr><td class="fw">Application-only features</td><td>AUC capped near 0.76</td><td>Add bureau trade-line and transaction history</td></tr>
+      <tr><td class="fw">LGD assumed (Module A)</td><td>ECL sensitive to recovery</td><td>Use the realised LGD modelled in Module D (41.8%)</td></tr>
+      <tr><td class="fw">No origination time series</td><td>No in-module vintage</td><td>Vintage and staging handled in Module D panel</td></tr>
+      <tr><td class="fw">Single product</td><td>Retail personal loan only</td><td>Product-specific recalibration for MSME, auto, cards</td></tr>
+    </tbody>
+  </table>
+
+  <div class="foot">
+    Technical Appendix - AI Credit Intelligence System - Module A Application Risk<br>
+    Custom AUC 0.756 vs incumbent 0.718 - KS 0.379 - Gini 0.513 - PSI 0.0002 - calibration within ~1pp across deciles<br>
+    All figures from the 61,503-loan held-out test set. Generated by the executed pipeline. Next validation: annual recalibration cycle.
   </div>
 </div>
-
-<!-- ============================================================ -->
-<h2>8. Monitoring Dashboard Triggers</h2>
-<div class="shd"></div>
-
-<table>
-  <thead><tr><th>Metric</th><th>Description</th><th class="r">Baseline</th><th class="r">Amber Trigger</th><th class="r">Red Trigger</th><th>Action</th></tr></thead>
-  <tbody>
-    <tr><td class="fw">Portfolio RAROC</td><td>Weighted avg RAROC on approved book</td><td class="r">-1.46%</td><td class="r" style="color:#EAB308">≤ 16%</td><td class="r neg">≤ 14%</td><td>Tighten RAROC gate</td></tr>
-    <tr><td class="fw">Band 4-5 Share</td><td>% of approved loans in B4 or B5</td><td class="r">60.5%</td><td class="r" style="color:#EAB308">+5 pp</td><td class="r neg">+10 pp</td><td>Reject B4/B5 early</td></tr>
-    <tr><td class="fw">PD Model PSI</td><td>Score distribution vs training reference</td><td class="r">&lt; 0.10</td><td class="r" style="color:#EAB308">0.10-0.25</td><td class="r neg">&gt; 0.25</td><td>Recalibrate model</td></tr>
-    <tr><td class="fw">Default Rate (30DPD+)</td><td>30+ DPD rate on approved cohort</td><td class="r">8.07%</td><td class="r" style="color:#EAB308">+2 pp</td><td class="r neg">+4 pp</td><td>Tighten underwriting</td></tr>
-    <tr><td class="fw">ECL Coverage Ratio</td><td>Provision / Actual realized losses</td><td class="r">~1.0×</td><td class="r" style="color:#EAB308">≤ 0.8×</td><td class="r neg">≤ 0.6×</td><td>Increase provision</td></tr>
-    <tr><td class="fw">Vintage Default Rate</td><td>DR on current quarter originations at 6M</td><td class="r">~9.5%</td><td class="r" style="color:#EAB308">+1.5 pp</td><td class="r neg">+3.0 pp</td><td>Review origination policy</td></tr>
-    <tr><td class="fw">IFRS 9 Stage 2 Migration</td><td>% of S1 book migrated to S2 quarterly</td><td class="r"> - </td><td class="r" style="color:#EAB308">&gt; 5%</td><td class="r neg">&gt; 15%</td><td>ECL provision review</td></tr>
-  </tbody>
-</table>
-
-<div class="two-col">
-  <div class="warn-box" style="margin-bottom:0">
-    <p><strong style="color:#EAB308">Monitoring frequency:</strong> PSI and band-share - monthly. Portfolio RAROC and default rate - monthly. Vintage cohort review - quarterly (at 3M, 6M, 12M, 24M loan age checkpoints). IFRS 9 stage migration - quarterly (aligned with IFRS 9 reporting). ECL provision adequacy - semi-annual or at each stress event.</p>
-  </div>
-  <div class="note-box" style="margin-bottom:0">
-    <p><strong style="color:#60A5FA">Escalation protocol:</strong> Amber triggers require Credit Risk team investigation within 5 business days and report to CRO within 10 days. Red triggers require immediate CRO notification, credit committee review within 15 days, and potential model freeze pending investigation. Model freeze means no new approvals above current gate until root cause is identified.</p>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<h2>9. Model Limitations & Future Work</h2>
-<div class="shd"></div>
-
-<table>
-  <thead><tr><th>Limitation</th><th>Impact</th><th>Recommended Enhancement</th><th>Priority</th></tr></thead>
-  <tbody>
-    <tr><td class="fw">Application-only features</td><td>AUROC capped at ~0.74; bureau + transaction data would improve to 0.78-0.82</td><td>Integrate bureau trade-line data and account transaction history</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">High</span></td></tr>
-    <tr><td class="fw">LGD assumed (0.45)</td><td>LGD error propagates directly into ECL; 10pp LGD error = 10pp ECL error</td><td>Build recovery curve model using collections data; vintage-adjusted LGD by product</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#EF4444">High</span></td></tr>
-    <tr><td class="fw">No behavioral scorecard</td><td>In-book risk monitoring relies on application score only; portfolio drift undetected</td><td>Module B behavioral scorecard exists; integrate as a dual-score policy (application + behavioral)</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Medium</span></td></tr>
-    <tr><td class="fw">Static RAROC threshold</td><td>Optimal gate shifts with LGD and portfolio composition; fixed threshold may be stale</td><td>Dynamic RAROC gate recalibrated quarterly using latest survival curve and LGD estimates</td><td><span class="tag" style="background:rgba(234,179,8,.15);color:#EAB308">Medium</span></td></tr>
-    <tr><td class="fw">No Early Warning System</td><td>Current-to-Bounce, Bounce-to-NPA transitions not modeled</td><td>Build C2B and B2N models for collections trigger strategy</td><td><span class="tag" style="background:rgba(59,130,246,.15);color:#3B82F6">Roadmap</span></td></tr>
-    <tr><td class="fw">Single product type</td><td>Retail personal loan; RAROC parameters not validated for MSME, auto, home loan</td><td>Product-specific cost of capital and risk weight calibration</td><td><span class="tag" style="background:rgba(59,130,246,.15);color:#3B82F6">Roadmap</span></td></tr>
-  </tbody>
-</table>
-
-<p style="font-size:10px;color:#3A5068;font-style:italic;border-top:1px solid #161D27;padding-top:14px;margin-top:20px">Technical Appendix · CRC-2026-09 · AI Credit Intelligence System · June 2026 · Classification: Board Restricted<br>Model owner: Risk Analytics Team. Next scheduled validation: Q1 2027. Contact: risk.analytics@institution.com</p>
-
-<script>
-Chart.defaults.color='#7A96B2';Chart.defaults.borderColor='#1E2A38';Chart.defaults.font.size=10;
-Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
-
-// ROC curve (approximate from AUROC=0.742)
-const fprs=[0,0.02,0.05,0.10,0.15,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.0];
-const tprs=[0,0.12,0.25,0.41,0.52,0.61,0.72,0.80,0.86,0.90,0.94,0.97,0.99,1.0];
-new Chart(document.getElementById('roc_chart'),{type:'line',data:{labels:fprs,datasets:[
-  {label:'PD Model (AUROC=0.742)',data:tprs.map((t,i)=>({x:fprs[i],y:t})),borderColor:'#22C55E',backgroundColor:'rgba(34,197,94,.08)',borderWidth:2,fill:true,pointRadius:3,tension:.4},
-  {label:'Random (AUROC=0.500)',data:[{x:0,y:0},{x:1,y:1}],borderColor:'#3A5068',borderWidth:1,borderDash:[4,4],pointRadius:0}
-]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:10}}},scales:{x:{title:{display:true,text:'False Positive Rate'},min:0,max:1,ticks:{callback:v=>v*100+'%'}},y:{title:{display:true,text:'True Positive Rate'},min:0,max:1,ticks:{callback:v=>v*100+'%'}}}}});
-
-// Score distribution
-const bands=['B1\nVery Low','B2\nLow','B3\nMedium','B4\nHigh','B5\nVery High'];
-const counts=[182,1798,9120,16979,33424];
-new Chart(document.getElementById('score_dist'),{type:'bar',data:{labels:bands,datasets:[{
-  label:'Loans',data:counts,backgroundColor:['rgba(34,197,94,.75)','rgba(74,222,128,.7)','rgba(234,179,8,.7)','rgba(249,115,22,.7)','rgba(239,68,68,.75)'],borderRadius:3
-}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#1E2A38'},ticks:{callback:v=>v.toLocaleString()}}}}});
-</script>
 </body>
 </html>
