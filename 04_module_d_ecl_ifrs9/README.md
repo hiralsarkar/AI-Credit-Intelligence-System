@@ -41,7 +41,7 @@ Run `_pipeline_d.py` (staging + ECL), `_collections_d.py` (roll rates, contact s
 ### Collections and next-best-action
 
 - `_collections_d.py`: roll rates and a contact-prioritisation strategy (contact the top 30% of at-risk accounts to avoid ~11.6% of the NPA roll, under an assumed intervention lift of 0.3, which is stated as an assumption, not a measured effect).
-- `_uplift_nba_d.py`: **exploratory only.** A two-model T-learner estimates the uplift of loan modification on avoiding default, over the ever-delinquent population (n = 20,615, 12.6% treated). Naive ATE is +4.2pp, but modification is an **observed, not randomised, treatment, so the effect is confounded**, and the uplift-decile validation is not yet monotonic (signal appears only in the top deciles). Treat this as a targeting hypothesis, not a causal claim. Do not quote the ATE as a treatment effect.
+- `_uplift_nba_d.py`: **exploratory only.** A two-model T-learner estimates the uplift of loan modification on avoiding default, over the ever-delinquent population (n = 20,615, 12.6% treated). Naive ATE is +4.2pp, but modification is an **observed, not randomised, treatment, so the effect is confounded**, and the uplift-decile validation is not yet monotonic (signal appears only in the top deciles). Treat this as a targeting hypothesis, not a causal claim. Do not quote the ATE as a treatment effect. Full write-up: [`06_docs/uplift_nba_analysis.html`](../06_docs/uplift_nba_analysis.html).
 
 ## Structure
 
