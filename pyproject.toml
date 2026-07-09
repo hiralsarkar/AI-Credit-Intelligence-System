@@ -1,0 +1,12 @@
+[tool.pytest.ini_options]
+pythonpath = ["04_decision_engine"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+# real errors only (syntax, undefined names) - style is not enforced on legacy code
+select = ["E9", "F63", "F7", "F82"]
