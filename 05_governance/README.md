@@ -10,6 +10,7 @@
 | `model_cards/module_a_model_card.md` | Module A model card - confirmed AUC=0.7551, KS=0.3786, stress test results | ✅ Complete |
 | `model_cards/module_b_model_card.md` | Module B model card - behavioural delinquency model, SHAP, stress flags | ✅ Complete |
 | `model_cards/module_c_model_card.md` | Module C model card - grade classifier, market PD, pricing model | ✅ Complete |
+| `model_cards/module_d_model_card.md` | Module D model card - IFRS 9 staging, transition matrix, LGD 41.8%, ECL by stage, collections/uplift | ✅ Complete |
 | `regulatory_alignment.md` | SR 11-7 / RBI MRM / Basel III / Fair Practices Code - full requirement mapping | ✅ Complete |
 | `monitoring_triggers.py` | Runnable PSI, AUC, portfolio health, fairness checks with GREEN/AMBER/RED | ✅ Complete |
 

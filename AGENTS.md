@@ -64,6 +64,6 @@ executive_presentation.html, architecture_diagram.html, system_blueprint.md (mas
 ## Planned / remaining (priority order)
 - Fold reject-inference + uplift onto a docs/HTML surface (Module D README done; add a C page).
 - Re-execute the 25 notebooks against current pipeline outputs so no notebook contradicts the docs.
-- Module D model card; wire Module D staging signal into the decision engine; calibrate the 60/40 composite weight.
+- Wire Module D staging signal into the decision engine; calibrate the 60/40 composite weight.
 - NTC thin-file model (Home Credit), Bureau Custom Model (Product/Customer/Location signatures).
 - MLOps / monitoring (PSI drift job), decision-engine refresh; rewrite Module B/C notebooks to the swap-set framing.
