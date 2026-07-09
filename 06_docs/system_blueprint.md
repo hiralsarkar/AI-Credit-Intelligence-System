@@ -1,8 +1,8 @@
 # AI Credit Intelligence System - Master Blueprint
 
-A full-lifecycle credit risk system engineered to beat the incumbent process on approval rate and default rate at the same time, then price, provision, and collect on that book more efficiently than the incumbent does.
+A full-lifecycle credit risk system engineered to beat a bureau-score benchmark on approval rate and default rate at the same time, then price, provision, and collect on that book more efficiently. Throughout this document, "incumbent" and "Champion" mean a bureau-score-only cutoff, the baseline a lender uses before it builds a custom scorecard, not a mature production underwriting process.
 
-Classification: Board Restricted - CRC-2026-09 - Version 2.0
+Working design document - Version 2.0
 
 ---
 
@@ -10,11 +10,11 @@ Classification: Board Restricted - CRC-2026-09 - Version 2.0
 
 The entire system is judged by one sentence:
 
-> Approve more good borrowers and fewer bad ones than the incumbent at the same time, then price, provision, and collect on that book more efficiently.
+> Approve more good borrowers and fewer bad ones than a bureau-score benchmark at the same time, then price, provision, and collect on that book more efficiently.
 
-Gini, KS, and AUC are enablers, not goals. A higher Gini is only useful because it shifts the approval-versus-default frontier outward. The deliverable a Chief Risk Officer respects is a superior business frontier, not a superior metric.
+Gini, KS, and AUC are enablers, not goals. A higher Gini is only useful because it shifts the approval-versus-default frontier outward. The deliverable that matters is a better business frontier, not a better metric.
 
-This corrects the previous narrative. The old headline was "RAROC gate approves fewer, higher quality loans." That reads as a retreat. The new headline is "our custom model dominates the incumbent's frontier," and the RAROC gate becomes a second-order dial that selects where on that superior frontier the committee chooses to sit.
+This corrects the previous narrative. The old headline was "RAROC gate approves fewer, higher quality loans." That reads as a retreat. The new headline is "our custom model dominates the bureau-score benchmark's frontier," and the RAROC gate becomes a second-order dial that selects where on that frontier the committee chooses to sit.
 
 ---
 
@@ -30,7 +30,7 @@ Every decision point in the system (origination, pricing, collections) is evalua
 
 How SC3 expresses itself in each domain:
 
-- Origination: higher approval rate AND lower default rate than the incumbent.
+- Origination: higher approval rate AND lower default rate than the bureau-score benchmark.
 - Pricing: more risk-adjusted revenue at the same or lower realised loss.
 - Collections: fewer interventions AND higher cure or recovery rate.
 
@@ -42,9 +42,9 @@ Every module must state which criterion it targets and prove it with a swap-set 
 
 In real model risk management the Champion is the incumbent and the Challenger is the candidate. A Challenger is promoted only if it beats the Champion on the business frontier.
 
-- Champion: the incumbent process the lender runs today. For this system the defensible incumbent is a bureau-score-only cutoff, which is exactly what a lender uses before it builds a custom model. This ties directly to the Bureau Custom Model thesis: a generic bureau score is the baseline a custom model must beat.
+- Champion: a bureau-score-only cutoff, the baseline a lender uses before it builds a custom model (not a mature production scorecard). This ties directly to the bureau-versus-custom thesis: a generic bureau score is the baseline a custom model must beat.
 - Challenger: our custom model (PD model plus behavioural and portfolio signals).
-- Promotion rule: the Challenger wins on every material axis - approval, default, risk-adjusted return, capital efficiency, and provisioning. That is the entire point of the project. A model that cannot beat the incumbent on all relevant parameters does not get deployed and does not get its author hired.
+- Promotion rule: the Challenger wins on every material axis - approval, default, risk-adjusted return, capital efficiency, and provisioning. A model that cannot beat this benchmark on the relevant parameters is not worth deploying.
 
 ---
 

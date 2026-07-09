@@ -27,6 +27,12 @@ This module goes beyond PD prediction to build a complete financial risk stack:
 | `04_expected_loss_capital_model` | EL, RWA, Economic Capital, RAROC per borrower |
 | `05_strategy_simulator` | 4 lending strategies compared on risk-return frontier |
 | `06_stress_testing` | 4 macro scenarios, RAROC matrix, break-even multipliers, monitoring triggers |
+| `07_business_impact_analysis` | Custom model vs bureau-score benchmark on the business frontier (approval / default / net income) |
+| `08_ready_reckoner` | Score-to-decision lookup for the credit committee |
+| `09_vintage_analysis` | Cohort default curves by application vintage |
+| `10_ifrs9_lifetime_pd_staging` | Origination-time PD-bucket proxy for provisioning (see note below) |
+
+> **Note on staging:** the origination-time IFRS 9 view in `10_ifrs9_lifetime_pd_staging` is a **PD-bucket proxy**, not true SICR-based staging. A single application snapshot has no notion of an *increase* in credit risk, so it cannot produce a genuine Stage 2 population. Real, panel-based IFRS 9 staging lives in **Module D** (Freddie Mac monthly performance data). Use this notebook for a first-cut provisioning lens only.
 
 ## Signal Output Schema
 
