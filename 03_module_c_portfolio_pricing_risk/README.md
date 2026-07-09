@@ -47,4 +47,6 @@ Place `accepted_2007_to_2018Q4.csv` in `data/raw/`
 
 ✅ **Complete** - all 3 notebooks executed. Default model AUC=0.7397, Gini=0.4794, KS=0.3517 on a 59,976-loan held-out test set (20.18% default rate). See `05_governance/model_cards/module_c_model_card.md` for confirmed metrics.
 
+**Reject inference** (`_reject_inference_c.py`) corrects the booked-only optimism bias: through-the-door bad rate 34.10% vs booked 20.18% (+69% understatement), with 35.5% of rejects safer than the worst-accepted decile. Full write-up: [`06_docs/reject_inference_analysis.html`](../06_docs/reject_inference_analysis.html).
+
 **Next:** `04_decision_engine/` - combines Modules A, B and C into a unified lending decision.

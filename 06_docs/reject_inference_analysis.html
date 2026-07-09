@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reject Inference - AI Credit Intelligence System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0F; --panel:#12121A; --line:#23222E;
+    --purple:#8B5CF6; --gold:#D4AF37; --white:#F5F4F8;
+    --text:#C9C7D4; --muted:#A29FB2; --risk:#C45B5B; --good:#5EEAD4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:Inter,system-ui,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 24px 72px}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;color:var(--white);line-height:1.2}
+  h1{font-size:2.3rem;margin:0 0 6px}
+  h2{font-size:1.35rem;margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--purple);margin-bottom:14px}
+  .lede{font-size:1.12rem;color:var(--text);max-width:70ch}
+  .num{font-family:'IBM Plex Mono',monospace;color:var(--white);font-weight:600}
+  strong{color:var(--white);font-weight:600}
+  /* KPI tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:34px 0 8px}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 16px}
+  .tile .v{font-family:'IBM Plex Mono',monospace;font-size:1.7rem;font-weight:600;color:var(--gold)}
+  .tile .v.risk{color:var(--risk)} .tile .v.good{color:var(--good)}
+  .tile .k{font-size:.82rem;color:var(--muted);margin-top:4px}
+  /* table */
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:500;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}
+  td.r,th.r{text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--white)}
+  /* callouts */
+  .note{background:var(--panel);border-left:3px solid var(--purple);
+    border-radius:8px;padding:14px 18px;margin:16px 0}
+  .note.gold{border-left-color:var(--gold)} .note.risk{border-left-color:var(--risk)}
+  .note b{color:var(--white)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .card h3{font-size:1.05rem;margin:0 0 6px;color:var(--purple)}
+  footer{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:.85rem;font-family:'IBM Plex Mono',monospace}
+  a{color:var(--gold)}
+  @media(max-width:640px){.tiles{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}h1{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">Module C · Portfolio &amp; Pricing Risk</div>
+  <h1>Reject Inference</h1>
+  <p class="lede">A scorecard trained only on <strong>booked</strong> loans is optimistic: the risky applicants were filtered out before they ever entered the data. Reject inference reconstructs the whole through-the-door population to measure how much the booked book understates true risk, and to surface good applicants a crude cutoff turned away.</p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v good">20.18%</div><div class="k">Booked bad rate (what the scorecard sees)</div></div>
+    <div class="tile"><div class="v risk">34.10%</div><div class="k">Through-the-door bad rate (whole pool)</div></div>
+    <div class="tile"><div class="v risk">+69%</div><div class="k">Selection-bias understatement</div></div>
+    <div class="tile"><div class="v gold">35.5%</div><div class="k">Rejects safer than the worst-accepted decile</div></div>
+  </div>
+
+  <h2>Calibration check: the PDs are honest</h2>
+  <p>The corrected model's mean PD on the accepted book is <span class="num">20.18%</span>, which equals the observed booked bad rate exactly. That self-consistency is the guardrail: the estimated probabilities are not inflated (an earlier run drifted to ~48% before the acceptance rate and reweighting were fixed). The true acceptance rate of <span class="num">37.5%</span> comes from the rejection summary, not a sampling artifact.</p>
+
+  <h2>The numbers</h2>
+  <table>
+    <thead><tr><th>Metric</th><th class="r">Value</th></tr></thead>
+    <tbody>
+      <tr><td>Accepted loans (modelled)</td><td class="r">299,877</td></tr>
+      <tr><td>Rejected applications (sampled)</td><td class="r">131,305</td></tr>
+      <tr><td>True acceptance rate</td><td class="r">37.5%</td></tr>
+      <tr><td>Booked bad rate</td><td class="r">20.18%</td></tr>
+      <tr><td>Inferred rejected bad rate</td><td class="r">42.45%</td></tr>
+      <tr><td>Through-the-door bad rate (whole pool)</td><td class="r">34.10%</td></tr>
+      <tr><td>Selection-bias understatement</td><td class="r">+69%</td></tr>
+      <tr><td>Median credit score: accepted vs rejected</td><td class="r">687 vs 637</td></tr>
+      <tr><td>Rejects safer than the worst-accepted decile (swap-in)</td><td class="r">35.5%</td></tr>
+      <tr><td>Reject-inference model AUC</td><td class="r">0.640</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note gold"><b>Read it plainly:</b> the true through-the-door pool is <b>69% riskier</b> (34.10% vs 20.18%) than the booked book suggests, because risky applicants were screened out before they became data. A model that ignores this over-approves at the margin.</div>
+
+  <h2>Reject inference does two jobs at once</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>1. Corrects the optimism bias</h3>
+      <p>By inferring outcomes for rejected applicants and reweighting, the model learns from the population it will actually score in production, not just the survivors. This lifts the measured bad rate from 20.18% to a realistic 34.10%.</p>
+    </div>
+    <div class="card">
+      <h3>2. Surfaces the swap-in set</h3>
+      <p><strong>35.5%</strong> of rejected applicants are safer than the worst-accepted decile. These are good borrowers a blunt cutoff turned away: the origination swap-set, seen from the reject side. Room to grow the book without adding risk.</p>
+    </div>
+  </div>
+
+  <h2>Method</h2>
+  <p>Known-good-bad (KGB) on the booked loans, augmented-good-bad (AGB) via inferred labels on the rejects, then reweighting to the true acceptance rate so the combined sample reflects the through-the-door population. Bad rates are compared at matched score bands to isolate selection effects from score effects.</p>
+
+  <h2>Honest limitations</h2>
+  <div class="note risk">
+    <p><b>Modest AUC (0.640).</b> Only three features are shared between the accepted and rejected files (credit score, DTI, loan amount), so the inference model is deliberately thin. This is stated, not hidden: the value here is the <b>bias correction and the swap-in signal</b>, not a high-discrimination reject scorecard. A production build would enrich the shared feature set (bureau attributes, application fields) before relying on reject scores for decisioning.</p>
+  </div>
+
+  <footer>
+    AI Credit Intelligence System · Module C reject-inference analysis · figures from <span style="color:var(--muted)">04_outputs/module_c_reject_inference.json</span>
+  </footer>
+
+</div>
+</body>
+</html>

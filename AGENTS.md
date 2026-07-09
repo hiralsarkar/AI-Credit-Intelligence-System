@@ -62,7 +62,7 @@ executive_presentation.html, architecture_diagram.html, system_blueprint.md (mas
 - Phase 1 done: `tests/` (decision-engine contracts + committed-output guards + a no-dash hygiene test), `.github/workflows/ci.yml` (ruff errors-only + pytest + demo smoke run), `pyproject.toml`, `Makefile`.
 
 ## Planned / remaining (priority order)
-- Fold reject-inference + uplift onto a docs/HTML surface (Module D README done; add a C page).
+- Reject-inference now has a docs page (06_docs/reject_inference_analysis.html); consider a matching uplift/NBA page next.
 - Re-execute the 25 notebooks against current pipeline outputs so no notebook contradicts the docs.
 - Wire Module D staging signal into the decision engine; calibrate the 60/40 composite weight.
 - NTC thin-file model (Home Credit), Bureau Custom Model (Product/Customer/Location signatures).
