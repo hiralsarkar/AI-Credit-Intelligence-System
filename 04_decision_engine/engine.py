@@ -98,6 +98,7 @@ def make_decision(composite_signal: dict) -> dict:
     sig_a = composite_signal["signal_a"]
     sig_b = composite_signal["signal_b"]
     sig_c = composite_signal.get("signal_c")
+    sig_d = composite_signal.get("signal_d")
     composite_pd = composite_signal["composite_pd"]
     composite_risk_band = composite_signal["composite_risk_band"]
 
@@ -233,6 +234,16 @@ def make_decision(composite_signal: dict) -> dict:
     # ─────────────────────────────────────────────────────────────────────────
     # Build output
     # ─────────────────────────────────────────────────────────────────────────
+    # Module D (IFRS 9) provisioning view - advisory only, does not gate the decision.
+    provisioning = _build_provisioning(sig_d)
+    if sig_d and (sig_d.get("ifrs9_stage", 1) >= 2 or sig_d.get("sicr_flag")):
+        reason_codes.append(_make_reason(
+            "ifrs9_provisioning", "provisioning",
+            f"IFRS 9 Stage {sig_d['ifrs9_stage']}: lifetime ECL "
+            f"{sig_d['lifetime_ecl_rate']:.2%} vs 12-month {sig_d['twelve_month_ecl_rate']:.2%}; "
+            f"provision for lifetime loss."
+        ))
+
     capital_impact = {
         "ead":              sig_a.get("ead", 0),
         "el":               sig_a.get("el", 0),
@@ -282,11 +293,33 @@ def make_decision(composite_signal: dict) -> dict:
         "reason_codes":         reason_codes,
         "capital_impact":       capital_impact,
         "pricing":              pricing,
+        "provisioning":         provisioning,
         "signal_summary":       signal_summary,
         "overrides_triggered":  overrides_triggered,
         "decision_basis":       decision_basis,
         "market_pd_note":       market_pd_note,
         "timestamp":            datetime.now().isoformat(),
+    }
+
+
+def _build_provisioning(sig_d: Optional[dict]) -> dict:
+    """IFRS 9 provisioning view from the Module D signal (advisory, not a gate)."""
+    if not sig_d:
+        return {"available": False, "note": "Module D provisioning signal not supplied"}
+    stage = sig_d.get("ifrs9_stage", 1)
+    label = {
+        1: "Stage 1 (performing, 12-month ECL)",
+        2: "Stage 2 (SICR, lifetime ECL)",
+        3: "Stage 3 (credit-impaired, lifetime ECL)",
+    }.get(stage, "Unknown")
+    return {
+        "available":             True,
+        "ifrs9_stage":           stage,
+        "stage_label":           label,
+        "twelve_month_ecl_rate": sig_d.get("twelve_month_ecl_rate"),
+        "lifetime_ecl_rate":     sig_d.get("lifetime_ecl_rate"),
+        "stage2_cliff_multiple": sig_d.get("stage2_cliff_multiple"),
+        "sicr_flag":             sig_d.get("sicr_flag", False),
     }
 
 

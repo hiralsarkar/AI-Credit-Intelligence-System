@@ -55,6 +55,7 @@ from signal_aggregator import (
     build_module_a_signal,
     build_module_b_signal,
     build_module_c_signal,
+    build_module_d_signal,
     aggregate_signals,
 )
 from engine import make_decision
@@ -176,6 +177,27 @@ APPLICANT_PROFILES = {
 
 # ── Core Runner ───────────────────────────────────────────────────────────────
 
+def _demo_module_d_signal(profile: dict):
+    """Illustrative IFRS 9 provisioning signal derived from the applicant's risk.
+    Real staging comes from Module D on panel data; here it demonstrates the wiring."""
+    pd_a = profile["signal_a"]["pd_score"]
+    b = profile.get("signal_b", {})
+    stressed = any(b.get(k) for k in ("stress_flag", "escalating_delinquency", "high_delinquency_score"))
+    if stressed and pd_a >= 0.30:
+        stage = 3
+    elif stressed or pd_a >= 0.15:
+        stage = 2
+    else:
+        stage = 1
+    return build_module_d_signal(
+        ifrs9_stage=stage,
+        lifetime_pd={1: 0.015, 2: 0.0587, 3: 0.0973}[stage],
+        lifetime_ecl_rate={1: 0.006, 2: 0.0245, 3: 0.0407}[stage],
+        twelve_month_ecl_rate=0.0006,
+        sicr_flag=(stage >= 2),
+    )
+
+
 def run_single_applicant(profile: dict, log_decisions: bool = True) -> dict:
     """
     Run the complete decision engine pipeline for one applicant profile.
@@ -186,9 +208,10 @@ def run_single_applicant(profile: dict, log_decisions: bool = True) -> dict:
     sig_a = build_module_a_signal(**profile["signal_a"])
     sig_b = build_module_b_signal(**profile["signal_b"])
     sig_c = build_module_c_signal(**profile["signal_c"])
+    sig_d = _demo_module_d_signal(profile)   # IFRS 9 provisioning view (illustrative)
 
     # ── Aggregate ─────────────────────────────────────────────────────────────
-    composite = aggregate_signals(sig_a, sig_b, sig_c)
+    composite = aggregate_signals(sig_a, sig_b, sig_c, sig_d)
 
     # ── Decision ──────────────────────────────────────────────────────────────
     decision_output = make_decision(composite)
@@ -207,6 +230,12 @@ def run_single_applicant(profile: dict, log_decisions: bool = True) -> dict:
     # ── Display ───────────────────────────────────────────────────────────────
     report = format_decision_for_display(decision_output, composite, explanation)
     print(report)
+
+    prov = decision_output.get("provisioning", {})
+    if prov.get("available"):
+        print(f"  IFRS 9 provisioning (Module D): {prov['stage_label']} | "
+              f"12-month ECL {prov['twelve_month_ecl_rate']:.2%} -> "
+              f"lifetime {prov['lifetime_ecl_rate']:.2%}")
 
     # ── Validate against expected outcome ────────────────────────────────────
     if "expected_decision" in profile:

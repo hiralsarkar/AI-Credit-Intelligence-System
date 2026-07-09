@@ -1,7 +1,7 @@
 """Behavioural contracts for the decision engine. No data files required."""
 from signal_aggregator import (
     build_module_a_signal, build_module_b_signal, build_module_c_signal,
-    aggregate_signals, assign_risk_band,
+    build_module_d_signal, aggregate_signals, assign_risk_band,
 )
 from engine import make_decision
 from constants import (
@@ -46,3 +46,18 @@ def test_behavioural_hard_override_forces_manual_review():
     out = make_decision(_c(0.05, 0.05, high_delinquency_score=True))
     assert out["decision"] == DECISION_MANUAL_REVIEW
     assert "high_delinquency_score" in out["overrides_triggered"]
+
+
+def test_module_d_provisioning_is_attached_and_advisory_only():
+    a = build_module_a_signal(pd_score=0.05, credit_score=720, ead=200000.0)
+    b = build_module_b_signal(delinquency_prob=0.04, behavioural_risk_score=70.0)
+    d = build_module_d_signal(ifrs9_stage=2, lifetime_pd=0.0587,
+                              lifetime_ecl_rate=0.0245, twelve_month_ecl_rate=0.0006,
+                              sicr_flag=True)
+    with_d = make_decision(aggregate_signals(a, b, None, d))
+    without_d = make_decision(aggregate_signals(a, b, None))
+    assert with_d["provisioning"]["available"] is True
+    assert with_d["provisioning"]["ifrs9_stage"] == 2
+    assert without_d["provisioning"]["available"] is False
+    # provisioning is advisory: adding D must not change the origination decision
+    assert with_d["decision"] == without_d["decision"]

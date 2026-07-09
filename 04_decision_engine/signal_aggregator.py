@@ -209,12 +209,43 @@ def build_module_c_signal(
     }
 
 
+def build_module_d_signal(
+    ifrs9_stage: int,
+    lifetime_pd: float,
+    lifetime_ecl_rate: float,
+    twelve_month_ecl_rate: Optional[float] = None,
+    sicr_flag: bool = False,
+    stage2_cliff_multiple: Optional[float] = None,
+) -> dict:
+    """
+    Construct a Module D (IFRS 9 provisioning) signal - the forward-looking lifetime
+    view that turns an approval into a provisioning position. It informs the decision
+    (staging, provisioning cost) but does not gate origination.
+
+    Trained on the Freddie Mac mortgage panel, a different population from the
+    origination modules, so this wiring is a reference architecture, not one book
+    scored end to end (see the project scope note).
+    """
+    ecl_12m = twelve_month_ecl_rate if twelve_month_ecl_rate is not None else lifetime_ecl_rate
+    if stage2_cliff_multiple is None and ecl_12m and ecl_12m > 0:
+        stage2_cliff_multiple = round(lifetime_ecl_rate / ecl_12m, 1)
+    return {
+        "ifrs9_stage":           int(ifrs9_stage),
+        "lifetime_pd":           float(lifetime_pd),
+        "lifetime_ecl_rate":     float(lifetime_ecl_rate),
+        "twelve_month_ecl_rate": float(ecl_12m),
+        "sicr_flag":             bool(sicr_flag),
+        "stage2_cliff_multiple": stage2_cliff_multiple,
+    }
+
+
 # ── Signal Aggregator ─────────────────────────────────────────────────────────
 
 def aggregate_signals(
     signal_a: dict,
     signal_b: Optional[dict],
     signal_c: Optional[dict],
+    signal_d: Optional[dict] = None,
     weights: Optional[dict] = None,
 ) -> dict:
     """
@@ -284,9 +315,11 @@ def aggregate_signals(
         "signal_a":             signal_a,
         "signal_b":             signal_b,
         "signal_c":             signal_c if c_available else None,
+        "signal_d":             signal_d,
         "weights_used":         {"module_a": w_a, "module_b": w_b},
         "b_available":          b_available,
         "c_available":          c_available,
+        "d_available":          signal_d is not None,
         "module_pd_comparison": {
             "module_a_pd":    round(pd_a, 4),
             "module_b_pd":    round(pd_b, 4),
