@@ -6,6 +6,7 @@ from signal_aggregator import (
 from engine import make_decision
 from constants import (
     DECISION_APPROVE, DECISION_DECLINE, DECISION_MANUAL_REVIEW, DECISION_REPRICE,
+    SIGNAL_WEIGHTS,
 )
 
 VALID = {DECISION_APPROVE, DECISION_DECLINE, DECISION_MANUAL_REVIEW, DECISION_REPRICE}
@@ -20,10 +21,17 @@ def _c(pd_a, pd_b, **b):
     return aggregate_signals(a, bb, c)
 
 
-def test_composite_pd_is_weighted_average_and_bounded():
+def test_signal_weights_are_a_valid_governance_choice():
+    wa, wb = SIGNAL_WEIGHTS["module_a"], SIGNAL_WEIGHTS["module_b"]
+    assert abs(wa + wb - 1.0) < 1e-9          # normalised
+    assert wa >= wb                            # Module A anchored primary at origination
+
+
+def test_composite_pd_uses_configured_weights_and_is_bounded():
+    wa, wb = SIGNAL_WEIGHTS["module_a"], SIGNAL_WEIGHTS["module_b"]
     comp = _c(0.10, 0.20)
     assert 0.0 <= comp["composite_pd"] <= 1.0
-    assert abs(comp["composite_pd"] - (0.60 * 0.10 + 0.40 * 0.20)) < 1e-9
+    assert abs(comp["composite_pd"] - (wa * 0.10 + wb * 0.20)) < 1e-9
 
 
 def test_risk_band_is_monotonic():

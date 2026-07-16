@@ -64,6 +64,6 @@ executive_presentation.html, architecture_diagram.html, system_blueprint.md (mas
 ## Planned / remaining (priority order)
 - Reject-inference now has a docs page (06_docs/reject_inference_analysis.html); consider a matching uplift/NBA page next.
 - Re-execute the 25 notebooks against current pipeline outputs so no notebook contradicts the docs.
-- Wire Module D staging signal into the decision engine; calibrate the 60/40 composite weight.
+- Wire Module D staging signal into the decision engine (done). Composite 60/40 weight now justified with a sensitivity-backed governance rationale (05_governance/composite_weight_rationale.md); revisit only on model retrain or when a single joint dataset exists.
 - NTC thin-file model (Home Credit), Bureau Custom Model (Product/Customer/Location signatures).
 - MLOps / monitoring (PSI drift job), decision-engine refresh; rewrite Module B/C notebooks to the swap-set framing.
