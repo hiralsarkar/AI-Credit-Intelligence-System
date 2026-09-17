@@ -1,0 +1,130 @@
+{
+  "b2n_model_auc": 0.945,
+  "uplift_decile_gap_measured": {
+    "1": -0.7564,
+    "2": null,
+    "3": null,
+    "4": null,
+    "5": null,
+    "6": null,
+    "7": -0.0281,
+    "8": -0.0981,
+    "9": 0.4416,
+    "10": 0.8491
+  },
+  "live_book": {
+    "n_loans": 589,
+    "total_ead": 20760730.0,
+    "mean_b2n_risk": 0.285,
+    "mean_measured_gap": 0.1042,
+    "share_with_positive_gap": 0.2139
+  },
+  "lgd_used": 0.4177,
+  "stage2_lifetime_ecl_rate": 0.0245,
+  "book_baseline_lifetime_ecl": 508638.0,
+  "targeting_comparison": {
+    "10pct": {
+      "accounts_contacted": 58,
+      "risk_only_assumed_lift": 85768.0,
+      "risk_only_measured_gap": 85531.0,
+      "fused_assumed_lift": 151704.0,
+      "fused_measured_gap": 223308.0,
+      "targeting_effect": 65936.0,
+      "measurement_effect": -237.0,
+      "combined_effect": 137541.0,
+      "combined_pct_of_book_ecl": 0.2704
+    },
+    "20pct": {
+      "accounts_contacted": 117,
+      "risk_only_assumed_lift": 192040.0,
+      "risk_only_measured_gap": 152675.0,
+      "fused_assumed_lift": 339081.0,
+      "fused_measured_gap": 521032.0,
+      "targeting_effect": 147041.0,
+      "measurement_effect": -39365.0,
+      "combined_effect": 328993.0,
+      "combined_pct_of_book_ecl": 0.6468
+    },
+    "30pct": {
+      "accounts_contacted": 176,
+      "risk_only_assumed_lift": 442557.0,
+      "risk_only_measured_gap": 223308.0,
+      "fused_assumed_lift": 460392.0,
+      "fused_measured_gap": 521032.0,
+      "targeting_effect": 17835.0,
+      "measurement_effect": -219249.0,
+      "combined_effect": 78476.0,
+      "combined_pct_of_book_ecl": 0.1543
+    }
+  },
+  "cohort_by_vintage": [
+    {
+      "vintage": 2008,
+      "n": 240,
+      "ead": 3687311.16,
+      "mean_b2n_risk": 0.3182,
+      "mean_measured_gap": 0.1367,
+      "mean_priority": 0.0622
+    },
+    {
+      "vintage": 2009,
+      "n": 90,
+      "ead": 3442891.22,
+      "mean_b2n_risk": 0.2569,
+      "mean_measured_gap": 0.0732,
+      "mean_priority": 0.0305
+    },
+    {
+      "vintage": 2010,
+      "n": 117,
+      "ead": 6575863.42,
+      "mean_b2n_risk": 0.2815,
+      "mean_measured_gap": 0.0749,
+      "mean_priority": 0.0174
+    },
+    {
+      "vintage": 2011,
+      "n": 142,
+      "ead": 7054663.75,
+      "mean_b2n_risk": 0.2494,
+      "mean_measured_gap": 0.0928,
+      "mean_priority": 0.0292
+    }
+  ],
+  "cohort_by_spell_length": [
+    {
+      "spell_bucket": "1 month",
+      "n": 271,
+      "ead": 6881114.44,
+      "mean_b2n_risk": 0.0197,
+      "mean_measured_gap": 0.1163,
+      "mean_priority": 0.0032
+    },
+    {
+      "spell_bucket": "2-3 months",
+      "n": 172,
+      "ead": 6145141.62,
+      "mean_b2n_risk": 0.6374,
+      "mean_measured_gap": 0.1323,
+      "mean_priority": 0.103
+    },
+    {
+      "spell_bucket": "4-6 months",
+      "n": 58,
+      "ead": 3186759.55,
+      "mean_b2n_risk": 0.4069,
+      "mean_measured_gap": 0.0685,
+      "mean_priority": 0.053
+    },
+    {
+      "spell_bucket": "7+ months",
+      "n": 88,
+      "ead": 4547713.94,
+      "mean_b2n_risk": 0.3325,
+      "mean_measured_gap": 0.0351,
+      "mean_priority": 0.0247
+    }
+  ],
+  "assumed_lift_baseline": 0.3,
+  "caveat": "Persuadability (measured_gap) comes from an OBSERVATIONAL T-learner: loan modification is a servicer decision, not a randomised treatment, so the gap is confounded by selection into treatment. These are priced targeting comparisons under that estimate, not a validated causal ECL forecast. A production rollout needs a randomised champion/challenger holdout on a live contact queue before the combined_effect numbers are used for capital or budget planning."
+}

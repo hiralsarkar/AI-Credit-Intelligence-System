@@ -31,10 +31,12 @@ inside, strictly beats Champion on approval and default. Both shown in every tab
 | D ECL / IFRS 9 | Staging, transition matrix, LGD, ECL-by-stage | LGD 41.8%; 39x ECL cliff S1->S2 | done |
 | D Collections | C2B / B2N / cure roll-rate + strategy | behavioural B2N AUC 0.565->0.946; DPD bucket dominant | done |
 | D Uplift / NBA | T-learner uplift on modification=treatment | 20,615 delinquent loans, 12.6% modified; naive ATE +4.2pp; top-20% persuadables +52pp uplift; decile-10 predicted +0.667 vs observed +0.745 | done |
+| D Surgical Strike | Fused B2N risk x measured uplift priority score, scored on live open Stage-2 book, priced vs risk-only/assumed-lift baseline | 589 live loans; combined B2N+behavioural AUC 0.945; targeting effect +77% (1.8x), targeting+honest-pricing +171% (2.7x) avoided loss at 20% capacity = 65% of the live sub-book's baseline lifetime ECL; gain plateaus at ~20% capacity, matching the 21.4% of the book with a measurable positive gap | done |
 
 Reject-inference caveat: AUC modest because only 3 features (score, DTI, amount) shared across accepted/rejected files - honest, not hidden.
 Uplift caveat (stated in code + docs): modification is not randomly assigned, so this is OBSERVATIONAL
 (confounded by selection into treatment); production needs randomised champion/challenger holdout or propensity adjustment. Not a causal claim.
+Surgical-strike caveat: prices *targeting strategies* under the same observational uplift estimate; it does not resolve the confounding above. The 1.8x/2.7x/65% figures are a strategy comparison, not a validated causal forecast, until a randomised holdout exists.
 
 ## Docs (06_docs/, all on new palette)
 optimal_cutoff_analysis.html (convergence chart, 61.9 + 63.7), technical_appendix.html (Sec 5 precision/recall
@@ -45,7 +47,7 @@ executive_presentation.html, architecture_diagram.html, system_blueprint.md (mas
 01: _pipeline_a, _economics_a, _stress_staging_a, _appendix_stats_a
 02: _pipeline_b
 03: _pipeline_c, _reject_inference_c
-04: _pipeline_d, _collections_d, _b2n_behavioural_d, _uplift_nba_d
+04: _pipeline_d, _collections_d, _b2n_behavioural_d, _uplift_nba_d, _surgical_strike_d (run last - reads module_d_ecl.json)
 
 ## Data parsing gotchas (already fixed - do not regress)
 - Freddie ACTUAL LOSS stored NEGATIVE -> use abs(); EAD = col 26 (zero-balance-removal UPB).
@@ -62,7 +64,9 @@ executive_presentation.html, architecture_diagram.html, system_blueprint.md (mas
 - Phase 1 done: `tests/` (decision-engine contracts + committed-output guards + a no-dash hygiene test), `.github/workflows/ci.yml` (ruff errors-only + pytest + demo smoke run), `pyproject.toml`, `Makefile`.
 
 ## Planned / remaining (priority order)
-- Reject-inference now has a docs page (06_docs/reject_inference_analysis.html); consider a matching uplift/NBA page next.
+- Reject-inference now has a docs page (06_docs/reject_inference_analysis.html); consider a matching uplift/NBA page next (could fold the surgical-strike fusion in as the same page's closing section).
+- A randomised champion/challenger holdout for the collections uplift model is still the real fix for the confounding caveat; surgical-strike only prices strategies under the existing observational estimate, it does not resolve it.
+- Wire the surgical-strike priority score into the decision engine as a Module D collections signal (decision engine currently only consumes staging/ECL from Module D, not the priority score).
 - Re-execute the 25 notebooks against current pipeline outputs so no notebook contradicts the docs.
 - Wire Module D staging signal into the decision engine (done). Composite 60/40 weight now justified with a sensitivity-backed governance rationale (05_governance/composite_weight_rationale.md); revisit only on model retrain or when a single joint dataset exists.
 - NTC thin-file model (Home Credit), Bureau Custom Model (Product/Customer/Location signatures).

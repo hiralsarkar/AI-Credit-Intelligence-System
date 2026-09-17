@@ -63,6 +63,10 @@ STEPS = [
     ("d", "Module D - uplift / next-best-action (exploratory)", f"{D}/_uplift_nba_d.py",
         [FREDDIE / f"sample_{y}.zip" for y in (2008, 2009, 2010, 2011)],
         "Needs the Freddie Mac sample zips (see Module D step above)."),
+    ("d", "Module D - surgical strike (fused priority score + ECL impact)", f"{D}/_surgical_strike_d.py",
+        [FREDDIE / f"sample_{y}.zip" for y in (2008, 2009, 2010, 2011)]
+        + [ROOT / D / "04_outputs/module_d_ecl.json"],
+        "Needs the Freddie Mac sample zips and module_d_ecl.json (run the Module D staging step above first)."),
 ]
 
 

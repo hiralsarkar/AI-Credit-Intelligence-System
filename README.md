@@ -77,7 +77,7 @@ Each module measures a custom Challenger against a simple benchmark, the kind of
 | **C** Portfolio | Is the rate right? | FICO + grade (0.705) | Full model (**0.729**) | +3.7pp approval / -4.9% default |
 | **D** ECL & Staging | What is the lifetime loss? | Snapshot proxy | Panel staging on 12.6M loan-months | **39x** Stage 1 to Stage 2 provisioning cliff, real LGD 41.8% |
 
-Module D's transition matrix (28.5% monthly Stage 2 to Stage 1 cure rate) and vintage curves (2008 crisis 6.0% vs 2011 1.1% default) drive the IFRS 9 ECL-reduction case: better origination keeps loans in Stage 1, and collections cure Stage 2 back before the lifetime-ECL cliff.
+Module D's transition matrix (28.5% monthly Stage 2 to Stage 1 cure rate) and vintage curves (2008 crisis 6.0% vs 2011 1.1% default) drive the IFRS 9 ECL-reduction case: better origination keeps loans in Stage 1, and collections cure Stage 2 back before the lifetime-ECL cliff. A fused priority score (roll-to-NPA risk x measured persuadability to intervention, not an assumed lift) prices that case on the live open Stage-2 book: at matched contact capacity, targeting by risk-and-persuadability instead of risk alone raises avoided expected loss to 2.7x the status-quo level, and the gain plateaus almost exactly at the share of the book that is measurably persuadable - a sanity check that it isn't fitting noise. See [Module D's surgical-strike section](04_module_d_ecl_ifrs9/README.md#surgical-strike-fused-priority-targeting) for the method and its causal caveats.
 
 ---
 
@@ -125,7 +125,7 @@ This is a portfolio study on public data, built to institutional conventions. Re
 - **The Champion is a bureau-score benchmark, not a production scorecard.** The lift shown is over a generic bureau-score cutoff, the baseline before a custom model exists. It is not a claim to beat a mature lender's existing underwriting.
 - **The integration is illustrative.** The four modules train on four unrelated public datasets (different borrowers, geographies, eras). The composite PD and decision engine show *how* the signals would combine; they are a reference architecture, not one book scored end to end.
 - **Module A's origination "staging" is a PD-bucket proxy, not SICR-based IFRS 9 staging.** A single application snapshot cannot express a significant increase in credit risk. All credible IFRS 9 staging in this project is Module D, on the Freddie Mac monthly panel.
-- **The collections uplift / next-best-action model is exploratory.** It uses loan modification as an observed (not randomised) treatment, so the effect is confounded, and its uplift-decile validation is not yet monotonic. Treat it as a targeting hypothesis, not a causal result.
+- **The collections uplift / next-best-action model is exploratory.** It uses loan modification as an observed (not randomised) treatment, so the effect is confounded, and its uplift-decile validation is not yet monotonic. Treat it as a targeting hypothesis, not a causal result. The fused surgical-strike priority score (Module D) prices comparisons *between targeting strategies* under this same estimate; it is a more honest use of the uplift model (measured decile gaps instead of an assumed flat lift), not a fix for the underlying confounding. A randomised holdout is still required before any of these figures inform capital or budget decisions.
 - **Data is public Kaggle / Freddie Mac.** Figures are realistic and reproducible, but they describe these datasets, not a live portfolio.
 
 ---
