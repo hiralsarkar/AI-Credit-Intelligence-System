@@ -100,5 +100,5 @@ out = dict(n_delinquent=int(len(df)), treated_share=round(float(T.mean()),4),
            avoided_default_control=round(float(Y[T==0].mean()),4),
            uplift_mean=round(float(uplift.mean()),4),
            uplift_decile_gap=val, top20_uplift=round(float(top['uplift'].mean()),4))
-json.dump(out, open(OUT + r"\module_d_uplift_nba.json","w"), indent=2)
+json.dump(out, open(os.path.join(OUT, "module_d_uplift_nba.json"),"w"), indent=2)
 print("\nSaved module_d_uplift_nba.json")

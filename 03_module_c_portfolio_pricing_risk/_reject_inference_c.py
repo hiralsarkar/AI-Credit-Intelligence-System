@@ -28,7 +28,7 @@ BASE = str(_HERE)
 REJ = os.environ.get("LC_REJECT_CSV", str(Path.home() / "Downloads" / "LendingClub Dataset" / "rejected_2007_to_2018q4.csv" / "rejected_2007_to_2018Q4.csv"))
 
 # ---- accepted (booked) loans with known outcome
-acc = pd.read_csv(BASE + r"\01_data\processed\clean_lendingclub.csv",
+acc = pd.read_csv(os.path.join(BASE, "01_data", "processed", "clean_lendingclub.csv"),
                   usecols=lambda c: c in ["fico_mid","dti","loan_amnt","DEFAULT"])
 acc = acc.dropna(subset=["DEFAULT"])
 common = ["fico_mid","dti","loan_amnt"]
@@ -44,7 +44,7 @@ rej = rej.dropna(subset=["fico_mid"]).query("fico_mid > 300 and fico_mid < 900")
 print(f"Rejected applicants (sample): {len(rej):,}")
 
 # true acceptance rate from the rejection summary (full population counts, not the sample)
-rs = pd.read_csv(BASE + r"\01_data\processed\rejection_summary.csv")
+rs = pd.read_csv(os.path.join(BASE, "01_data", "processed", "rejection_summary.csv"))
 accept_rate = rs["approved_count"].sum() / rs["total_apps"].sum()
 n_acc, n_rej = len(acc), len(rej)
 print(f"True acceptance rate (rejection summary): {accept_rate:.1%}")
@@ -84,5 +84,5 @@ out = dict(accepted=int(n_acc), rejected_sample=int(n_rej), accept_rate=round(ac
            booked_bad_rate=round(float(booked_bad),4), ttd_bad_rate=round(float(ttd_bad),4),
            selection_bias_pct=round(float((ttd_bad-booked_bad)/booked_bad),4),
            safe_rejects_share=round(float(good_rejects),4))
-json.dump(out, open(BASE + r"\04_outputs\module_c_reject_inference.json","w"), indent=2)
+json.dump(out, open(os.path.join(BASE, "04_outputs", "module_c_reject_inference.json"),"w"), indent=2)
 print("\nSaved module_c_reject_inference.json")

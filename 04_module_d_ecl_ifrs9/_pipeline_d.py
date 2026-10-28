@@ -186,6 +186,6 @@ out = dict(
     sicr_rate_24m=round(float(S["reached_s2"].mean()),4),
     ecl_by_stage=ecl,
 )
-json.dump(out, open(OUT + r"\module_d_ecl.json","w"), indent=2)
-S.to_csv(OUT + r"\sicr_loanlevel.csv", index=False)
+json.dump(out, open(os.path.join(OUT, "module_d_ecl.json"),"w"), indent=2)
+S.to_csv(os.path.join(OUT, "sicr_loanlevel.csv"), index=False)
 print("\nSaved module_d_ecl.json + sicr_loanlevel.csv")

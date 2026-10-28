@@ -77,6 +77,7 @@ def log_decision(
 
     decision_id = str(uuid.uuid4())[:8].upper()
     timestamp   = decision_output.get("timestamp", datetime.now().isoformat())
+    sb          = composite_signal.get("signal_b")   # None for thin-file applicants
 
     # ── Build the full log record ─────────────────────────────────────────────
     record = {
@@ -93,10 +94,11 @@ def log_decision(
         "composite_pd":     decision_output["composite_pd"],
         "composite_risk_band": decision_output["composite_risk_band"],
         "module_a_pd":      composite_signal["signal_a"]["pd_score"],
-        "module_b_pd":      composite_signal["signal_b"]["delinquency_prob"],
+        "module_b_pd":      sb["delinquency_prob"] if sb else None,
         "market_pd":        composite_signal["signal_c"]["market_pd"] if composite_signal.get("signal_c") else None,
         "credit_score":     composite_signal["signal_a"]["credit_score"],
-        "behavioural_score": composite_signal["signal_b"]["behavioural_risk_score"],
+        "behavioural_score": sb["behavioural_risk_score"] if sb else None,
+        "thin_file":        sb is None,
 
         # Capital
         "ead":              decision_output["capital_impact"]["ead"],
@@ -107,14 +109,16 @@ def log_decision(
         "value_decision":   decision_output["capital_impact"]["value_decision"],
 
         # Pricing
+        "offered_rate":     decision_output["pricing"].get("current_rate_pct"),
+        "breakeven_rate":   decision_output["pricing"].get("breakeven_rate"),
         "suggested_rate":   decision_output["pricing"]["suggested_rate"],
         "pricing_adequacy": decision_output["pricing"]["pricing_adequacy"],
         "loan_grade":       decision_output["pricing"]["loan_grade"],
 
         # Flags
-        "stress_flag":          composite_signal["signal_b"].get("stress_flag", False),
-        "critical_utilisation": composite_signal["signal_b"].get("critical_utilisation", False),
-        "high_delinquency":     composite_signal["signal_b"].get("high_delinquency_score", False),
+        "stress_flag":          bool(sb and sb.get("stress_flag", False)),
+        "critical_utilisation": bool(sb and sb.get("critical_utilisation", False)),
+        "high_delinquency":     bool(sb and sb.get("high_delinquency_score", False)),
         "concentration_flag":   composite_signal["signal_c"]["concentration_flag"] if composite_signal.get("signal_c") else False,
         "overrides_triggered":  decision_output.get("overrides_triggered", []),
 
@@ -123,6 +127,8 @@ def log_decision(
         "signal_weight_b":  composite_signal["weights_used"]["module_b"],
         "dominant_module":  explanation["signal_contributions"]["dominant_module"],
         "b_available":      composite_signal.get("b_available", True),
+        "engine_version":   decision_output.get("engine_version"),
+        "what_would_change": decision_output.get("what_would_change", []),
         "c_available":      composite_signal.get("c_available", True),
 
         # Reason codes (top 3)

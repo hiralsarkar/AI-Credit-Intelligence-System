@@ -19,9 +19,9 @@ from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
 
 BASE = str(_HERE)
-RAW = BASE + r"\01_data\raw\application_train.csv"
-PROC = BASE + r"\01_data\processed"
-OUT = BASE + r"\04_outputs"
+RAW = os.path.join(BASE, "01_data", "raw", "application_train.csv")
+PROC = os.path.join(BASE, "01_data", "processed")
+OUT = os.path.join(BASE, "04_outputs")
 
 df = pd.read_csv(RAW)
 y = df["TARGET"].values
@@ -79,7 +79,7 @@ frontier = pd.DataFrame({
     "incumbent_approval": c_inc[:, 0], "incumbent_default": c_inc[:, 1],
     "custom_approval": c_cust[:, 0], "custom_default": c_cust[:, 1],
 })
-frontier.to_csv(OUT + r"\swapset_frontier.csv", index=False)
+frontier.to_csv(os.path.join(OUT, "swapset_frontier.csv"), index=False)
 
 # swap-set at the stated anchor: incumbent 50% approval
 def default_at(score, ytrue, q):
@@ -96,12 +96,10 @@ anchor_q = 0.50
 inc_dr, inc_ar = default_at(pd_inc, yte, anchor_q)
 cust_dr_same_ar, _ = default_at(pd_cust, yte, anchor_q)         # SC1
 cust_ar_same_dr = approval_at_default(pd_cust, yte, inc_dr)     # SC2
-# SC3: largest custom approval that still beats incumbent default at anchor
-sc3_ar = sc3_dr = None
-for q in np.linspace(anchor_q, 0.85, 351):
-    dr, ar = default_at(pd_cust, yte, q)
-    if dr < inc_dr - 0.0005 and ar > inc_ar + 0.005:
-        sc3_ar, sc3_dr = ar, dr
+# SC3: shared definition (see _operating_point.py) so every output agrees
+from _operating_point import sc3_point
+_sc3 = sc3_point(pd_cust, yte, round(inc_dr, 4))
+sc3_ar, sc3_dr = _sc3 if _sc3 else (None, None)
 swap = dict(
     anchor_incumbent_approval=round(inc_ar, 4), anchor_incumbent_default=round(inc_dr, 4),
     sc1_custom_default_same_approval=round(cust_dr_same_ar, 4),
@@ -130,8 +128,8 @@ scored = pd.DataFrame({
     "days_birth": df.iloc[te]["DAYS_BIRTH"].values,
     "region_rating": df.iloc[te]["REGION_RATING_CLIENT"].values,
 })
-scored.to_csv(PROC + r"\scored_test_a.csv", index=False)
+scored.to_csv(os.path.join(PROC, "scored_test_a.csv"), index=False)
 
 json.dump({"incumbent": m_inc, "custom": m_cust, "swap_set": swap},
-          open(OUT + r"\module_a_metrics.json", "w"), indent=2)
+          open(os.path.join(OUT, "module_a_metrics.json"), "w"), indent=2)
 print("\nSaved: scored_test_a.csv, swapset_frontier.csv, module_a_metrics.json")

@@ -198,7 +198,7 @@ print(f"  mean measured persuadability gap: {live['measured_gap'].mean():+.1%}  
       f"(share with a measurable positive gap: {(live['measured_gap'] > 0).mean():.1%})")
 
 # ---- pull LGD and Stage-2 lifetime ECL rate from the pipeline's own output (single source of truth)
-with open(OUT + r"\module_d_ecl.json") as f:
+with open(os.path.join(OUT, "module_d_ecl.json")) as f:
     ecl_ref = json.load(f)
 LGD = ecl_ref["lgd"]
 stage2_lifetime_ecl_rate = ecl_ref["ecl_by_stage"]["stage2_lifetime_ecl_rate"]
@@ -281,5 +281,5 @@ out = dict(
             "needs a randomised champion/challenger holdout on a live contact queue before "
             "the combined_effect numbers are used for capital or budget planning."),
 )
-json.dump(out, open(OUT + r"\module_d_surgical_strike.json", "w"), indent=2)
+json.dump(out, open(os.path.join(OUT, "module_d_surgical_strike.json"), "w"), indent=2)
 print("\nSaved module_d_surgical_strike.json")
