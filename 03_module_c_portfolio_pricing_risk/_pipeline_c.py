@@ -18,9 +18,9 @@ from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
 
 BASE = str(_HERE)
-P = BASE + r"\01_data\processed"
-Xtr = pd.read_csv(P + r"\X_train_c.csv"); ytr = pd.read_csv(P + r"\y_train_c.csv").iloc[:, 0].values
-Xte = pd.read_csv(P + r"\X_test_c.csv"); yte = pd.read_csv(P + r"\y_test_c.csv").iloc[:, 0].values
+P = os.path.join(BASE, "01_data", "processed")
+Xtr = pd.read_csv(os.path.join(P, "X_train_c.csv")); ytr = pd.read_csv(os.path.join(P, "y_train_c.csv")).iloc[:, 0].values
+Xte = pd.read_csv(os.path.join(P, "X_test_c.csv")); yte = pd.read_csv(os.path.join(P, "y_test_c.csv")).iloc[:, 0].values
 
 leak = ["int_rate", "installment", "RATE_SPREAD", "RATE_PER_RISK", "EL_RATE_PROXY",
         "grade_n", "sub_grade_n"]
@@ -69,10 +69,10 @@ scored = Xte.copy()
 scored["actual_default"] = yte
 scored["pd_custom"] = p_cust
 scored["pd_incumbent"] = p_inc
-scored.to_csv(P + r"\scored_test_c.csv", index=False)
+scored.to_csv(os.path.join(P, "scored_test_c.csv"), index=False)
 json.dump({"incumbent": m_inc, "custom": m_cust,
            "swap_set": {"incumbent_approval": round(inc_ar,4), "incumbent_default": round(inc_dr,4),
                         "sc1_custom_default": round(cust_dr_sv,4),
                         "sc2_custom_approval": round(cust_ar_sd,4)}},
-          open(BASE + r"\04_outputs\module_c_metrics.json", "w"), indent=2)
+          open(os.path.join(BASE, "04_outputs", "module_c_metrics.json"), "w"), indent=2)
 print("\nSaved scored_test_c.csv, module_c_metrics.json")

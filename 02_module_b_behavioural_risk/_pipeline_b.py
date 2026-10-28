@@ -19,9 +19,9 @@ from sklearn.metrics import roc_auc_score
 from xgboost import XGBClassifier
 
 BASE = str(_HERE)
-P = BASE + r"\01_data\processed"
-Xtr = pd.read_csv(P + r"\X_train_b.csv"); ytr = pd.read_csv(P + r"\y_train_b.csv").iloc[:, 0].values
-Xte = pd.read_csv(P + r"\X_test_b.csv"); yte = pd.read_csv(P + r"\y_test_b.csv").iloc[:, 0].values
+P = os.path.join(BASE, "01_data", "processed")
+Xtr = pd.read_csv(os.path.join(P, "X_train_b.csv")); ytr = pd.read_csv(os.path.join(P, "y_train_b.csv")).iloc[:, 0].values
+Xte = pd.read_csv(os.path.join(P, "X_test_b.csv")); yte = pd.read_csv(os.path.join(P, "y_test_b.csv")).iloc[:, 0].values
 
 dpd_cols = [c for c in Xtr.columns if "PastDue" in c or "DaysLate" in c or "DPD" in c]
 print("DPD (incumbent) features:", dpd_cols)
@@ -61,7 +61,7 @@ scored = Xte.copy()
 scored["actual_delinquent"] = yte
 scored["delinquency_prob"] = p_cust
 scored["dpd_rule_prob"] = p_inc
-scored.to_csv(P + r"\scored_test_b.csv", index=False)
+scored.to_csv(os.path.join(P, "scored_test_b.csv"), index=False)
 json.dump({"incumbent": m_inc, "custom": m_cust, "capture": {f"{int(k*100)}pct": v for k,v in caps.items()}},
-          open(BASE + r"\04_outputs\module_b_metrics.json", "w"), indent=2)
+          open(os.path.join(BASE, "04_outputs", "module_b_metrics.json"), "w"), indent=2)
 print("\nSaved scored_test_b.csv, module_b_metrics.json")

@@ -109,5 +109,5 @@ out = dict(b2n_auc_origination=round(auc_o,3), b2n_auc_behavioural=round(auc_b,3
            b2n_auc_combined=round(auc_f,3),
            drivers={n:round(float(c),3) for n,c in coefs},
            roll_by_bucket={("30dpd" if b==1 else "60dpd"):round(float(r["mean"]),4) for b,r in by_bucket.iterrows()})
-json.dump(out, open(OUT + r"\module_d_b2n_behavioural.json","w"), indent=2)
+json.dump(out, open(os.path.join(OUT, "module_d_b2n_behavioural.json"),"w"), indent=2)
 print("\nSaved module_d_b2n_behavioural.json")

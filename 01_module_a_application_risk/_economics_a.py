@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 _HERE = Path(__file__).resolve().parent
 BASE = str(_HERE)
-s = pd.read_csv(BASE + r"\01_data\processed\scored_test_a.csv")
+s = pd.read_csv(os.path.join(BASE, "01_data", "processed", "scored_test_a.csv"))
 
 LGD, CAP, REV, OPEX_R, HURDLE = 0.45, 0.105, 0.12, 0.03, 0.14
 RW_MAP = {1: 0.75, 2: 0.75, 3: 1.00, 4: 1.50, 5: 1.50}
@@ -99,5 +99,5 @@ out = dict(
     custom_raroc_gated=book(cust_raroc, E_cust, "pd_custom"),
     band_economics=rows,
 )
-json.dump(out, open(BASE + r"\04_outputs\module_a_economics.json", "w"), indent=2)
+json.dump(out, open(os.path.join(BASE, "04_outputs", "module_a_economics.json"), "w"), indent=2)
 print("\nSaved module_a_economics.json")

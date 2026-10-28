@@ -9,23 +9,19 @@ import os
 from pathlib import Path
 _HERE = Path(__file__).resolve().parent
 BASE = str(_HERE)
-s = pd.read_csv(BASE + r"\01_data\processed\scored_test_a.csv")
+s = pd.read_csv(os.path.join(BASE, "01_data", "processed", "scored_test_a.csv"))
 LGD, CAP, REV, OPEX_R = 0.45, 0.105, 0.12, 0.03
 RW_MAP = {1: .75, 2: .75, 3: 1.0, 4: 1.5, 5: 1.5}
 pd_c = s["pd_custom"].values; y = s["actual_default"].values; ead = s["ead"].values
-band = np.where(pd_c < .05, 1, np.where(pd_c < .10, 2, np.where(pd_c < .20, 3, np.where(pd_c < .40, 4, 5))))
+band = np.where(pd_c < .05, 1, np.where(pd_c < .10, 2, np.where(pd_c < .20, 3, np.where(pd_c < .35, 4, 5))))
 rw = np.vectorize(RW_MAP.get)(band)
 
 inc_default = 0.0369  # incumbent default at 50% (from economics run)
 order = np.argsort(pd_c)
 
-# explicit SC3 point: highest approval that still beats incumbent default AND > 50% approval
-sc3 = None
-for q in np.linspace(0.50, 0.80, 301):
-    n = int(len(pd_c) * q); appr = order[:n]
-    dr = y[appr].mean()
-    if dr < inc_default - 0.0008:
-        sc3 = (q, dr)
+# SC3: shared definition (see _operating_point.py) so every output agrees
+from _operating_point import sc3_point
+sc3 = sc3_point(pd_c, y, inc_default)
 print(f"SC3 balanced point: approval {sc3[0]:.1%}, default {sc3[1]:.2%} "
       f"(incumbent 50.0% / {inc_default:.2%}) -> higher approval AND lower default")
 
@@ -80,5 +76,5 @@ out = dict(sc3_point=dict(approval=round(sc3[0],4), default=round(sc3[1],4)),
                                  portfolio_raroc=round(ni.sum()/cap.sum(),4),
                                  ecl_rate=round(el.sum()/ead[book].sum(),4)),
            ifrs9_staging_approved=staging, ifrs9_staging_pool=staging_pool)
-json.dump(out, open(BASE + r"\04_outputs\module_a_stress_staging.json","w"), indent=2)
+json.dump(out, open(os.path.join(BASE, "04_outputs", "module_a_stress_staging.json"),"w"), indent=2)
 print("\nSaved module_a_stress_staging.json")

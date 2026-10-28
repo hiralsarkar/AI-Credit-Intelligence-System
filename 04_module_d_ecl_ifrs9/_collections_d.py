@@ -130,5 +130,5 @@ out = dict(
             "b2n_auc": round(auc_b2n,3), "b2n_rate": round(r_b2n,4),
             "cure_auc": round(auc_cure,3), "cure_rate": round(float(fc['cured'].mean()),4)},
     collection_strategy=strat, intervention_lift_assumed=LIFT)
-json.dump(out, open(OUT + r"\module_d_collections.json","w"), indent=2)
+json.dump(out, open(os.path.join(OUT, "module_d_collections.json"),"w"), indent=2)
 print("\nSaved module_d_collections.json")
