@@ -56,6 +56,24 @@ This module goes beyond PD prediction to build a complete financial risk stack:
 Download from: https://www.kaggle.com/c/home-credit-default-risk  
 Place `application_train.csv` in `data/raw/`
 
+## Robustness checks
+
+`_robustness_a.py` asks how far the headline numbers can be trusted. It answers three questions a model validator would ask, and writes `04_outputs/module_a_robustness.json`.
+
+| Check | What it does | Why it matters |
+|---|---|---|
+| **Ablation** | Fits a logistic regression on the same full feature set as XGBoost, then splits the AUC lift into a *data effect* (more features) and a *model effect* (XGBoost over logistic regression) | Shows whether the gain comes from the algorithm or from using richer data |
+| **Calibration** | Reliability table, Brier score and expected calibration error, before and after isotonic calibration fitted on the validation set | RAROC, expected loss and the breakeven rate treat the PD as a true probability |
+| **Honest operating point** | Chooses the SC3 approval point on a validation set, then applies its score threshold to the untouched test set | Removes the optimism of picking and reporting a cutoff on the same loans |
+| **Uncertainty** | Paired, stratified bootstrap (1,000 resamples) gives 95% intervals on AUC, the ablation effects and every swap-set figure | Turns each headline into a defensible range |
+
+The test set is the same 61,503 loans used by `_pipeline_a.py`; the remaining 80% is split 75/25 into train and validation, and nothing is fitted or tuned on test. The statistics live in `_robustness_lib.py` and are unit-tested on synthetic data in `tests/test_robustness.py`.
+
+```bash
+python 01_module_a_application_risk/_robustness_a.py          # or: python run_all.py --only a
+BOOTSTRAP_N=200 python 01_module_a_application_risk/_robustness_a.py   # faster, wider intervals
+```
+
 ## Status
 
 ✅ Complete

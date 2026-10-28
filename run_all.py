@@ -38,6 +38,9 @@ STEPS = [
     ("a", "Module A - stress test + PD-bucket provisioning proxy", f"{A}/_stress_staging_a.py",
         [ROOT / A / "01_data/processed/scored_test_a.csv"],
         "Produced by the Module A PD step above; run that first."),
+    ("a", "Module A - robustness: ablation, calibration, bootstrap intervals", f"{A}/_robustness_a.py",
+        [ROOT / A / "01_data/raw/application_train.csv"],
+        "Download Home Credit (application_train.csv) -> 01_module_a_application_risk/01_data/raw/"),
     ("b", "Module B - delinquency model, collections capture", f"{B}/_pipeline_b.py",
         [ROOT / B / "01_data/processed/X_train_b.csv", ROOT / B / "01_data/processed/X_test_b.csv"],
         "Run 02_module_b_behavioural_risk/02_notebooks/01_data_preprocessing_b.ipynb first "

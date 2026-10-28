@@ -168,6 +168,10 @@ On **61,503 held-out loans**, the custom model's approved book defaults less tha
 
 Module D's transition matrix (28.5% monthly cure from Stage 2 to Stage 1) and vintage curves (2008 crisis 6.0% vs 2011 1.1% default) carry the provisioning case. Its surgical-strike score, which ranks the live Stage 2 book by roll-to-loss risk times measured persuadability, raises avoided expected loss to 2.7x the risk-only status quo at the same contact capacity. See [Module D](04_module_d_ecl_ifrs9/README.md#surgical-strike-fused-priority-targeting) for the method and its causal caveats.
 
+### How much to trust these numbers
+
+A robustness step ([`_robustness_a.py`](01_module_a_application_risk/_robustness_a.py)) re-tests Module A the way a validator would: it separates the gain from **more data** versus **a better algorithm**, checks that the PD is **calibrated** enough to price with, picks the operating point on a **validation set** and reports it on untouched test loans, and puts **95% bootstrap intervals** on every headline figure. See the [Module A README](01_module_a_application_risk/README.md#robustness-checks).
+
 ## 🛠️ The self-audit
 
 I audited my engine line by line and found that **RAROC was always computed at a fixed 12% rate**, whatever the loan was actually priced at. A 6.5% teaser loan looked as profitable as a 12% one, and repricing could never change the numbers. The current engine fixes that and six other issues, with tests that keep them fixed.
@@ -205,7 +209,8 @@ pip install -r requirements.txt
 python 04_decision_engine/demo.py                                          # six applicants, one per outcome plus teaser-rate and thin-file
 python 04_decision_engine/demo.py --pd_a 0.07 --pd_b 0.05 --offered_rate 6.5   # score your own applicant
 python 04_decision_engine/demo.py --pd_a 0.16 --thin_file --offered_rate 13     # no behavioural history
-pytest                                                                     # 21 tests
+python 01_module_a_application_risk/_robustness_a.py                       # ablation, calibration, 95% intervals (needs Home Credit data)
+pytest                                                                     # 28 tests
 ```
 
 To regenerate every figure from raw data, place the datasets (see [Data](#-data)) and run:

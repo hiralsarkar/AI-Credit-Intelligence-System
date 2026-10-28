@@ -65,6 +65,8 @@ executive_presentation.html, architecture_diagram.html, system_blueprint.md (mas
 
 - Phase 2 done (2026-10-28): decision engine v2. Price-aware RAROC at the offered rate with breakeven pricing; reprice by economics with a 24% rate ceiling; thin-file applicants carry no synthetic Module B values; every route records a reason; all thresholds from constants.py; counterfactual "what would change this" lines; SC3 has one shared definition (_operating_point.py, 61.9% / 3.61%); pipelines use os.path.join. 06_docs/decision_studio.html is the light-themed capstone front end (story, analyst workbench, evidence); its JS engine mirrors the Python engine exactly. Studio uses a light palette by design; the dark palette above still applies to the other docs.
 
+- Phase 3 (2026-10-28): Module A robustness step `_robustness_a.py` (ablation LR-all vs XGBoost, isotonic calibration on validation, SC3 chosen on validation and reported on test, paired stratified bootstrap 95% intervals). Statistics in `_robustness_lib.py`, unit-tested in tests/test_robustness.py. Output module_a_robustness.json is produced only by running on the real Home Credit file; quote its figures only after that run.
+
 ## Planned / remaining (priority order)
 - Reject-inference now has a docs page (06_docs/reject_inference_analysis.html); consider a matching uplift/NBA page next (could fold the surgical-strike fusion in as the same page's closing section).
 - A randomised champion/challenger holdout for the collections uplift model is still the real fix for the confounding caveat; surgical-strike only prices strategies under the existing observational estimate, it does not resolve it.
