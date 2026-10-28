@@ -10,7 +10,7 @@ from sklearn.metrics import roc_auc_score, precision_score, recall_score
 from xgboost import XGBClassifier
 
 BASE = str(_HERE)
-df = pd.read_csv(BASE + r"\01_data\raw\application_train.csv")
+df = pd.read_csv(os.path.join(BASE, "01_data", "raw", "application_train.csv"))
 y = df["TARGET"].values
 drop = {"TARGET", "SK_ID_CURR"}
 num = [c for c in df.select_dtypes(include=[np.number]).columns if c not in drop]
@@ -58,5 +58,5 @@ out = dict(auc=round(auc,4), ks=round(ks(yte,p_te),4), gini=round(2*auc-1,4),
            feature_importance={k:round(float(v),1) for k,v in imp.items()},
            calibration=[{"decile":int(d)+1,"pred":round(float(r.mean_pd),4),"actual":round(float(r.actual),4)} for d,r in cal.iterrows()],
            psi=round(psi,4), precision_decline=round(float(prec),4), recall_decline=round(float(rec),4))
-json.dump(out, open(BASE + r"\04_outputs\module_a_appendix_stats.json","w"), indent=2)
+json.dump(out, open(os.path.join(BASE, "04_outputs", "module_a_appendix_stats.json"),"w"), indent=2)
 print("\nSaved module_a_appendix_stats.json")

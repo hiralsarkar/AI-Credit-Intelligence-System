@@ -31,12 +31,15 @@ import numpy as np
 import pandas as pd
 from typing import Optional
 
+import math
+
 from constants import (
     SIGNAL_WEIGHTS,
-    MODULE_B_FALLBACK_DELINQUENCY_PROB,
-    MODULE_B_FALLBACK_RISK_BAND,
     RISK_BAND_THRESHOLDS,
     RISK_BAND_LABELS,
+    MARKET_PD_DIVERGENCE_THRESHOLD,
+    LGD_UNSECURED, RISK_WEIGHTS, CAPITAL_RATIO,
+    INTEREST_RATE, OPERATING_COST, HURDLE_RATE, RATE_ROUNDING_STEP,
 )
 
 
@@ -77,10 +80,59 @@ MODULE_C_REQUIRED_KEYS = {
 
 # ── Individual Module Signal Builders ─────────────────────────────────────────
 
+def deal_economics(
+    pd: float,
+    ead: float,
+    rate: float,
+    risk_band: Optional[int] = None,
+    lgd: float = LGD_UNSECURED,
+    hurdle: float = HURDLE_RATE,
+) -> dict:
+    """
+    Price-aware single-loan economics (v2).
+
+    rate is the annual rate as a FRACTION (0.12 = 12%). Returns expected loss,
+    economic capital, net income, RAROC at that rate, and the breakeven rate:
+    the lowest rate at which RAROC exactly meets the hurdle.
+
+        RAROC     = (rate - PD x LGD - opex) x EAD / capital
+        breakeven = hurdle x capital / EAD + PD x LGD + opex
+
+    v1 always used a fixed 12% revenue rate here, which made RAROC a function
+    of PD alone and left the REPRICE route unable to change the economics.
+    """
+    if risk_band is None:
+        risk_band = assign_risk_band(pd)
+    el_rate = pd * lgd
+    capital = ead * RISK_WEIGHTS.get(risk_band, 1.00) * CAPITAL_RATIO
+    net_income = ead * (rate - el_rate - OPERATING_COST)
+    raroc = net_income / capital if capital > 0 else 0.0
+    breakeven = (hurdle * capital / ead if ead > 0 else 0.0) + el_rate + OPERATING_COST
+    return {
+        "pd":               float(pd),
+        "risk_band":        int(risk_band),
+        "rate":             float(rate),
+        "el":               float(el_rate * ead),
+        "el_rate":          float(el_rate),
+        "economic_capital": float(capital),
+        "rwa":              float(ead * RISK_WEIGHTS.get(risk_band, 1.00)),
+        "net_income":       float(net_income),
+        "raroc":            float(raroc),
+        "breakeven_rate":   float(breakeven),
+        "above_hurdle":     bool(raroc >= hurdle),
+    }
+
+
+def round_rate_up(rate: float, step: float = RATE_ROUNDING_STEP) -> float:
+    """Round a fractional rate UP to the pricing grid (25 bp by default)."""
+    return math.ceil(rate / step - 1e-9) * step
+
+
 def build_module_a_signal(
     pd_score: float,
     credit_score: int,
     ead: float,
+    offered_rate: Optional[float] = None,
     risk_band: Optional[int] = None,
     el: Optional[float] = None,
     raroc: Optional[float] = None,
@@ -94,54 +146,39 @@ def build_module_a_signal(
 
     Parameters
     ----------
-    pd_score       : Probability of default (0-1) from XGBoost champion model.
+    pd_score       : Probability of default (0-1) from the custom PD model.
     credit_score   : WoE scorecard score (300-900).
     ead            : Exposure at default - loan amount in ₹.
+    offered_rate   : Rate offered to the applicant, % p.a. (e.g. 11.5). If omitted,
+                     the base rate (INTEREST_RATE) is assumed and the signal says so.
     risk_band      : Integer 1-5. Computed from pd_score if not provided.
-    el             : Expected Loss. Computed if not provided.
-    raroc          : Risk-Adjusted Return on Capital. Computed if not provided.
-    economic_capital: Economic Capital. Computed if not provided.
+    el, raroc, economic_capital : Pre-computed overrides (batch path).
     """
-    from constants import (
-        LGD_UNSECURED, RISK_WEIGHTS, CAPITAL_RATIO,
-        INTEREST_RATE, OPERATING_COST, HURDLE_RATE,
-    )
-
-    # Assign risk band from PD if not provided
     if risk_band is None:
         risk_band = assign_risk_band(pd_score)
 
-    # Compute financial metrics if not provided
-    lgd = LGD_UNSECURED
-    if el is None:
-        el      = pd_score * lgd * ead
-    el_rate     = pd_score * lgd
+    rate_supplied = offered_rate is not None
+    rate = (offered_rate / 100.0) if rate_supplied else INTEREST_RATE
+    econ = deal_economics(pd_score, ead, rate, risk_band)
 
-    rw = RISK_WEIGHTS.get(risk_band, 1.00)
-    rwa = ead * rw
-    if economic_capital is None:
-        economic_capital = rwa * CAPITAL_RATIO
-
-    revenue    = ead * INTEREST_RATE
-    opex       = ead * OPERATING_COST
-    net_income = revenue - el - opex
-    if raroc is None:
-        raroc = net_income / economic_capital if economic_capital > 0 else 0.0
-
-    # Score to risk grade label
-    risk_grade = score_to_grade_label(credit_score)
+    el = econ["el"] if el is None else el
+    economic_capital = econ["economic_capital"] if economic_capital is None else economic_capital
+    raroc = econ["raroc"] if raroc is None else raroc
 
     return {
         "pd_score":         float(pd_score),
         "risk_band":        int(risk_band),
         "credit_score":     int(credit_score),
-        "risk_grade":       risk_grade,
+        "risk_grade":       score_to_grade_label(credit_score),
         "el":               float(el),
-        "el_rate":          float(el_rate),
+        "el_rate":          float(econ["el_rate"]),
         "raroc":            float(raroc),
         "ead":              float(ead),
         "economic_capital": float(economic_capital),
-        "rwa":              float(rwa),
+        "rwa":              float(econ["rwa"]),
+        "offered_rate":     float(rate * 100.0),
+        "rate_supplied":    rate_supplied,
+        "breakeven_rate":   float(econ["breakeven_rate"] * 100.0),
         "above_hurdle":     raroc >= HURDLE_RATE,
     }
 
@@ -257,7 +294,7 @@ def aggregate_signals(
     Parameters
     ----------
     signal_a : Module A signal dictionary (required).
-    signal_b : Module B signal dictionary (optional - graceful fallback).
+    signal_b : Module B signal dictionary, or None for a thin-file applicant.
     signal_c : Module C signal dictionary (optional - affects routing).
     weights  : Override default weights {"module_a": 0.60, "module_b": 0.40}.
 
@@ -267,7 +304,7 @@ def aggregate_signals(
         composite_pd       : Weighted PD combining Modules A and B
         composite_risk_band: Risk band derived from composite_pd
         signal_a           : Module A signal (passed through)
-        signal_b           : Module B signal (or fallback)
+        signal_b           : Module B signal, or None (thin file)
         signal_c           : Module C signal (or None)
         weights_used       : Actual weights applied
         b_available        : Whether real Module B data was used
@@ -276,21 +313,19 @@ def aggregate_signals(
     """
     w = weights or SIGNAL_WEIGHTS
 
-    # ── Module B: use fallback if not available ───────────────────────────────
+    # ── Module B: thin-file applicants carry no synthetic signal (v2) ─────────
     b_available = signal_b is not None
-    if not b_available:
-        signal_b = _module_b_fallback()
-        # When B is unavailable, put full weight on A
-        w_a, w_b = 1.00, 0.00
-    else:
+    if b_available:
         w_a = w.get("module_a", 0.60)
         w_b = w.get("module_b", 0.40)
+    else:
+        w_a, w_b = 1.00, 0.00   # Module A carries full weight; nothing is assumed for B
 
     # ── Composite PD ─────────────────────────────────────────────────────────
     pd_a = signal_a["pd_score"]
-    pd_b = signal_b["delinquency_prob"]
+    pd_b = signal_b["delinquency_prob"] if b_available else None
 
-    composite_pd = w_a * pd_a + w_b * pd_b
+    composite_pd = w_a * pd_a + (w_b * pd_b if b_available else 0.0)
     composite_pd = float(np.clip(composite_pd, 0.0, 1.0))
 
     # ── Composite risk band ───────────────────────────────────────────────────
@@ -305,7 +340,7 @@ def aggregate_signals(
             "composite_pd":  round(composite_pd, 4),
             "market_pd":     round(signal_c["market_pd"], 4),
             "divergence":    round(divergence, 4),
-            "flag":          divergence > 0.15,  # >15pp divergence is notable
+            "flag":          divergence > MARKET_PD_DIVERGENCE_THRESHOLD,
         }
 
     return {
@@ -313,7 +348,8 @@ def aggregate_signals(
         "composite_risk_band":  composite_risk_band,
         "composite_risk_label": RISK_BAND_LABELS.get(composite_risk_band, "Unknown"),
         "signal_a":             signal_a,
-        "signal_b":             signal_b,
+        "signal_b":             signal_b if b_available else None,
+        "thin_file":            not b_available,
         "signal_c":             signal_c if c_available else None,
         "signal_d":             signal_d,
         "weights_used":         {"module_a": w_a, "module_b": w_b},
@@ -322,7 +358,7 @@ def aggregate_signals(
         "d_available":          signal_d is not None,
         "module_pd_comparison": {
             "module_a_pd":    round(pd_a, 4),
-            "module_b_pd":    round(pd_b, 4),
+            "module_b_pd":    round(pd_b, 4) if b_available else None,
             "composite_pd":   round(composite_pd, 4),
             "market_pd":      round(signal_c["market_pd"], 4) if c_available else None,
         },
@@ -429,21 +465,3 @@ def score_to_grade_label(credit_score: int) -> str:
     if credit_score >= 550:  return "Medium Risk"
     if credit_score >= 450:  return "High Risk"
     return "Very High Risk"
-
-
-def _module_b_fallback() -> dict:
-    """
-    Fallback Module B signal for thin-file applicants with no behavioural history.
-
-    Conservative assumption: population average delinquency probability,
-    no active stress flags.
-    """
-    return build_module_b_signal(
-        delinquency_prob        = MODULE_B_FALLBACK_DELINQUENCY_PROB,
-        behavioural_risk_score  = 50.0,
-        stress_flag             = False,
-        critical_utilisation    = False,
-        escalating_delinquency  = False,
-        high_delinquency_score  = False,
-        behavioural_risk_band   = MODULE_B_FALLBACK_RISK_BAND,
-    )

@@ -19,6 +19,10 @@ from __future__ import annotations
 
 from typing import Optional
 
+from constants import (
+    HURDLE_RATE, COMPOSITE_PD_REVIEW_MIN, MARKET_PD_DIVERGENCE_THRESHOLD,
+)
+
 
 # ── Reason Code Registry ──────────────────────────────────────────────────────
 # Maps feature names (as they appear in model inputs) to plain-English
@@ -105,11 +109,11 @@ def explain_signal_contributions(composite_signal: dict) -> dict:
     """
     weights = composite_signal.get("weights_used", {"module_a": 0.60, "module_b": 0.40})
     sig_a   = composite_signal["signal_a"]
-    sig_b   = composite_signal["signal_b"]
+    sig_b   = composite_signal.get("signal_b")
     sig_c   = composite_signal.get("signal_c")
 
     pd_a = sig_a["pd_score"]
-    pd_b = sig_b["delinquency_prob"]
+    pd_b = sig_b["delinquency_prob"] if sig_b else 0.0
     w_a  = weights.get("module_a", 0.60)
     w_b  = weights.get("module_b", 0.40)
 
@@ -131,16 +135,21 @@ def explain_signal_contributions(composite_signal: dict) -> dict:
         f"Module A (application-time risk) contributes {pct_a:.0f}% of the composite score "
         f"(PD={pd_a:.2%}, weight={w_a:.0%})."
     )
-    narrative_parts.append(
-        f"Module B (behavioural risk) contributes {pct_b:.0f}% "
-        f"(delinquency probability={pd_b:.2%}, weight={w_b:.0%})"
-        + (" [estimated - no behavioural history]" if not composite_signal.get("b_available") else "") + "."
-    )
+    if sig_b:
+        narrative_parts.append(
+            f"Module B (behavioural risk) contributes {pct_b:.0f}% "
+            f"(delinquency probability={pd_b:.2%}, weight={w_b:.0%})."
+        )
+    else:
+        narrative_parts.append(
+            "Module B is not used: the applicant has no behavioural history, "
+            "so no behavioural values are assumed."
+        )
     if sig_c:
         narrative_parts.append(
             f"Module C cross-check: market-implied PD={sig_c['market_pd']:.2%} "
             f"(grade {sig_c['loan_grade_signal']}) - "
-            + ("aligns with internal estimate." if abs(sig_c["market_pd"] - composite_signal["composite_pd"]) < 0.10
+            + ("aligns with internal estimate." if abs(sig_c["market_pd"] - composite_signal["composite_pd"]) <= MARKET_PD_DIVERGENCE_THRESHOLD
                else f"diverges from internal estimate by "
                     f"{abs(sig_c['market_pd'] - composite_signal['composite_pd']):.1%}. "
                     f"Further review warranted.")
@@ -192,7 +201,6 @@ def generate_adverse_action_reasons(
     decision   = decision_output["decision"]
     reasons    = []
     sig_a      = composite_signal["signal_a"]
-    sig_b      = composite_signal["signal_b"]
     sig_c      = composite_signal.get("signal_c")
     overrides  = decision_output.get("overrides_triggered", [])
     reason_codes_raw = decision_output.get("reason_codes", [])
@@ -238,7 +246,7 @@ def generate_adverse_action_reasons(
 
     # ── Add module-level reasons if we have space ─────────────────────────────
     composite_pd = composite_signal["composite_pd"]
-    if composite_pd >= 0.20 and not any(r["code"] == "composite_pd" for r in reasons):
+    if composite_pd >= COMPOSITE_PD_REVIEW_MIN and not any(r["code"] == "composite_pd" for r in reasons):
         reasons.append({
             "rank":        len(reasons) + 1,
             "code":        "composite_pd",
@@ -248,13 +256,15 @@ def generate_adverse_action_reasons(
             "priority":    "high",
         })
 
-    if sig_a["raroc"] < 0.14 and not any(r["code"] == "raroc_below_hurdle" for r in reasons):
+    deal_raroc = decision_output.get("capital_impact", {}).get("raroc", sig_a["raroc"])
+    if deal_raroc < HURDLE_RATE and not any(r["code"] in ("raroc_below_hurdle", "underpriced", "unpriceable")
+                                            for r in reasons):
         reasons.append({
             "rank":        len(reasons) + 1,
             "code":        "raroc_below_hurdle",
-            "description": f"Risk-adjusted return ({sig_a['raroc']:.1%}) below minimum required ({0.14:.0%})",
+            "description": f"Risk-adjusted return ({deal_raroc:.1%}) below minimum required ({HURDLE_RATE:.0%})",
             "source":      "Module A - Capital Model",
-            "value":       f"{sig_a['raroc']:.2%}",
+            "value":       f"{deal_raroc:.2%}",
             "priority":    "high",
         })
 
@@ -369,6 +379,9 @@ def format_decision_for_display(
     lines.append(f"  {'Expected Loss (EL)':<30} ₹{ci['el']:,.0f}  ({ci['el_rate']:.2%} of loan)")
     lines.append(f"  {'Economic Capital':<30} ₹{ci['economic_capital']:,.0f}")
     lines.append(f"  {'RAROC':<30} {ci['raroc']:.2%}  ({ci['value_decision']})")
+    if ci.get("breakeven_rate") is not None:
+        lines.append(f"  {'Offered Rate':<30} {ci['offered_rate']:.2f}% p.a.")
+        lines.append(f"  {'Breakeven Rate (hurdle)':<30} {ci['breakeven_rate']:.2f}% p.a.")
     lines.append("")
     lines.append(sep)
 
@@ -410,6 +423,14 @@ def format_decision_for_display(
         lines.append("")
         lines.append(sep)
 
+    if decision_output.get("what_would_change"):
+        lines.append("  WHAT WOULD CHANGE THIS DECISION")
+        lines.append("")
+        for m in decision_output["what_would_change"]:
+            lines.append(f"  -> {m}")
+        lines.append("")
+        lines.append(sep)
+
     lines.append(f"  Timestamp: {decision_output['timestamp']}")
     lines.append(thick)
 
@@ -426,6 +447,8 @@ def _categorise_source(category: str) -> str:
         "capital":       "Module A - Capital Model",
         "review":        "Composite Model",
         "approval":      "Composite Model",
+        "data":          "Data Quality",
+        "provisioning":  "Module D - IFRS 9",
     }
     return mapping.get(category, "Decision Engine")
 
@@ -440,15 +463,21 @@ def _build_regulatory_summary(
     decision = decision_output["decision"]
     cpd      = composite_signal["composite_pd"]
     sa       = composite_signal["signal_a"]
-    sb       = composite_signal["signal_b"]
+    sb       = composite_signal.get("signal_b")
+    w        = composite_signal.get("weights_used", {"module_a": 0.60, "module_b": 0.40})
 
     summary = (
         f"This lending decision was produced by the AI Credit Intelligence System "
         f"on {decision_output['timestamp'][:10]}. "
         f"The composite probability of default was assessed at {cpd:.2%}, "
-        f"derived from a weighted combination of the Application Risk model "
-        f"(Module A, PD={sa['pd_score']:.2%}, weight=60%) and the Behavioural "
-        f"Risk model (Module B, PD={sb['delinquency_prob']:.2%}, weight=40%). "
+        + (
+            f"derived from a weighted combination of the Application Risk model "
+            f"(Module A, PD={sa['pd_score']:.2%}, weight={w['module_a']:.0%}) and the Behavioural "
+            f"Risk model (Module B, PD={sb['delinquency_prob']:.2%}, weight={w['module_b']:.0%}). "
+            if sb else
+            f"derived from the Application Risk model alone (Module A, PD={sa['pd_score']:.2%}); "
+            f"the applicant has no behavioural history and none was assumed. "
+        ) +
         f"The decision of {decision} was reached through a rules-based policy "
         f"framework applied to the composite score. "
     )

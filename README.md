@@ -97,6 +97,32 @@ Each module follows the same layout: `01_data/` (raw is gitignored, download sep
 
 ---
 
+## Decision engine v2 and the Decision Studio
+
+Open [`06_docs/decision_studio.html`](06_docs/decision_studio.html) in a browser: the project story, an analyst workbench that scores applications live, and the evidence charts. Its engine mirrors `04_decision_engine` exactly (checked on 1,120 input combinations).
+
+v2 came from auditing v1 line by line. What changed:
+
+| Issue in v1 | Fix in v2 |
+|---|---|
+| RAROC used a fixed 12% revenue rate, so it depended on PD alone and a 6.5% teaser loan looked as profitable as a 12% one | RAROC is computed at the **offered rate** on the composite PD, with a **breakeven rate** that exactly meets the 14% hurdle |
+| REPRICE fired only on Module C's label and could never change the economics | Reprice when the offered rate is below breakeven or Module C says Underpriced; suggested rate = the higher of the two, rounded up to 25 bp; above the 24% ceiling, decline |
+| Thin-file applicants were shown an invented 6.7% behavioural PD | No synthetic values: Module A carries full weight, a data-gap reason is recorded, and the file goes to an analyst |
+| One decline path could produce an empty adverse-action notice | Every route records its own reason; a test sweeps 1,000+ input combinations |
+| Literal thresholds in narratives and explainability | Every threshold is read from `constants.py` |
+| SC3 was 62.6% in `module_a_metrics.json` but 61.9% elsewhere | One shared definition in `01_module_a_application_risk/_operating_point.py` |
+| Pipelines built paths as `BASE + r"\folder\file"`, which only works on Windows | `os.path.join` everywhere, guarded by a test |
+
+Each non-approval now also states **what would change the decision** (the PD needed, or the rate needed).
+
+```bash
+python 04_decision_engine/demo.py                              # six applicants, one per outcome plus teaser-rate and thin-file
+python 04_decision_engine/demo.py --pd_a 0.07 --pd_b 0.05 --offered_rate 6.5
+python 04_decision_engine/demo.py --pd_a 0.16 --thin_file --offered_rate 13
+```
+
+---
+
 ## Run it
 
 The decision engine runs with **no data download**:

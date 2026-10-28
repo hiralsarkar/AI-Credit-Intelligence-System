@@ -1,7 +1,7 @@
 """
 demo.py - AI Credit Intelligence System
 ======================================
-A self-contained runnable demo of the complete three-signal decision engine.
+A self-contained runnable demo of the complete four-signal decision engine (v2).
 
 Usage
 -----
@@ -64,7 +64,7 @@ from audit_logger import log_decision, print_audit_summary
 
 
 # ── Preset Applicant Profiles ─────────────────────────────────────────────────
-# Four profiles representing the four possible decision outcomes.
+# Six profiles: one per decision outcome, plus a teaser-rate loan and a thin-file applicant.
 # Values are calibrated to the real model outputs from the trained notebooks.
 
 APPLICANT_PROFILES = {
@@ -75,6 +75,7 @@ APPLICANT_PROFILES = {
         "expected_decision": "APPROVE",
         "signal_a": {
             "pd_score":     0.048,
+            "offered_rate": 12.0,
             "credit_score": 724,
             "ead":          350000.0,
         },
@@ -97,10 +98,11 @@ APPLICANT_PROFILES = {
 
     "PRIYA_SHARMA": {
         "name": "Priya Sharma",
-        "description": "Self-employed borrower, low rate offered, loan needs repricing",
+        "description": "Self-employed borrower offered 11%, market grade C prices at 14.8%",
         "expected_decision": "REPRICE",
         "signal_a": {
             "pd_score":     0.088,
+            "offered_rate": 11.0,
             "credit_score": 648,
             "ead":          180000.0,
         },
@@ -127,6 +129,7 @@ APPLICANT_PROFILES = {
         "expected_decision": "MANUAL REVIEW",
         "signal_a": {
             "pd_score":     0.156,
+            "offered_rate": 12.0,
             "credit_score": 582,
             "ead":          120000.0,
         },
@@ -153,6 +156,7 @@ APPLICANT_PROFILES = {
         "expected_decision": "DECLINE",
         "signal_a": {
             "pd_score":     0.412,
+            "offered_rate": 12.0,
             "credit_score": 431,
             "ead":          95000.0,
         },
@@ -172,6 +176,53 @@ APPLICANT_PROFILES = {
             "concentration_flag":  True,
         },
     },
+
+    "KARAN_DESAI": {
+        "name": "Karan Desai",
+        "description": "Low-risk borrower on a 6.5% teaser rate: v1 approved it, v2 reprices",
+        "expected_decision": "REPRICE",
+        "signal_a": {
+            "pd_score":     0.070,
+            "offered_rate": 6.5,
+            "credit_score": 668,
+            "ead":          400000.0,
+        },
+        "signal_b": {
+            "delinquency_prob":       0.050,
+            "behavioural_risk_score": 66.0,
+            "stress_flag":            False,
+            "critical_utilisation":   False,
+            "escalating_delinquency": False,
+            "high_delinquency_score": False,
+        },
+        "signal_c": {
+            "market_pd":           0.060,
+            "loan_grade_signal":   "A",
+            "suggested_rate":      6.8,
+            "pricing_adequacy":    "Fair",
+            "concentration_flag":  False,
+        },
+    },
+
+    "MEERA_IYER": {
+        "name": "Meera Iyer",
+        "description": "New-to-credit applicant with no behavioural history (thin file)",
+        "expected_decision": "MANUAL REVIEW",
+        "signal_a": {
+            "pd_score":     0.165,
+            "offered_rate": 13.0,
+            "credit_score": 598,
+            "ead":          150000.0,
+        },
+        "signal_b": None,   # thin file: no synthetic behavioural values in v2
+        "signal_c": {
+            "market_pd":           0.150,
+            "loan_grade_signal":   "C",
+            "suggested_rate":      14.0,
+            "pricing_adequacy":    "Fair",
+            "concentration_flag":  False,
+        },
+    },
 }
 
 
@@ -181,7 +232,7 @@ def _demo_module_d_signal(profile: dict):
     """Illustrative IFRS 9 provisioning signal derived from the applicant's risk.
     Real staging comes from Module D on panel data; here it demonstrates the wiring."""
     pd_a = profile["signal_a"]["pd_score"]
-    b = profile.get("signal_b", {})
+    b = profile.get("signal_b") or {}
     stressed = any(b.get(k) for k in ("stress_flag", "escalating_delinquency", "high_delinquency_score"))
     if stressed and pd_a >= 0.30:
         stage = 3
@@ -206,7 +257,7 @@ def run_single_applicant(profile: dict, log_decisions: bool = True) -> dict:
     """
     # ── Build signals ─────────────────────────────────────────────────────────
     sig_a = build_module_a_signal(**profile["signal_a"])
-    sig_b = build_module_b_signal(**profile["signal_b"])
+    sig_b = build_module_b_signal(**profile["signal_b"]) if profile.get("signal_b") else None
     sig_c = build_module_c_signal(**profile["signal_c"])
     sig_d = _demo_module_d_signal(profile)   # IFRS 9 provisioning view (illustrative)
 
@@ -254,10 +305,11 @@ def run_custom_applicant(args) -> dict:
         "name": "Custom Applicant",
         "signal_a": {
             "pd_score":     args.pd_a,
+            "offered_rate": args.offered_rate,
             "credit_score": args.credit_score,
             "ead":          args.ead,
         },
-        "signal_b": {
+        "signal_b": None if args.thin_file else {
             "delinquency_prob":       args.pd_b,
             "behavioural_risk_score": args.brs,
             "stress_flag":            args.stress_flag,
@@ -300,11 +352,9 @@ def run_batch_from_csv(csv_path: str, n_rows: int = 10) -> None:
         try:
             sig_a = load_module_a_signal_from_csv(csv_path, i)
 
-            # Module B fallback (would normally load from scorecard_output_b.csv)
-            sig_b = build_module_b_signal(
-                delinquency_prob=0.067,
-                behavioural_risk_score=50.0,
-            )
+            # Module B is joined from scorecard_output_b.csv in production; with no
+            # behavioural record the applicant is treated as thin file (v2: nothing assumed)
+            sig_b = None
             # Module C fallback
             sig_c = build_module_c_signal(
                 market_pd=sig_a["pd_score"],
@@ -342,7 +392,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python demo.py                      # Run all 4 preset profiles
+  python demo.py                      # Run all preset profiles
   python demo.py --profile ANAND_MEHTA  # Run one profile
   python demo.py --pd_a 0.12 --credit_score 610 --ead 200000 --pd_b 0.08 --brs 55
   python demo.py --batch ../01_module_a_application_risk/01_data/processed/scorecard_output.csv
@@ -363,6 +413,8 @@ Examples:
     parser.add_argument("--pd_a",         type=float, default=0.10, help="Module A PD (0-1)")
     parser.add_argument("--credit_score", type=int,   default=620,  help="WoE scorecard score (300-900)")
     parser.add_argument("--ead",          type=float, default=200000, help="Loan amount (EAD) in Rs")
+    parser.add_argument("--offered_rate", type=float, default=None, help="Rate offered to the applicant (%% p.a.)")
+    parser.add_argument("--thin_file",    action="store_true", help="No behavioural history (Module B absent)")
 
     # Custom applicant inputs (Module B)
     parser.add_argument("--pd_b",         type=float, default=0.067, help="Module B delinquency prob (0-1)")
@@ -401,11 +453,12 @@ Examples:
         run_single_applicant(profile)
         return
 
-    # Default or --all: run all four preset profiles
+    # Default or --all: run every preset profile
     has_custom = any([
         args.pd_a != 0.10, args.credit_score != 620,
         args.pd_b != 0.067, args.brs != 50.0,
         args.stress_flag, args.critical_util,
+        args.offered_rate is not None, args.thin_file,
     ])
 
     if has_custom:
@@ -424,7 +477,8 @@ Examples:
 
         # Final summary
         print("\n" + "═" * 72)
-        print("  DEMO COMPLETE - 4 applicants processed, 4 decisions logged")
+        n = len(APPLICANT_PROFILES)
+        print(f"  DEMO COMPLETE - {n} applicants processed, {n} decisions logged")
         print("  Run  python demo.py --summary  to see the audit log")
         print("═" * 72)
 

@@ -42,3 +42,23 @@ def test_no_em_or_en_dashes_in_tracked_sources():
     bad = [f for f in listed
            if any(ch in (ROOT / f).read_text(encoding="utf-8", errors="ignore") for ch in (em, en))]
     assert not bad, f"em/en dashes found in tracked files: {bad}"
+
+
+def test_sc3_operating_point_agrees_across_outputs():
+    """SC3 has one definition (_operating_point.py); every output must agree."""
+    m = _load("01_module_a_application_risk/04_outputs/module_a_metrics.json")
+    s = _load("01_module_a_application_risk/04_outputs/module_a_stress_staging.json")
+    assert m["swap_set"]["sc3_custom_approval"] == s["sc3_point"]["approval"]
+    assert m["swap_set"]["sc3_custom_default"] == s["sc3_point"]["default"]
+    # SC3 must beat the benchmark on both axes
+    assert s["sc3_point"]["approval"] > m["swap_set"]["anchor_incumbent_approval"]
+    assert s["sc3_point"]["default"] < m["swap_set"]["anchor_incumbent_default"]
+
+
+def test_pipelines_build_portable_paths():
+    """Windows-only 'BASE + r"\\folder\\file"' paths write mangled names on Mac/Linux/CI."""
+    import re
+    pat = re.compile(r'\+\s*r"\\')
+    bad = [str(p.relative_to(ROOT)) for p in ROOT.glob("0*/_*.py")
+           if pat.search(p.read_text(encoding="utf-8"))]
+    assert not bad, f"backslash path concatenation in: {bad}"

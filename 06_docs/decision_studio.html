@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Credit Decision Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<style>
+/* Layout: a light, colourful product site. Home tells the story top to bottom; Workbench is a three-pane analyst console
+   (queue / decision / edit); Evidence is a chart grid. Single deliberate light theme. */
+:root{
+  color-scheme:light;
+  --bg:#F6F5FB; --surface:#FFFFFF; --tint:#F0EEFA; --line:#E4E1F0; --line-strong:#D3CEE6;
+  --ink:#17142E; --text:#3B3856; --muted:#6B6787;
+  --violet:#6A4BEF; --violet-ink:#4B2FC9; --violet-soft:#EEEAFE;
+  --amber:#C98500; --amber-soft:#FFF4D9;
+  --teal:#0E9F8E; --teal-soft:#DDF6F2;
+  --sky:#2F7BEA; --sky-soft:#E3EEFD;
+  --coral:#E0484D; --coral-soft:#FDE7E7;
+  --orange:#E27512; --orange-soft:#FDEEDD;
+  --display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:14px; --shadow:0 1px 2px rgba(23,20,46,.05),0 8px 24px -12px rgba(23,20,46,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:rgba(246,245,251,.92)}
+h1,h2,h3,h4{font-family:var(--display);color:var(--ink);margin:0;letter-spacing:-.015em;text-wrap:balance}
+h1{font-size:clamp(32px,5vw,54px);line-height:1.05;font-weight:700}
+h2{font-size:clamp(24px,3vw,32px);line-height:1.15;font-weight:700}
+h3{font-size:18px;font-weight:600;line-height:1.3}
+h4{font-size:15px;font-weight:600}
+p{margin:0}
+a{color:var(--violet-ink)}
+.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--violet-ink)}
+.lead{font-size:18px;color:var(--text);max-width:62ch}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.wrap{max-width:1240px;margin:0 auto}
+svg.lucide{width:18px;height:18px;stroke-width:2;flex:none}
+:focus-visible{outline:2px solid var(--violet);outline-offset:2px;border-radius:6px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));
+  background:rgba(246,245,251,.88);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand .mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),#9B7BFF 55%,var(--amber));color:#fff}
+.brand b{font-family:var(--display);font-size:17px;display:block;line-height:1.1}
+.brand span{font-size:12px;color:var(--muted)}
+nav.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);padding:4px;border-radius:12px;overflow-x:auto}
+nav.tabs a{display:flex;align-items:center;gap:7px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted);text-decoration:none;padding:7px 14px;border-radius:9px;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{background:var(--violet);color:#fff}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--body);border-radius:10px;padding:10px 16px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--violet);color:#fff;box-shadow:0 6px 18px -8px var(--violet)}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line-strong)}
+.btn.small{padding:6px 11px;font-size:13px;border-radius:8px}
+.btn.amber{background:var(--amber);color:#fff}
+
+/* home */
+section.block{padding-block:56px 8px}
+.hero{position:relative;overflow-x:clip;padding-block:56px 32px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:center}
+@media (max-width:920px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero::before{content:"";position:absolute;inset:-40px 0 auto auto;width:70%;height:520px;z-index:-1;
+  background:radial-gradient(40% 50% at 70% 30%,rgba(106,75,239,.18),transparent 70%),radial-gradient(35% 40% at 30% 70%,rgba(14,159,142,.14),transparent 70%),radial-gradient(30% 35% at 85% 75%,rgba(201,133,0,.16),transparent 70%)}
+.hero-copy{display:flex;flex-direction:column;gap:20px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--violet),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.byline{display:flex;align-items:center;gap:12px}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#fff;background:linear-gradient(135deg,var(--violet),var(--teal))}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+
+.stack{position:relative;min-height:380px}
+.app-card{position:absolute;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px}
+.app-card.back1{inset:0 8% auto 12%;transform:rotate(-4deg);opacity:.55;height:220px}
+.app-card.back2{inset:16px 4% auto 6%;transform:rotate(2.5deg);opacity:.75;height:240px}
+.app-card.front{inset:36px 0 auto 0;display:flex;flex-direction:column;gap:14px}
+.app-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.app-head small{font-family:var(--mono);color:var(--muted);font-size:12px}
+.swap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.swap>div{border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.swap .old{background:var(--tint)} .swap .new{background:var(--amber-soft)}
+.swap b{font-family:var(--mono);font-size:22px;color:var(--ink)}
+.bar{height:8px;border-radius:99px;background:var(--tint);position:relative;overflow:hidden}
+.bar>i{position:absolute;inset:0 auto 0 0;border-radius:99px}
+.bar .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+
+.kpi-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:8px}
+@media (max-width:860px){.kpi-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi-tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:6px}
+.kpi-tile .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center}
+.kpi-tile b{font-family:var(--display);font-size:30px;color:var(--ink);line-height:1.1}
+.kpi-tile span{font-size:13px;color:var(--muted)}
+
+.sec-head{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;max-width:760px}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.cards4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:980px){.cards4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){.cards3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.cards4{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.icon-badge{width:42px;height:42px;border-radius:12px;display:grid;place-items:center}
+.icon-badge svg.lucide{width:21px;height:21px}
+.c-violet{background:var(--violet-soft);color:var(--violet-ink)} .c-amber{background:var(--amber-soft);color:var(--amber)}
+.c-teal{background:var(--teal-soft);color:var(--teal)} .c-sky{background:var(--sky-soft);color:var(--sky)}
+.c-coral{background:var(--coral-soft);color:var(--coral)} .c-orange{background:var(--orange-soft);color:var(--orange)}
+.stat-line{font-family:var(--mono);font-size:13px;color:var(--ink);background:var(--tint);border-radius:8px;padding:6px 10px;align-self:flex-start}
+
+/* flow diagram */
+.flow{display:grid;grid-template-columns:minmax(0,1.3fr) 56px minmax(0,1fr) 56px minmax(0,1fr);align-items:center;gap:0}
+@media (max-width:980px){.flow{grid-template-columns:minmax(0,1fr)}.flow .arrow{transform:rotate(90deg);justify-self:center;margin-block:6px}}
+.mods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:520px){.mods{grid-template-columns:minmax(0,1fr)}}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;border-top:4px solid var(--c)}
+.mod .tagline{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;color:var(--ink)}
+.mod .tagline i{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 14%,white);color:var(--c)}
+.mod .meta{font-size:12.5px;color:var(--muted)}
+.mod .auc{font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.arrow{display:grid;place-items:center;color:var(--violet)}
+.arrow svg.lucide{width:28px;height:28px}
+.engine-box{background:linear-gradient(160deg,var(--violet),#8566FF);color:#fff;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 18px 40px -20px var(--violet)}
+.engine-box h3{color:#fff}
+.engine-box ol{margin:0;padding-left:20px;font-size:13.5px;display:flex;flex-direction:column;gap:3px;color:rgba(255,255,255,.92)}
+.outcomes{display:flex;flex-direction:column;gap:10px}
+.outcome{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.outcome .dot{width:34px;height:34px;border-radius:10px;display:grid;place-items:center}
+.outcome b{font-family:var(--display);color:var(--ink);display:block;font-size:14px}
+.outcome span{font-size:12.5px;color:var(--muted)}
+
+.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.chart-box{position:relative;height:300px;width:100%}
+.chart-box.short{height:240px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.span2{grid-column:1/-1}
+
+/* tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--tint)}
+td.num,th.num{text-align:right}
+tr.changed td{background:color-mix(in srgb,var(--amber-soft) 70%,white)}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--display);letter-spacing:.02em;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.chip svg.lucide{width:14px;height:14px}
+.chip.APPROVE{background:var(--teal-soft);color:var(--teal)}
+.chip.REPRICE{background:var(--amber-soft);color:var(--amber)}
+.chip.MANUAL{background:var(--sky-soft);color:var(--sky)}
+.chip.DECLINE{background:var(--coral-soft);color:var(--coral)}
+
+.fixes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.fixes{grid-template-columns:minmax(0,1fr)}}
+.fix{display:grid;grid-template-columns:auto 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.fix p{font-size:14px}
+.fix .was{font-size:13px;color:var(--muted);margin-top:4px}
+
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:s}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.steps{grid-template-columns:minmax(0,1fr)}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--violet-ink);font-weight:600}
+
+.pitch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.pitch{grid-template-columns:minmax(0,1fr)}}
+.quote{background:linear-gradient(160deg,var(--violet-soft),var(--surface) 70%);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:12px}
+.quote p.say{font-size:16.5px;color:var(--ink);line-height:1.65}
+details.qa{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+details.qa+details.qa{margin-top:10px}
+details.qa summary{cursor:pointer;list-style:none;padding:14px 16px;display:flex;gap:10px;align-items:center;font-weight:600;color:var(--ink)}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary .chev{margin-left:auto;transition:transform .15s}
+details.qa[open] summary .chev{transform:rotate(90deg)}
+details.qa .ans{padding:0 16px 16px 44px;font-size:14.5px}
+.limits{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.limits li{display:flex;gap:10px;font-size:14.5px}
+.limits li svg.lucide{color:var(--amber);margin-top:3px}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+
+/* workbench */
+.wb{display:grid;grid-template-columns:260px minmax(0,1fr) 330px;gap:18px;align-items:start;padding-top:24px}
+@media (max-width:1180px){.wb{grid-template-columns:minmax(0,1fr) 320px}.queue{grid-column:1/-1}}
+@media (max-width:820px){.wb{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.queue .list{display:flex;flex-direction:column;padding:6px}
+@media (max-width:1180px){.queue .list{flex-direction:row;overflow-x:auto}.queue .q{min-width:210px}}
+.q{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:10px;border:1px solid transparent}
+.q:hover{background:var(--tint)}
+.q[aria-pressed="true"]{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 40%,white)}
+.q:focus-visible{outline:2px solid var(--violet)}
+.q .top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.q b{font-family:var(--display);color:var(--ink);font-size:14.5px}
+.q small{font-size:12.5px;color:var(--muted)}
+.q .id{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.dec{display:flex;flex-direction:column;gap:18px;padding:20px}
+.dec-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.who h2{font-size:24px}
+.who .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:4px}
+.who .meta span{display:inline-flex;align-items:center;gap:5px}
+.who .meta svg.lucide{width:15px;height:15px}
+.verdict{border-radius:14px;padding:18px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;border:1px solid}
+.verdict .vi{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.verdict .vi svg.lucide{width:26px;height:26px}
+.verdict .vt{font-family:var(--display);font-weight:700;font-size:26px;line-height:1.1}
+.verdict p{color:var(--ink);font-size:15px;margin-top:4px}
+.verdict.APPROVE{background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 30%,white)} .verdict.APPROVE .vi{background:var(--teal)} .verdict.APPROVE .vt{color:var(--teal)}
+.verdict.REPRICE{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,white)} .verdict.REPRICE .vi{background:var(--amber)} .verdict.REPRICE .vt{color:var(--amber)}
+.verdict.MANUAL{background:var(--sky-soft);border-color:color-mix(in srgb,var(--sky) 30%,white)} .verdict.MANUAL .vi{background:var(--sky)} .verdict.MANUAL .vt{color:var(--sky)}
+.verdict.DECLINE{background:var(--coral-soft);border-color:color-mix(in srgb,var(--coral) 30%,white)} .verdict.DECLINE .vi{background:var(--coral)} .verdict.DECLINE .vt{color:var(--coral)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;grid-column:1/-1}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.metric{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.metric .lbl{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.metric .lbl svg.lucide{width:15px;height:15px}
+.metric .val{font-family:var(--mono);font-size:22px;color:var(--ink);font-weight:500;line-height:1.1}
+.metric .sub{font-size:12px;color:var(--muted)}
+.good{color:var(--teal)!important} .bad{color:var(--coral)!important} .warn{color:var(--amber)!important}
+.ruler svg{width:100%;height:64px;display:block;overflow:visible}
+.two{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.reasons{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.reasons li{display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:14px;align-items:start}
+.reasons .ri{width:28px;height:28px;border-radius:8px;display:grid;place-items:center}
+.reasons .ri svg.lucide{width:15px;height:15px}
+.reasons .src{display:block;font-size:11.5px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sig{display:flex;flex-direction:column;gap:12px}
+.sig-row{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.sig-row .tag{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#fff;font-size:13px}
+.sig-row p{font-size:13.5px}
+.sig-row .bar{margin-top:6px}
+.callout{border-radius:12px;padding:14px;display:flex;gap:12px;font-size:14px}
+.callout.next{background:var(--violet-soft);color:var(--ink)}
+.callout.prov{background:var(--tint)}
+.callout ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.edit{display:flex;flex-direction:column}
+.edit details{border-bottom:1px solid var(--line)}
+.edit details:last-child{border-bottom:0}
+.edit summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;color:var(--ink)}
+.edit summary::-webkit-details-marker{display:none}
+.edit summary .k{margin-left:auto;font:500 11.5px var(--mono);color:var(--muted)}
+.edit summary .mi{width:26px;height:26px;border-radius:8px;display:grid;place-items:center}
+.fields{display:flex;flex-direction:column;gap:12px;padding:2px 16px 16px}
+.field{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.field label{font-size:13.5px}
+.field output{font-family:var(--mono);font-size:13px;color:var(--ink);background:var(--tint);padding:2px 7px;border-radius:6px}
+.field input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--violet)}
+.field select{font:inherit;font-size:13.5px;border:1px solid var(--line-strong);border-radius:8px;padding:5px 8px;background:var(--surface);color:var(--ink)}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toggles label{display:flex;align-items:center;gap:7px;font-size:13px}
+.toggles input{accent-color:var(--violet);width:16px;height:16px}
+.hint{font-size:12.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:50;box-shadow:var(--shadow)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.heat td{text-align:center;font-family:var(--mono);font-size:13px}
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#home"><span class="mark"><i data-lucide="scale"></i></span><span><b>Credit Decision Studio</b><span>AI Credit Intelligence System · engine v2</span></span></a>
+    <nav class="tabs" aria-label="Views">
+      <a href="#home" data-view="home"><i data-lucide="house"></i>Home</a>
+      <a href="#workbench" data-view="workbench"><i data-lucide="layout-dashboard"></i>Analyst workbench</a>
+      <a href="#evidence" data-view="evidence"><i data-lucide="chart-line"></i>Evidence</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== HOME ===================== -->
+<main id="v-home" class="view wrap">
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="byline"><span class="avatar">HS</span><div><div class="eyebrow">Capstone · Hiral Sarkar</div><div class="small muted">Credit risk, data science and decisioning</div></div></div>
+      <h1>I built a credit engine that approves <em>more good borrowers</em> and fewer bad ones.</h1>
+      <p class="lead">Most lenders start with a bureau-score cutoff. It is simple, and it leaves money on the table: good applicants get turned away, risky ones get priced like safe ones, and the analyst gets a number with no reasons. This system replaces that cutoff with four models, one explainable decision, and a workbench an analyst actually enjoys using.</p>
+      <div class="cta">
+        <a class="btn primary" href="#workbench"><i data-lucide="layout-dashboard"></i>Open the analyst workbench</a>
+        <a class="btn ghost" href="#story"><i data-lucide="book-open"></i>Read the story</a>
+      </div>
+    </div>
+    <div class="stack" aria-label="Example decision card">
+      <div class="app-card back1"></div>
+      <div class="app-card back2"></div>
+      <div class="app-card front" id="heroCard"></div>
+    </div>
+  </section>
+
+  <div class="kpi-strip">
+    <div class="kpi-tile"><span class="ic c-teal"><i data-lucide="user-check"></i></span><b>+27%</b><span>more approvals at the benchmark's 3.69% default rate (50% to 63.6%)</span></div>
+    <div class="kpi-tile"><span class="ic c-violet"><i data-lucide="trending-down"></i></span><b>-20%</b><span>fewer defaults at the same 50% approval volume (3.69% to 2.95%)</span></div>
+    <div class="kpi-tile"><span class="ic c-amber"><i data-lucide="indian-rupee"></i></span><b>₹176 cr</b><span>net income at my recommended 61.9% approval, against ₹144 cr for the benchmark</span></div>
+    <div class="kpi-tile"><span class="ic c-coral"><i data-lucide="triangle-alert"></i></span><b>39×</b><span>jump in provisioning when a loan slips from IFRS 9 Stage 1 to Stage 2</span></div>
+  </div>
+
+  <section class="block" id="story">
+    <div class="sec-head"><span class="eyebrow">The problem</span><h2>Four things go wrong when a lender decides on a bureau score alone</h2>
+      <p class="lead">I framed every module around a question a credit committee actually asks. Each one has a measurable cost if you get it wrong.</p></div>
+    <div class="cards4">
+      <div class="card"><span class="icon-badge c-teal"><i data-lucide="user-x"></i></span><h3>Good borrowers get declined</h3><p class="small">A generic score ranks risk coarsely, so the cutoff turns away people who would have repaid.</p><span class="stat-line">13.6 pts of approval left on the table</span></div>
+      <div class="card"><span class="icon-badge c-amber"><i data-lucide="tag"></i></span><h3>Loans are priced blind</h3><p class="small">A risky loan at a safe loan's rate earns less than the capital it ties up. A rate cut can quietly destroy value.</p><span class="stat-line">Bands 4 and 5 run at negative RAROC</span></div>
+      <div class="card"><span class="icon-badge c-coral"><i data-lucide="landmark"></i></span><h3>Provisions arrive as a surprise</h3><p class="small">Under IFRS 9 a loan that deteriorates must hold lifetime expected loss, not 12 months of it.</p><span class="stat-line">0.06% to 2.45% ECL at Stage 2</span></div>
+      <div class="card"><span class="icon-badge c-sky"><i data-lucide="message-circle-question"></i></span><h3>Analysts get scores, not reasons</h3><p class="small">A number with no explanation cannot be defended to a customer, an auditor or a regulator.</p><span class="stat-line">Every v2 decision carries reasons</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">What I built</span><h2>Four specialist models feed one explainable decision</h2>
+      <p class="lead">Each model is trained on a real public dataset and measured against the simple benchmark a lender would use without it. The engine combines their signals in a fixed, auditable order.</p></div>
+    <div class="flow">
+      <div class="mods">
+        <div class="mod" style="--c:var(--violet)"><div class="tagline"><i><span data-lucide="file-user"></span></i>A · Application risk</div><div class="meta">Who should we approve? Home Credit, 307k applications.</div><div class="auc">AUC 0.718 → 0.756</div></div>
+        <div class="mod" style="--c:var(--teal)"><div class="tagline"><i><span data-lucide="activity"></span></i>B · Behavioural risk</div><div class="meta">How is the borrower behaving? Give Me Some Credit, 150k.</div><div class="auc">AUC 0.768 → 0.860</div></div>
+        <div class="mod" style="--c:var(--amber)"><div class="tagline"><i><span data-lucide="badge-percent"></span></i>C · Pricing and portfolio</div><div class="meta">Is the rate right for the risk? LendingClub 2007 to 2018.</div><div class="auc">AUC 0.705 → 0.729</div></div>
+        <div class="mod" style="--c:var(--coral)"><div class="tagline"><i><span data-lucide="layers"></span></i>D · IFRS 9 and collections</div><div class="meta">What is the lifetime loss? Freddie Mac, 12.6M loan-months.</div><div class="auc">LGD 41.8% · 39× stage cliff</div></div>
+      </div>
+      <div class="arrow"><i data-lucide="arrow-right"></i></div>
+      <div class="engine-box">
+        <span class="eyebrow" style="color:rgba(255,255,255,.8)">Decision engine v2</span>
+        <h3>Rules applied in order, first match wins</h3>
+        <ol>
+          <li>Composite PD of 35% or more: decline</li>
+          <li>Behavioural red flags: analyst review</li>
+          <li>Concentration risk: analyst review</li>
+          <li>Rate below breakeven: reprice</li>
+          <li>PD under 10% and RAROC above 14%: approve</li>
+          <li>Value-destructive: decline</li>
+          <li>Everything else: analyst review</li>
+        </ol>
+      </div>
+      <div class="arrow"><i data-lucide="arrow-right"></i></div>
+      <div class="outcomes">
+        <div class="outcome"><span class="dot c-teal"><i data-lucide="circle-check"></i></span><div><b>Approve</b><span>Low risk, earns its capital</span></div></div>
+        <div class="outcome"><span class="dot c-amber"><i data-lucide="badge-indian-rupee"></i></span><div><b>Reprice</b><span>Good risk, wrong rate</span></div></div>
+        <div class="outcome"><span class="dot c-sky"><i data-lucide="user-search"></i></span><div><b>Manual review</b><span>Needs human judgement</span></div></div>
+        <div class="outcome"><span class="dot c-coral"><i data-lucide="circle-x"></i></span><div><b>Decline</b><span>With adverse-action reasons</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">The result</span><h2>Higher approval and lower default, at the same time</h2>
+      <p class="lead">On 61,503 held-out loans, my model's curve sits below the benchmark's at every approval rate. I recommend 61.9%: one prudent step inside the income-maximising point, and better than the benchmark on both axes.</p></div>
+    <div class="grid2">
+      <div class="chart-card"><div><h3>Approval rate against realised default</h3><p class="small muted">Lower is better. The gold line is the benchmark's default rate at 50% approval, which I treat as risk appetite.</p></div><div class="chart-box"><canvas id="cFrontierHome" aria-label="Frontier chart"></canvas></div></div>
+      <div class="chart-card"><div><h3>Net income by approval strategy</h3><p class="small muted">Module A economics, ₹ crore, on the same held-out book.</p></div><div class="chart-box"><canvas id="cIncome" aria-label="Net income by strategy"></canvas></div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">Version 2</span><h2>I audited my own engine and fixed what I found</h2>
+      <p class="lead">Reading v1 line by line, I found that RAROC was always computed at a fixed 12% rate, whatever the loan was priced at. So a teaser-rate loan looked as profitable as a fully priced one. v2 fixes that and five other issues, with tests that keep them fixed.</p></div>
+    <div class="fixes">
+      <div class="fix"><span class="icon-badge c-amber"><i data-lucide="badge-indian-rupee"></i></span><div><h4>RAROC at the rate actually offered</h4><p>The engine prices each loan at its offered rate and solves for the breakeven rate that just meets the 14% hurdle.</p><p class="was">v1: fixed 12% revenue, so RAROC was really a second PD cutoff at about 16.7%.</p></div></div>
+      <div class="fix"><span class="icon-badge c-violet"><i data-lucide="refresh-ccw"></i></span><div><h4>Reprice by economics</h4><p>A loan below breakeven is repriced to the higher of breakeven and the market grade rate, rounded up to 25 bp. Above the 24% ceiling it declines.</p><p class="was">v1: repriced only when Module C said so.</p></div></div>
+      <div class="fix"><span class="icon-badge c-sky"><i data-lucide="user-round-search"></i></span><div><h4>Honest thin-file handling</h4><p>New-to-credit applicants are scored on Module A alone, with a data-gap reason and an analyst review instead of an automatic decline.</p><p class="was">v1: showed an invented 6.7% behavioural PD in the narrative.</p></div></div>
+      <div class="fix"><span class="icon-badge c-teal"><i data-lucide="list-checks"></i></span><div><h4>Every decision has reasons</h4><p>Every route records its own reason code, and a test checks 1,000+ input combinations to prove no notice is ever empty.</p><p class="was">v1: one decline path could produce an empty adverse-action notice.</p></div></div>
+      <div class="fix"><span class="icon-badge c-coral"><i data-lucide="lightbulb"></i></span><div><h4>"What would change this"</h4><p>Each non-approval states the smallest change that moves it: the PD needed, or the rate needed.</p><p class="was">v1: decisions explained the past, not the path forward.</p></div></div>
+      <div class="fix"><span class="icon-badge c-orange"><i data-lucide="wrench"></i></span><div><h4>One source of truth</h4><p>All thresholds come from one constants file. The recommended operating point has one shared definition, and the pipelines now run on Mac and Linux, not only Windows.</p><p class="was">v1: hard-coded literals, 62.6% vs 61.9% in different outputs, backslash-only paths.</p></div></div>
+    </div>
+    <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
+      <h3>The same six applicants through both engines</h3>
+      <div class="tablewrap"><table id="beforeAfter"></table></div>
+      <p class="small muted">Computed live in this page by the same logic as the Python engine. Highlighted rows changed decision.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">Built for the analyst</span><h2>A file goes from queue to decision notice in four moves</h2></div>
+    <div class="steps">
+      <div class="step"><span class="n">STEP 1</span><span class="icon-badge c-violet"><i data-lucide="inbox"></i></span><h4>Pick from the queue</h4><p class="small">Every application shows its live decision, so the analyst starts with the files that need a human.</p></div>
+      <div class="step"><span class="n">STEP 2</span><span class="icon-badge c-teal"><i data-lucide="scan-eye"></i></span><h4>Read the verdict</h4><p class="small">Decision, reasons in plain English, and each model's signal on one screen.</p></div>
+      <div class="step"><span class="n">STEP 3</span><span class="icon-badge c-amber"><i data-lucide="sliders-horizontal"></i></span><h4>Test what-ifs</h4><p class="small">Move a slider or apply the suggested rate and the decision updates instantly.</p></div>
+      <div class="step"><span class="n">STEP 4</span><span class="icon-badge c-coral"><i data-lucide="clipboard-check"></i></span><h4>Copy the notice</h4><p class="small">One click copies the decision report, ready for the file or the customer letter.</p></div>
+    </div>
+    <div style="margin-top:18px"><a class="btn primary" href="#workbench"><i data-lucide="arrow-right"></i>Try it with Karan's teaser-rate loan</a></div>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">In an interview</span><h2>How I talk about this project</h2></div>
+    <div class="pitch">
+      <div class="quote"><span class="eyebrow">The 30-second version</span>
+        <p class="say">"Lenders often start with a bureau-score cutoff. I built four models on real public data and a decision engine that combines them. At the same default rate it approves 27% more applicants, and at the same volume it cuts defaults by 20%. Then I audited my own engine, found it ignored the loan's interest rate when judging profitability, and rebuilt it so every decision is priced, explained and tested."</p></div>
+      <div class="quote"><span class="eyebrow">The two-minute walkthrough</span>
+        <ul class="limits" style="font-size:14.5px">
+          <li><i data-lucide="circle-dot"></i><span><b>Problem:</b> a generic cutoff mis-ranks risk and ignores price and lifetime loss.</span></li>
+          <li><i data-lucide="circle-dot"></i><span><b>Approach:</b> one model per lending question, each beaten against a simple benchmark.</span></li>
+          <li><i data-lucide="circle-dot"></i><span><b>Decision:</b> a 60/40 composite PD, then ordered rules ending in a 14% RAROC hurdle.</span></li>
+          <li><i data-lucide="circle-dot"></i><span><b>Result:</b> the swap-set frontier, and 61.9% approval at 3.61% default.</span></li>
+          <li><i data-lucide="circle-dot"></i><span><b>Rigour:</b> I found and fixed my own pricing flaw, with tests that keep it fixed.</span></li>
+          <li><i data-lucide="circle-dot"></i><span><b>Limits:</b> four datasets, so the integration is a reference design.</span></li>
+        </ul></div>
+    </div>
+    <div style="margin-top:18px">
+      <details class="qa"><summary><i data-lucide="help-circle"></i>Why 61.9% and not the income-maximising 63.7%?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">63.7% is where income peaks while default stays inside the 3.69% appetite, but it sits exactly on that limit. I recommend one step inside, where the model beats the benchmark on approval and default at once. That leaves room for model error and economic drift, and it is easier to defend to a credit committee.</div></details>
+      <details class="qa"><summary><i data-lucide="help-circle"></i>How did you choose the 60/40 weighting between Modules A and B?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">A and B are trained on different populations, so there is no joint label to fit the weights on. I made it a documented governance choice: A is primary because it exists for every applicant, B is an overlay. I ran a sensitivity analysis and recorded the rationale in the governance folder, to be revisited on any retrain.</div></details>
+      <details class="qa"><summary><i data-lucide="help-circle"></i>What was the most important bug you found?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">RAROC used a fixed 12% revenue rate. That made profitability a function of PD only, so a loan offered at 6.5% looked as good as one at 12%, and repricing could never change the numbers. In v2 the engine prices at the offered rate and solves for breakeven. Karan's teaser loan was approved by v1 at 9% RAROC; v2 reprices it to 7.00%.</div></details>
+      <details class="qa"><summary><i data-lucide="help-circle"></i>Is the collections uplift result causal?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">No, and I say so in the code and docs. Loan modification was not randomly assigned, so the uplift is observational. I use it to compare targeting strategies, and I state that a randomised holdout is needed before it informs budget or capital.</div></details>
+      <details class="qa"><summary><i data-lucide="help-circle"></i>How would you take this to production?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">Score all four modules on one joint book, refit the composite weights on a shared label, add PSI drift monitoring with the amber and red triggers already in the constants file, run a randomised champion/challenger for collections, and wire the engine behind an API that writes to the audit log already in the code.</div></details>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="sec-head"><span class="eyebrow">Scope</span><h2>What this does not claim</h2></div>
+    <ul class="limits">
+      <li><i data-lucide="info"></i><span>The benchmark is a bureau-score cutoff, not a mature lender's production scorecard.</span></li>
+      <li><i data-lucide="info"></i><span>The four modules use four unrelated public datasets, so the combined engine is a reference design, not one book scored end to end.</span></li>
+      <li><i data-lucide="info"></i><span>Credible IFRS 9 staging lives in Module D on the Freddie Mac panel. Staging shown at origination is illustrative.</span></li>
+      <li><i data-lucide="info"></i><span>Capital is set at 10.5% of risk-weighted assets, which makes single-loan RAROC look high. The ranking of decisions is what matters.</span></li>
+    </ul>
+  </section>
+  <footer><span>Hiral Sarkar · AI Credit Intelligence System</span><a href="https://github.com/hiralsarkar/AI-Credit-Intelligence-System">github.com/hiralsarkar/AI-Credit-Intelligence-System</a></footer>
+</main>
+
+<!-- ===================== WORKBENCH ===================== -->
+<main id="v-workbench" class="view wrap" hidden>
+  <div class="wb">
+    <aside class="panel queue">
+      <div class="panel-h"><h4 style="display:flex;gap:8px;align-items:center;white-space:nowrap"><i data-lucide="inbox"></i>Queue</h4><span class="small muted" id="qcount"></span></div>
+      <div class="list" id="queue" role="group" aria-label="Applications"></div>
+    </aside>
+
+    <section class="panel">
+      <div class="dec" id="dec" aria-live="polite">
+        <div class="dec-head">
+          <div class="who"><h2 id="dName"></h2><div class="meta" id="dMeta"></div></div>
+          <span class="chip" id="dEngine" style="background:var(--violet-soft);color:var(--violet-ink)"><i data-lucide="cpu"></i>Engine v2</span>
+        </div>
+        <div class="verdict" id="verdict">
+          <span class="vi" id="vIcon"></span>
+          <div><div class="vt" id="vText"></div><p id="vReason"></p></div>
+          <div class="actions" id="vActions"></div>
+        </div>
+        <div>
+          <div class="small muted" style="margin-bottom:2px">Composite PD against the policy bands</div>
+          <div class="ruler"><svg id="ruler" viewBox="0 0 640 64" role="img" aria-label="Composite PD position"></svg></div>
+        </div>
+        <div class="metrics" id="metrics"></div>
+        <div class="two">
+          <div style="display:flex;flex-direction:column;gap:12px;min-width:0"><h4>Why this decision</h4><ul class="reasons" id="reasons"></ul></div>
+          <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+            <h4>What each model says</h4><div class="sig" id="signals"></div>
+          </div>
+        </div>
+        <div class="callout next" id="next"></div>
+        <div class="callout prov" id="prov"></div>
+      </div>
+    </section>
+
+    <aside class="panel edit" aria-label="Edit application">
+      <div class="panel-h"><h4 style="display:flex;gap:8px;align-items:center"><i data-lucide="sliders-horizontal"></i>Edit and test</h4><button class="btn ghost small" id="resetApp" type="button"><i data-lucide="rotate-ccw"></i>Reset</button></div>
+      <details open><summary><span class="mi c-violet"><i data-lucide="file-user"></i></span>Application<span class="k">Module A</span></summary>
+        <div class="fields">
+          <div class="field"><label for="pdA">Application PD</label><output id="pdA_o"></output><input type="range" id="pdA" min="0.005" max="0.6" step="0.001"></div>
+          <div class="field"><label for="score">Scorecard score</label><output id="score_o"></output><input type="range" id="score" min="300" max="900" step="1"></div>
+          <div class="field"><label for="ead">Loan amount</label><output id="ead_o"></output><input type="range" id="ead" min="25000" max="1000000" step="5000"></div>
+          <div class="field"><label for="rate">Offered rate p.a.</label><output id="rate_o"></output><input type="range" id="rate" min="0.05" max="0.28" step="0.0025"></div>
+        </div></details>
+      <details open><summary><span class="mi c-teal"><i data-lucide="activity"></i></span>Behaviour<span class="k">Module B</span></summary>
+        <div class="fields">
+          <div class="toggles"><label><input type="checkbox" id="hasB">Has credit history</label></div>
+          <div class="field"><label for="pdB">Delinquency probability</label><output id="pdB_o"></output><input type="range" id="pdB" min="0.005" max="0.6" step="0.001"></div>
+          <div class="field"><label for="brs">Behavioural score</label><output id="brs_o"></output><input type="range" id="brs" min="0" max="100" step="1"></div>
+          <div class="toggles">
+            <label><input type="checkbox" id="stress">Stress flag</label>
+            <label><input type="checkbox" id="util">Utilisation 80%+</label>
+            <label><input type="checkbox" id="esc">60/90 DPD events</label>
+            <label><input type="checkbox" id="hds">5+ delinquencies</label>
+          </div>
+        </div></details>
+      <details><summary><span class="mi c-amber"><i data-lucide="badge-percent"></i></span>Pricing and portfolio<span class="k">Module C</span></summary>
+        <div class="fields">
+          <div class="field"><label for="mpd">Market-implied PD</label><output id="mpd_o"></output><input type="range" id="mpd" min="0.01" max="0.6" step="0.001"></div>
+          <div class="field"><label for="grade">Predicted grade</label><select id="grade"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+          <div class="field"><label for="srate">Grade rate</label><output id="srate_o"></output><input type="range" id="srate" min="0.05" max="0.28" step="0.001"></div>
+          <div class="field"><label for="adequacy">Pricing adequacy</label><select id="adequacy"><option>Fair</option><option>Underpriced</option><option>Overpriced</option></select></div>
+          <div class="toggles"><label><input type="checkbox" id="conc">Concentration flag</label></div>
+        </div></details>
+      <details><summary><span class="mi c-coral"><i data-lucide="settings-2"></i></span>Credit policy<span class="k">constants.py</span></summary>
+        <div class="fields">
+          <div class="field"><label for="wA">Weight on Module A</label><output id="wA_o"></output><input type="range" id="wA" min="0.3" max="1" step="0.05"></div>
+          <div class="field"><label for="hurdle">RAROC hurdle</label><output id="hurdle_o"></output><input type="range" id="hurdle" min="0.08" max="0.30" step="0.005"></div>
+          <div class="field"><label for="approveMax">Auto-approve below PD</label><output id="approveMax_o"></output><input type="range" id="approveMax" min="0.03" max="0.20" step="0.005"></div>
+          <div class="field"><label for="declineMin">Hard decline at PD</label><output id="declineMin_o"></output><input type="range" id="declineMin" min="0.20" max="0.60" step="0.01"></div>
+          <div class="field"><label for="maxRate">Rate ceiling</label><output id="maxRate_o"></output><input type="range" id="maxRate" min="0.15" max="0.36" step="0.005"></div>
+          <p class="hint">Policy changes apply to every file in the queue.</p>
+          <button class="btn ghost small" id="resetPolicy" type="button"><i data-lucide="rotate-ccw"></i>Restore policy defaults</button>
+        </div></details>
+    </aside>
+  </div>
+</main>
+
+<!-- ===================== EVIDENCE ===================== -->
+<main id="v-evidence" class="view wrap" hidden>
+  <section class="block" style="padding-top:32px">
+    <div class="sec-head"><span class="eyebrow">Evidence</span><h2>Every number here comes from a pipeline output in the repo</h2>
+      <p class="lead">Held-out test sets, fixed seed 42. Each module is measured against the benchmark a lender would use without it.</p></div>
+    <div class="grid2">
+      <div class="chart-card span2"><div><h3>Module A · swap-set frontier on 61,503 held-out loans</h3><p class="small muted">At any approval rate, the custom model's approved book defaults less. Markers show the three ways to take the gain.</p></div><div class="chart-box"><canvas id="cFrontier"></canvas></div></div>
+      <div class="chart-card"><div><h3>Discrimination lift by module</h3><p class="small muted">Held-out AUC, benchmark against custom model.</p></div><div class="chart-box short"><canvas id="cAuc"></canvas></div></div>
+      <div class="chart-card"><div><h3>Module B · delinquents caught by capacity</h3><p class="small muted">Share of future delinquents found when collections can contact the riskiest X% of accounts.</p></div><div class="chart-box short"><canvas id="cCapture"></canvas></div></div>
+      <div class="chart-card"><div><h3>Module A · RAROC by risk band</h3><p class="small muted">Bands 4 and 5 (4,680 loans) destroy capital. The dashed line is the 14% hurdle.</p></div><div class="chart-box short"><canvas id="cBands"></canvas></div></div>
+      <div class="chart-card"><div><h3>Module D · cumulative default by vintage</h3><p class="small muted">Freddie Mac loans by months on book. The 2008 crisis vintage defaults 3 to 4 times more.</p></div><div class="chart-box short"><canvas id="cVintage"></canvas></div></div>
+      <div class="chart-card"><div><h3>Module D · ECL rate by IFRS 9 stage</h3><p class="small muted">12-month ECL in Stage 1 against lifetime ECL in Stages 2 and 3, measured LGD 41.8%.</p></div><div class="chart-box short"><canvas id="cEcl"></canvas></div></div>
+      <div class="chart-card"><div><h3>Module D · monthly stage transitions</h3><p class="small muted">28.5% of Stage 2 loans cure to Stage 1 each month, which is why early collections pay.</p></div><div class="tablewrap"><table class="heat" id="tm"></table></div></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ============ engine (mirrors 04_decision_engine v2) ============ */
+const DEFAULT_POLICY={wA:0.60,hurdle:0.14,approveMax:0.10,reviewMin:0.20,declineMin:0.35,lgd:0.45,capRatio:0.105,opex:0.03,baseRate:0.12,concPD:0.25,divergence:0.15,maxRate:0.24,step:0.0025};
+const RW={1:0.75,2:0.75,3:1.0,4:1.5,5:1.5};
+const BAND={1:"Very Low",2:"Low",3:"Medium",4:"High",5:"Very High"};
+let policy={...DEFAULT_POLICY};
+const band=pd=>pd<0.05?1:pd<0.10?2:pd<0.20?3:pd<0.35?4:5;
+const bband=p=>p<0.03?1:p<0.07?2:p<0.15?3:p<0.30?4:5;
+const gradeLabel=s=>s>=700?"Very Low Risk":s>=625?"Low Risk":s>=550?"Medium Risk":s>=450?"High Risk":"Very High Risk";
+const pct=(x,d=1)=>(x*100).toFixed(d)+"%";
+const inr=x=>"₹"+Math.round(x).toLocaleString("en-IN");
+const R=(code,category,description)=>({code,category,description});
+const OVR={high_delinquency_score:"Severe repeated delinquency pattern (5+ events in 2 years)",critical_utilisation:"Credit card utilisation at critical level (80%+ of limit)",escalating_delinquency:"Escalating delinquency severity (60+ or 90+ day late events on record)"};
+function econ(pd,ead,rate,rb,P){const elr=pd*P.lgd,cap=ead*(RW[rb]||1)*P.capRatio,ni=ead*(rate-elr-P.opex);return{el:elr*ead,elr,cap,ni,raroc:cap>0?ni/cap:0,breakeven:P.hurdle*cap/ead+elr+P.opex}}
+const roundUp=(r,s)=>Math.ceil(r/s-1e-9)*s;
+function moduleD(s){const st=s.b.has&&(s.b.stress||s.b.esc||s.b.hds);const g=(st&&s.a.pd>=0.30)?3:(st||s.a.pd>=0.15)?2:1;return{stage:g,lpd:{1:0.015,2:0.0587,3:0.0973}[g],lecl:{1:0.006,2:0.0245,3:0.0407}[g],ecl12:0.0006}}
+
+function runV2(s,P){
+  const thin=!s.b.has, wA=thin?1:P.wA, wB=thin?0:1-P.wA;
+  const comp=Math.min(1,Math.max(0,wA*s.a.pd+(thin?0:wB*s.b.pd))), cb=band(comp);
+  const e=econ(comp,s.a.ead,s.a.rate,cb,P), raroc=e.raroc;
+  const reasons=[],ov=[];
+  if(thin)reasons.push(R("thin_file","data","No behavioural history. Composite PD rests on Module A alone; no behavioural values are assumed."));
+  else{if(s.b.hds)ov.push("high_delinquency_score");if(s.b.util)ov.push("critical_utilisation");if(s.b.esc)ov.push("escalating_delinquency");ov.forEach(f=>reasons.push(R(f,"hard_override",OVR[f])))}
+  const conc=s.c.conc&&s.c.mpd>P.concPD;
+  if(conc)reasons.push(R("concentration_risk","portfolio",`Loan adds portfolio concentration risk. Market-implied PD (${pct(s.c.mpd)}) exceeds the concentration threshold (${pct(P.concPD,0)}).`));
+  const cUnder=s.c.adequacy==="Underpriced", cRate=s.c.srate;
+  const underE=s.a.rate<e.breakeven, underC=cUnder&&s.a.rate<cRate;
+  const need=roundUp(Math.max(e.breakeven,cUnder?cRate:0),P.step);
+  let d,primary;
+  if(comp>=P.declineMin){d="DECLINE";primary=`Composite probability of default (${pct(comp)}) is at or above the hard decline threshold (${pct(P.declineMin,0)}).`;reasons.unshift(R("composite_pd_decline","pd_threshold",primary))}
+  else if(ov.length){d="MANUAL REVIEW";primary=OVR[ov[0]]}
+  else if(conc){d="MANUAL REVIEW";primary="Concentration risk needs portfolio sign-off before this loan is booked."}
+  else if(comp<P.reviewMin&&(underE||underC)){
+    if(need>P.maxRate){d="DECLINE";primary=`The rate needed to meet the ${pct(P.hurdle,0)} hurdle (${pct(need,2)}) is above the ${pct(P.maxRate,0)} policy rate ceiling.`;reasons.push(R("unpriceable","capital",primary))}
+    else{d="REPRICE";primary=`Reprice from ${pct(s.a.rate,2)} to ${pct(need,2)}. At the offered rate RAROC is ${pct(raroc)} against a ${pct(P.hurdle,0)} hurdle.`;
+      reasons.push(R("underpriced","pricing",underE?`Offered rate ${pct(s.a.rate,2)} is below the breakeven rate ${pct(e.breakeven,2)} (the rate at which RAROC meets the ${pct(P.hurdle,0)} hurdle).`:`Module C predicts grade ${s.c.grade}, which prices at ${pct(cRate,2)}; offered ${pct(s.a.rate,2)}.`))}}
+  else if(comp<P.approveMax&&raroc>=P.hurdle){d="APPROVE";primary=`Composite PD (${pct(comp)}) is inside the auto-approve band (below ${pct(P.approveMax,0)}) and RAROC at the offered rate (${pct(raroc)}) meets the ${pct(P.hurdle,0)} hurdle.`;reasons.push(R("pd_low_raroc_adequate","approval",primary))}
+  else if(raroc<P.hurdle&&!thin){d="DECLINE";primary=`RAROC at the offered rate (${pct(raroc)}) is below the ${pct(P.hurdle,0)} hurdle, and composite PD (${pct(comp)}) is outside the repricing band (below ${pct(P.reviewMin,0)}).`;reasons.push(R("raroc_below_hurdle","capital",primary))}
+  else{d="MANUAL REVIEW";primary=thin?"Thin-file applicant outside the auto-approve band. An analyst should verify income and bank statements before deciding.":`Composite PD (${pct(comp)}) is in the manual review band (${pct(P.approveMax,0)} to ${pct(P.declineMin,0)}). Human judgement required.`;reasons.push(R("pd_review_band","review",primary))}
+  const move=[];
+  if(d!=="APPROVE"){
+    if(comp>=P.declineMin)move.push(`Composite PD would need to fall below ${pct(P.declineMin,0)} to leave the decline zone.`);
+    if(comp>=P.approveMax&&comp<P.declineMin){const needA=wA>0?(P.approveMax-(thin?0:wB*s.b.pd))/wA:-1;move.push(needA>0?`An application PD below ${pct(needA)} would bring composite PD under ${pct(P.approveMax,0)}.`:`The behavioural PD alone keeps composite PD above ${pct(P.approveMax,0)}.`)}
+    if((raroc<P.hurdle||d==="REPRICE")&&need<=P.maxRate&&comp<P.declineMin)move.push(`A rate of ${pct(need,2)} meets the ${pct(P.hurdle,0)} hurdle at this PD.`);
+    if(ov.length)move.push("Clearing the behavioural flags removes the hard override.");
+  }
+  const md=moduleD(s);
+  if(md.stage>=2)reasons.push(R("ifrs9_provisioning","provisioning",`Expected IFRS 9 Stage ${md.stage}: provision lifetime ECL ${pct(md.lecl,2)} rather than 12-month ${pct(md.ecl12,2)}.`));
+  const notes=[];const div=Math.abs(s.c.mpd-comp);if(div>P.divergence)notes.push(`Internal composite PD (${pct(comp)}) diverges from the market-implied PD (${pct(s.c.mpd)}) by ${pct(div)}.`);
+  return{decision:d,primary,reasons,comp,band:cb,e,raroc,need,thin,overrides:ov,move,md,notes,wA,wB,suggested:d==="REPRICE"?need:null};
+}
+/* v1, kept only for the before/after comparison: fixed 12% revenue on Module A PD, synthetic B for thin files */
+function runV1(s,P){
+  const B=s.b.has?s.b:{pd:0.067},wA=s.b.has?P.wA:1,wB=s.b.has?1-P.wA:0;
+  const comp=Math.min(1,Math.max(0,wA*s.a.pd+wB*B.pd)),e=econ(s.a.pd,s.a.ead,P.baseRate,band(s.a.pd),P);
+  const ov=s.b.has&&(s.b.hds||s.b.util||s.b.esc),conc=s.c.conc&&s.c.mpd>P.concPD,rep=s.c.adequacy==="Underpriced";
+  let d;if(comp>=P.declineMin)d="DECLINE";else if(ov||conc)d="MANUAL REVIEW";else if(rep&&comp<P.reviewMin)d="REPRICE";else if(comp<P.approveMax&&e.raroc>=P.hurdle)d="APPROVE";else if(e.raroc<P.hurdle)d="DECLINE";else d="MANUAL REVIEW";
+  return{decision:d,raroc:e.raroc};
+}
+
+/* ============ applications ============ */
+const APPS=[
+ {id:"A-1038",name:"Anand Mehta",tag:"Salaried, clean history",a:{pd:0.048,score:724,ead:350000,rate:0.12},b:{has:true,pd:0.031,brs:81,stress:false,util:false,esc:false,hds:false},c:{mpd:0.054,grade:"A",srate:0.072,adequacy:"Fair",conc:false}},
+ {id:"A-1039",name:"Priya Sharma",tag:"Self-employed, offered 11%",a:{pd:0.088,score:648,ead:180000,rate:0.11},b:{has:true,pd:0.062,brs:58,stress:false,util:false,esc:false,hds:false},c:{mpd:0.224,grade:"C",srate:0.148,adequacy:"Underpriced",conc:false}},
+ {id:"A-1040",name:"Vikram Nair",tag:"Escalating delinquency",a:{pd:0.156,score:582,ead:120000,rate:0.12},b:{has:true,pd:0.218,brs:28,stress:true,util:true,esc:true,hds:false},c:{mpd:0.328,grade:"D",srate:0.175,adequacy:"Underpriced",conc:true}},
+ {id:"A-1041",name:"Rahul Verma",tag:"Repeated delinquency",a:{pd:0.412,score:431,ead:95000,rate:0.12},b:{has:true,pd:0.348,brs:12,stress:true,util:false,esc:true,hds:true},c:{mpd:0.519,grade:"F",srate:0.241,adequacy:"Underpriced",conc:true}},
+ {id:"A-1042",name:"Karan Desai",tag:"6.5% teaser rate",a:{pd:0.070,score:668,ead:400000,rate:0.065},b:{has:true,pd:0.050,brs:66,stress:false,util:false,esc:false,hds:false},c:{mpd:0.060,grade:"A",srate:0.068,adequacy:"Fair",conc:false}},
+ {id:"A-1043",name:"Meera Iyer",tag:"New to credit, thin file",a:{pd:0.165,score:598,ead:150000,rate:0.13},b:{has:false,pd:0.067,brs:50,stress:false,util:false,esc:false,hds:false},c:{mpd:0.150,grade:"C",srate:0.14,adequacy:"Fair",conc:false}},
+];
+const clone=o=>JSON.parse(JSON.stringify(o));
+const work={}; APPS.forEach(a=>work[a.id]=clone(a));
+let current="A-1042";
+
+/* ============ presentation helpers ============ */
+const $=id=>document.getElementById(id);
+const cls=d=>d==="MANUAL REVIEW"?"MANUAL":d;
+const DICON={APPROVE:"circle-check",REPRICE:"badge-indian-rupee","MANUAL REVIEW":"user-search",DECLINE:"circle-x"};
+const DLABEL={APPROVE:"Approve",REPRICE:"Reprice","MANUAL REVIEW":"Manual review",DECLINE:"Decline"};
+const chip=d=>`<span class="chip ${cls(d)}"><i data-lucide="${DICON[d]}"></i>${DLABEL[d]}</span>`;
+const CATI={hard_override:["triangle-alert","c-coral","Module B"],pd_threshold:["octagon-alert","c-coral","Composite model"],capital:["trending-down","c-coral","Capital model"],pricing:["badge-indian-rupee","c-amber","Pricing"],portfolio:["layers","c-orange","Module C"],review:["user-search","c-sky","Composite model"],approval:["circle-check","c-teal","Composite model"],data:["database","c-violet","Data quality"],provisioning:["landmark","c-violet","Module D, IFRS 9"]};
+function icons(){try{window.lucide&&lucide.createIcons({attrs:{"aria-hidden":"true"}})}catch(_){}}
+function toast(msg){const t=$("toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2200)}
+
+/* ============ workbench ============ */
+const F={pdA:["a","pd",v=>pct(v,1)],score:["a","score",v=>String(v)],ead:["a","ead",inr],rate:["a","rate",v=>pct(v,2)],pdB:["b","pd",v=>pct(v,1)],brs:["b","brs",v=>v+" / 100"],mpd:["c","mpd",v=>pct(v,1)],srate:["c","srate",v=>pct(v,2)]};
+const CB={hasB:["b","has"],stress:["b","stress"],util:["b","util"],esc:["b","esc"],hds:["b","hds"],conc:["c","conc"]};
+const PF={wA:v=>`${pct(v,0)} A / ${pct(1-v,0)} B`,hurdle:v=>pct(v,1),approveMax:v=>pct(v,1),declineMin:v=>pct(v,0),maxRate:v=>pct(v,1)};
+function loadForm(){const s=work[current];for(const k in F){const[g,f]=F[k];$(k).value=s[g][f]}for(const k in CB){const[g,f]=CB[k];$(k).checked=!!s[g][f]}$("grade").value=s.c.grade;$("adequacy").value=s.c.adequacy;for(const k in PF)$(k).value=policy[k]}
+function readForm(){const s=work[current];for(const k in F){const[g,f]=F[k];s[g][f]=parseFloat($(k).value)}for(const k in CB){const[g,f]=CB[k];s[g][f]=$(k).checked}s.c.grade=$("grade").value;s.c.adequacy=$("adequacy").value;for(const k in PF)policy[k]=parseFloat($(k).value)}
+
+function renderQueue(){
+  const counts={};
+  $("queue").innerHTML=APPS.map(a=>{const r=runV2(work[a.id],policy);counts[r.decision]=(counts[r.decision]||0)+1;
+    const edited=JSON.stringify(work[a.id])!==JSON.stringify(a);
+    return `<button type="button" class="q" data-id="${a.id}" aria-pressed="${a.id===current}"><span class="top"><b>${a.name}</b>${chip(r.decision)}</span><small>${a.tag}${edited?" · edited":""}</small><span class="id">${a.id} · ${inr(work[a.id].a.ead)} · ${pct(work[a.id].a.rate,2)}</span></button>`}).join("");
+  $("qcount").textContent=`${(counts["MANUAL REVIEW"]||0)} need review`;
+  document.querySelectorAll(".q").forEach(b=>b.addEventListener("click",()=>{current=b.dataset.id;loadForm();renderWB()}));
+}
+function drawRuler(comp){
+  const el=$("ruler"),W=Math.max(280,Math.round(el.clientWidth||640)),x=v=>Math.min(1,v/0.6)*W,P=policy;el.setAttribute("viewBox",`0 0 ${W} 64`);
+  const zones=[[0,P.approveMax,"var(--teal)","Approve"],[P.approveMax,P.reviewMin,"var(--amber)","Reprice / review"],[P.reviewMin,P.declineMin,"var(--sky)","Review"],[P.declineMin,0.6,"var(--coral)","Decline"]];
+  let s=zones.map(z=>`<rect x="${x(z[0])}" y="22" width="${Math.max(0,x(z[1])-x(z[0]))}" height="12" fill="${z[2]}" opacity=".28"/>`).join("");
+  [P.approveMax,P.reviewMin,P.declineMin].forEach(t=>s+=`<line x1="${x(t)}" x2="${x(t)}" y1="18" y2="38" stroke="var(--muted)"/><text x="${x(t)}" y="54" text-anchor="middle" style="font:500 11px var(--mono);fill:var(--muted)">${pct(t,0)}</text>`);
+  const cx=x(comp);
+  s+=`<line x1="${cx}" x2="${cx}" y1="10" y2="38" stroke="var(--ink)" stroke-width="2.5"/><circle cx="${cx}" cy="10" r="5" fill="var(--violet)" stroke="#fff" stroke-width="2"/>`;
+  s+=`<text x="${Math.min(W-4,Math.max(4,cx+10))}" y="14" text-anchor="${cx>W-90?"end":"start"}" style="font:600 12px var(--mono);fill:var(--ink)">${pct(comp,1)}</text>`;
+  $("ruler").innerHTML=s;
+}
+function metric(icon,label,val,sub,klass,barPct,tickPct,color){
+  return `<div class="metric"><span class="lbl"><i data-lucide="${icon}"></i>${label}</span><span class="val ${klass||""}">${val}</span>${barPct!=null?`<div class="bar"><i style="width:${Math.max(2,Math.min(100,barPct))}%;background:${color}"></i>${tickPct!=null?`<span class="tick" style="left:${Math.min(100,tickPct)}%"></span>`:""}</div>`:""}<span class="sub">${sub}</span></div>`;
+}
+function renderWB(){
+  const s=work[current],app=APPS.find(a=>a.id===current);
+  for(const k in F){const[g,f,fmt]=F[k];$(k+"_o").textContent=fmt(s[g][f])}
+  for(const k in PF)$(k+"_o").textContent=PF[k](policy[k]);
+  ["pdB","brs","stress","util","esc","hds"].forEach(k=>$(k).disabled=!s.b.has);
+  const r=runV2(s,policy);
+  $("dName").textContent=app.name;
+  $("dMeta").innerHTML=`<span><i data-lucide="hash"></i>${app.id}</span><span><i data-lucide="wallet"></i>${inr(s.a.ead)}</span><span><i data-lucide="percent"></i>offered ${pct(s.a.rate,2)}</span><span><i data-lucide="gauge"></i>score ${s.a.score}</span>`;
+  $("verdict").className="verdict "+cls(r.decision);
+  $("vIcon").innerHTML=`<i data-lucide="${DICON[r.decision]}"></i>`;
+  $("vText").textContent=DLABEL[r.decision];
+  $("vReason").textContent=r.primary;
+  let acts="";
+  if(r.decision==="REPRICE"||(r.raroc<policy.hurdle&&r.need<=policy.maxRate&&r.comp<policy.declineMin&&r.decision!=="APPROVE"))acts+=`<button class="btn amber small" id="applyRate" type="button"><i data-lucide="wand-sparkles"></i>Apply ${pct(r.need,2)} and re-score</button>`;
+  acts+=`<button class="btn ghost small" id="copyNotice" type="button"><i data-lucide="copy"></i>Copy decision notice</button>`;
+  if(JSON.stringify(s)!==JSON.stringify(app))acts+=`<button class="btn ghost small" id="undo" type="button"><i data-lucide="undo-2"></i>Back to original file</button>`;
+  $("vActions").innerHTML=acts;
+  drawRuler(r.comp);
+  const hurdle=policy.hurdle,rk=r.raroc>=hurdle?"good":r.raroc>=hurdle*0.85?"warn":"bad";
+  $("metrics").innerHTML=
+    metric("gauge","Composite PD",pct(r.comp,2),`Band ${r.band}, ${BAND[r.band]}`,"",r.comp/0.6*100,null,"var(--violet)")+
+    metric("trending-up","RAROC at offered rate",pct(r.raroc,1),`hurdle ${pct(hurdle,0)}`,rk,Math.max(0,r.raroc)/Math.max(0.6,r.raroc)*100,hurdle/Math.max(0.6,r.raroc)*100,r.raroc>=hurdle?"var(--teal)":"var(--coral)")+
+    metric("badge-indian-rupee","Breakeven rate",pct(r.e.breakeven,2),s.a.rate>=r.e.breakeven?`offered ${pct(s.a.rate,2)} covers it`:`offered ${pct(s.a.rate,2)} falls short`,s.a.rate>=r.e.breakeven?"good":"bad",s.a.rate/0.28*100,r.e.breakeven/0.28*100,s.a.rate>=r.e.breakeven?"var(--teal)":"var(--amber)")+
+    metric("shield-alert","Expected loss",inr(r.e.el),`${pct(r.e.elr,2)} of the loan`,"",null);
+  $("reasons").innerHTML=r.reasons.map(x=>{const c=CATI[x.category]||["info","c-violet","Engine"];return `<li><span class="ri ${c[1]}"><i data-lucide="${c[0]}"></i></span><span><span class="src">${c[2]}</span>${x.description}</span></li>`}).join("")+
+    r.notes.map(n=>`<li><span class="ri c-sky"><i data-lucide="info"></i></span><span><span class="src">Cross-check</span>${n}</span></li>`).join("");
+  const contribA=r.wA*s.a.pd,contribB=s.b.has?r.wB*s.b.pd:0,tot=contribA+contribB||1;
+  const flags=s.b.has?[s.b.stress&&"stress",s.b.util&&"utilisation 80%+",s.b.esc&&"60/90 DPD",s.b.hds&&"5+ delinquencies"].filter(Boolean):[];
+  $("signals").innerHTML=[
+    ["A","var(--violet)",`<b>Application PD ${pct(s.a.pd)}</b> · score ${s.a.score} (${gradeLabel(s.a.score)}). Drives ${Math.round(contribA/tot*100)}% of composite PD.`,contribA/tot*100],
+    ["B","var(--teal)",s.b.has?`<b>Delinquency ${pct(s.b.pd)}</b> · behaviour score ${s.b.brs}/100, band ${bband(s.b.pd)}. ${flags.length?"Flags: "+flags.join(", ")+".":"No flags."} Drives ${Math.round(contribB/tot*100)}%.`:`<b>No credit history.</b> Not used, and nothing is assumed in its place.`,s.b.has?contribB/tot*100:0],
+    ["C","var(--amber)",`<b>Market PD ${pct(s.c.mpd)}</b> · grade ${s.c.grade} prices at ${pct(s.c.srate,2)} · ${s.c.adequacy}${s.c.conc?" · concentration flag":""}.`,null],
+    ["D","var(--coral)",`<b>Expected Stage ${r.md.stage}</b> · lifetime PD ${pct(r.md.lpd,2)}, ECL ${pct(r.md.lecl,2)}.`,null],
+  ].map(x=>`<div class="sig-row"><span class="tag" style="background:${x[1]}">${x[0]}</span><div><p>${x[2]}</p>${x[3]!=null?`<div class="bar"><i style="width:${Math.max(1,x[3])}%;background:${x[1]}"></i></div>`:""}</div></div>`).join("");
+  $("next").innerHTML=r.move.length?`<i data-lucide="lightbulb"></i><div><b>What would change this decision</b><ul>${r.move.map(m=>`<li>${m}</li>`).join("")}</ul></div>`:`<i data-lucide="party-popper"></i><div><b>Nothing to change.</b> This file clears every policy rule at the offered rate.</div>`;
+  const pr=r.md.stage===1?r.md.ecl12:r.md.lecl;
+  $("prov").innerHTML=`<i data-lucide="landmark"></i><div><b>IFRS 9 provisioning:</b> Stage ${r.md.stage}, provision about <span class="num">${inr(pr*s.a.ead)}</span> (${pct(pr,2)} of the loan). Advisory only; it never changes the decision. Origination staging here is illustrative, from the demo rules.</div>`;
+  const ar=$("applyRate");if(ar)ar.addEventListener("click",()=>{s.a.rate=r.need;loadForm();renderWB();toast(`Rate set to ${pct(r.need,2)}. Decision re-scored.`)});
+  $("copyNotice").addEventListener("click",()=>copyNotice(app,s,r));
+  const u=$("undo");if(u)u.addEventListener("click",()=>{work[current]=clone(app);loadForm();renderWB()});
+  renderQueue();icons();
+}
+function copyNotice(app,s,r){
+  const L=[`DECISION NOTICE · ${app.id} · ${app.name}`,`Decision: ${r.decision}`,`Reason: ${r.primary}`,"",
+    `Composite PD ${pct(r.comp,2)} (band ${r.band}, ${BAND[r.band]})`,`Offered rate ${pct(s.a.rate,2)} · breakeven ${pct(r.e.breakeven,2)} · RAROC ${pct(r.raroc,1)} (hurdle ${pct(policy.hurdle,0)})`,`Expected loss ${inr(r.e.el)} on ${inr(s.a.ead)}`,"","Reason codes:",...r.reasons.map((x,i)=>`  ${i+1}. ${x.description}`)];
+  if(r.move.length)L.push("","What would change this decision:",...r.move.map(m=>`  - ${m}`));
+  if(r.decision==="DECLINE")L.push("","Adverse action notice (RBI Fair Practices Code): the principal reasons are listed above. The applicant may request this report within 60 days.");
+  L.push("",`Credit Decision Studio · engine v2`);
+  const text=L.join("\n");
+  const done=()=>toast("Decision notice copied");
+  try{navigator.clipboard.writeText(text).then(done,()=>fallbackCopy(text))}catch(_){fallbackCopy(text)}
+}
+function fallbackCopy(text){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}ta.remove();toast(ok?"Decision notice copied":"Copy is blocked here. Select the text in the report instead.")}
+
+/* ============ home: hero card + before/after ============ */
+function renderHome(){
+  const k=APPS.find(a=>a.id==="A-1042"),r2=runV2(k,DEFAULT_POLICY),r1=runV1(k,DEFAULT_POLICY);
+  $("heroCard").innerHTML=`<div class="app-head"><div><small>${k.id} · ${inr(k.a.ead)} · personal loan</small><h3>${k.name}</h3></div>${chip(r2.decision)}</div>
+   <div class="swap"><div class="old"><span class="small muted">Offered</span><b>${pct(k.a.rate,2)}</b><span class="small muted">RAROC ${pct(r2.raroc,0)}</span></div><i data-lucide="arrow-right" style="color:var(--amber)"></i><div class="new"><span class="small" style="color:var(--amber)">Engine suggests</span><b>${pct(r2.need,2)}</b><span class="small" style="color:var(--amber)">meets 14% hurdle</span></div></div>
+   <div><div class="small muted" style="display:flex;justify-content:space-between"><span>RAROC at offered rate</span><span class="num">${pct(r2.raroc,1)} / 14%</span></div><div class="bar" style="margin-top:6px"><i style="width:${r2.raroc/0.3*100}%;background:var(--amber)"></i><span class="tick" style="left:${0.14/0.3*100}%"></span></div></div>
+   <p class="small" style="color:var(--ink)"><i data-lucide="info" style="width:15px;height:15px;vertical-align:-3px;color:var(--violet)"></i> v1 would have ${r1.decision.toLowerCase()}d this loan, scoring it at a 12% rate it never earns.</p>`;
+  $("beforeAfter").innerHTML=`<thead><tr><th>Applicant</th><th class="num">Offered</th><th class="num">RAROC v1</th><th class="num">RAROC v2</th><th>v1 decision</th><th>v2 decision</th></tr></thead><tbody>`+
+    APPS.map(a=>{const x=runV1(a,DEFAULT_POLICY),y=runV2(a,DEFAULT_POLICY);return `<tr class="${x.decision!==y.decision?"changed":""}"><td><b style="color:var(--ink)">${a.name}</b><div class="small muted">${a.tag}</div></td><td class="num">${pct(a.a.rate,2)}</td><td class="num">${pct(x.raroc,0)}</td><td class="num">${pct(y.raroc,0)}</td><td>${chip(x.decision)}</td><td>${chip(y.decision)}${y.suggested?` <span class="small num">to ${pct(y.suggested,2)}</span>`:""}</td></tr>`}).join("")+"</tbody>";
+}
+
+/* ============ charts (data from committed pipeline outputs) ============ */
+const FR=[[0.05,0.0146,0.0101],[0.08,0.015,0.0112],[0.11,0.0177,0.0133],[0.14,0.0196,0.0151],[0.17,0.0206,0.0152],[0.2,0.0223,0.0163],[0.23,0.0234,0.0186],[0.26,0.0251,0.0196],[0.29,0.0266,0.0209],[0.32,0.0285,0.0218],[0.35,0.0305,0.023],[0.38,0.0319,0.024],[0.41,0.0333,0.0253],[0.44,0.0347,0.0266],[0.47,0.0353,0.0281],[0.5,0.0369,0.0295],[0.53,0.0381,0.031],[0.56,0.0391,0.0326],[0.59,0.0405,0.0343],[0.62,0.0423,0.0361],[0.65,0.0443,0.0377],[0.68,0.0458,0.0397],[0.71,0.048,0.0414],[0.74,0.05,0.0436],[0.77,0.0523,0.0459],[0.8,0.0544,0.0483],[0.83,0.0568,0.051],[0.86,0.0593,0.0538],[0.89,0.0626,0.0574],[0.92,0.0661,0.0617],[0.95,0.0701,0.067]];
+const VINT={"2008":[0.0001,0.0072,0.0189,0.0328,0.0447,0.0532,0.0603,0.0669,0.0719,0.0756,0.0784,0.0803,0.082,0.0832,0.0842,0.0851,0.0857,0.0864,0.0873,0.0879,0.0885],"2009":[0,0.0015,0.0037,0.0057,0.0083,0.0108,0.0132,0.0156,0.0172,0.0185,0.0196,0.0203,0.0212,0.0218,0.0226,0.0232,0.0236,0.0243,0.0247,0.0252,0.0255],"2010":[0,0.0011,0.0035,0.0059,0.0086,0.0113,0.0132,0.015,0.0165,0.0176,0.0187,0.0198,0.0205,0.0213,0.0219,0.0226,0.0233,0.0237,0.0243,0.0255,0.0283],"2011":[0,0.0017,0.0036,0.0058,0.0077,0.0093,0.0107,0.012,0.0133,0.0142,0.015,0.0156,0.0166,0.0174,0.018,0.0186,0.0191,0.0207,0.0246,0.0279,0.0289]};
+const TM={"Stage 1":[0.98,0.0052,0,0,0.0148],"Stage 2":[0.2853,0.6152,0.0796,0.0104,0.0095],"Stage 3":[0.0508,0.0358,0.8988,0.007,0.0076]};
+const charts={};
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+function frontierCfg(withMarkers){
+  const C={v:css("--violet"),m:"#A8A4BE",g:css("--amber"),t:css("--teal")};
+  const ds=[
+    {label:"Bureau-score benchmark",data:FR.map(p=>({x:p[0]*100,y:p[1]*100})),borderColor:C.m,backgroundColor:C.m,borderWidth:2.5,pointRadius:0,tension:.25},
+    {label:"My custom PD model",data:FR.map(p=>({x:p[0]*100,y:p[2]*100})),borderColor:C.v,backgroundColor:"rgba(106,75,239,.10)",fill:"-1",borderWidth:3,pointRadius:0,tension:.25},
+    {label:"Risk appetite 3.69%",data:[{x:5,y:3.69},{x:95,y:3.69}],borderColor:C.g,borderDash:[6,5],borderWidth:1.5,pointRadius:0}];
+  if(withMarkers)ds.push({type:"scatter",label:"Operating points",data:[{x:50,y:3.69,l:"Benchmark 50% / 3.69%"},{x:50,y:2.95,l:"Same volume: 2.95% default"},{x:63.6,y:3.69,l:"Same risk: 63.6% approval"},{x:61.9,y:3.61,l:"Recommended SC3: 61.9% / 3.61%"}],
+    pointRadius:7,pointHoverRadius:9,pointBackgroundColor:[C.m,C.v,C.v,C.g],pointBorderColor:"#fff",pointBorderWidth:2});
+  else ds.push({type:"scatter",label:"Recommended 61.9%",data:[{x:61.9,y:3.61,l:"Recommended SC3: 61.9% / 3.61%"}],pointRadius:8,pointBackgroundColor:C.g,pointBorderColor:"#fff",pointBorderWidth:2});
+  return{type:"line",data:{datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"nearest",intersect:false},
+    scales:{x:{type:"linear",min:5,max:95,title:{display:true,text:"Approval rate (%)"},grid:{color:css("--line")}},y:{min:0,max:7.5,title:{display:true,text:"Default rate of approved book (%)"},grid:{color:css("--line")}}},
+    plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}},tooltip:{callbacks:{label:c=>c.raw.l||`${c.dataset.label}: ${c.parsed.y.toFixed(2)}% default at ${c.parsed.x.toFixed(0)}% approval`}}}}};
+}
+function makeCharts(view){
+  if(!window.Chart)return;
+  Chart.defaults.font.family=css("--body").split(",")[0].replace(/"/g,"")+", sans-serif";Chart.defaults.color=css("--muted");Chart.defaults.font.size=12;
+  const mk=(id,cfg)=>{if(charts[id]||!$(id))return;charts[id]=new Chart($(id),cfg)};
+  if(view==="home"){
+    mk("cFrontierHome",frontierCfg(false));
+    mk("cIncome",{type:"bar",data:{labels:["Benchmark 50%","Custom 50%","Recommended 61.9%","Same risk 63.6%"],datasets:[{data:[144.4,149.3,176.2,179.8],backgroundColor:["#C9C5DB",css("--violet"),css("--amber"),"#A995FF"],borderRadius:8,maxBarThickness:64}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`₹${c.parsed.y} cr net income`}}},scales:{y:{beginAtZero:true,title:{display:true,text:"Net income (₹ crore)"},grid:{color:css("--line")}},x:{grid:{display:false}}}}});
+  }
+  if(view==="evidence"){
+    mk("cFrontier",frontierCfg(true));
+    mk("cAuc",{type:"bar",data:{labels:["A · Application","B · Behavioural","C · Pricing"],datasets:[{label:"Benchmark",data:[0.718,0.768,0.705],backgroundColor:"#C9C5DB",borderRadius:6},{label:"Custom",data:[0.756,0.860,0.729],backgroundColor:css("--violet"),borderRadius:6}]},
+      options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0.6,max:0.9,title:{display:true,text:"AUC"},grid:{color:css("--line")}},x:{grid:{display:false}}},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}}}}});
+    mk("cCapture",{type:"line",data:{labels:["10%","15%","20%","30%"],datasets:[{label:"Past-DPD rule",data:[49.8,58.4,65.3,70.8],borderColor:"#A8A4BE",backgroundColor:"#A8A4BE",borderWidth:2.5,tension:.3},{label:"Behavioural model",data:[53.6,64.3,71.6,81.2],borderColor:css("--teal"),backgroundColor:css("--teal"),borderWidth:3,tension:.3}]},
+      options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:40,max:90,title:{display:true,text:"Delinquents caught (%)"},grid:{color:css("--line")}},x:{title:{display:true,text:"Accounts contacted"},grid:{display:false}}},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}}}}});
+    const bv=[97.7,73.8,26.8,-18.9,-78.4];
+    mk("cBands",{type:"bar",data:{labels:["Band 1","Band 2","Band 3","Band 4","Band 5"],datasets:[{label:"RAROC",data:bv,backgroundColor:bv.map(v=>v>=14?css("--teal"):v>=0?css("--amber"):css("--coral")),borderRadius:6},{type:"line",label:"Hurdle 14%",data:[14,14,14,14,14],borderColor:css("--violet"),borderDash:[6,5],borderWidth:1.5,pointRadius:0}]},
+      options:{responsive:true,maintainAspectRatio:false,scales:{y:{title:{display:true,text:"RAROC (%)"},grid:{color:css("--line")}},x:{grid:{display:false}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y}%`}}}}});
+    const vc={"2008":css("--coral"),"2009":css("--amber"),"2010":css("--teal"),"2011":css("--violet")};
+    mk("cVintage",{type:"line",data:{labels:VINT["2008"].map((_,i)=>i*6),datasets:Object.keys(VINT).map(y=>({label:y+" vintage",data:VINT[y].map(v=>v*100),borderColor:vc[y],backgroundColor:vc[y],borderWidth:2.5,pointRadius:0,tension:.3}))},
+      options:{responsive:true,maintainAspectRatio:false,scales:{y:{title:{display:true,text:"Cumulative default (%)"},grid:{color:css("--line")}},x:{title:{display:true,text:"Months on book"},ticks:{maxTicksLimit:6},grid:{display:false}}},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}}}}});
+    mk("cEcl",{type:"bar",data:{labels:["Stage 1 · 12-month","Stage 1 · lifetime","Stage 2 · lifetime","Stage 3 · lifetime"],datasets:[{data:[0.06,0.64,2.45,4.07],backgroundColor:[css("--teal"),"#9FDCD3",css("--amber"),css("--coral")],borderRadius:6,maxBarThickness:56}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`ECL ${c.parsed.y.toFixed(2)}% of exposure`}}},scales:{y:{title:{display:true,text:"ECL rate (%)"},grid:{color:css("--line")}},x:{grid:{display:false}}}}});
+  }
+}
+function renderTM(){
+  const cols=["Stage 1","Stage 2","Stage 3","Default","Prepaid"];
+  $("tm").innerHTML=`<thead><tr><th>From → to</th>${cols.map(c=>`<th class="num">${c}</th>`).join("")}</tr></thead><tbody>`+
+    Object.keys(TM).map(r=>`<tr><th style="background:var(--surface);text-transform:none;letter-spacing:0;font-size:13px">${r}</th>${TM[r].map(v=>{const a=Math.sqrt(v);return `<td style="background:rgba(106,75,239,${(a*0.55).toFixed(2)});color:${a>0.75?"#fff":"var(--ink)"}">${pct(v,v>0&&v<0.01?2:1)}</td>`}).join("")}</tr>`).join("")+"</tbody>";
+}
+
+/* ============ routing + boot ============ */
+const VIEWS=["home","workbench","evidence"];
+function route(){
+  const h=(location.hash||"").slice(1);
+  const v=VIEWS.includes(h)?h:"home";
+  VIEWS.forEach(x=>$("v-"+x).hidden=x!==v);
+  document.querySelectorAll("nav.tabs a").forEach(a=>a.dataset.view===v?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  if(VIEWS.includes(h))window.scrollTo({top:0});
+  if(v==="home"||v==="evidence")requestAnimationFrame(()=>makeCharts(v));
+}
+document.querySelectorAll('a[href="#story"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();$("story").scrollIntoView({behavior:"smooth"})}));
+[...Object.keys(F),...Object.keys(CB),...Object.keys(PF),"grade","adequacy"].forEach(k=>$(k).addEventListener("input",()=>{readForm();renderWB()}));
+$("resetApp").addEventListener("click",()=>{work[current]=clone(APPS.find(a=>a.id===current));loadForm();renderWB()});
+$("resetPolicy").addEventListener("click",()=>{policy={...DEFAULT_POLICY};loadForm();renderWB();toast("Policy restored to repo defaults")});
+renderHome();renderTM();loadForm();renderWB();
+window.addEventListener("hashchange",()=>{route();if(location.hash==="#workbench")renderWB()});window.addEventListener("resize",()=>{if(!$("v-workbench").hidden)drawRuler(runV2(work[current],policy).comp)});route();icons();
+window.__engine={runV2,runV1,APPS,DEFAULT_POLICY};
+})();
+</script>
+
+</body>
+</html>
