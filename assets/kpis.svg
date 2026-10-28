@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="150" viewBox="0 0 1280 150" role="img" aria-label="Headline results">
+<defs><clipPath id="t"><rect width="296" height="150" rx="18"/></clipPath></defs>
+<g transform="translate(0,0)"><g clip-path="url(#t)"><rect width="296" height="150" fill="#FFFFFF"/><rect width="296" height="5" fill="#0E9F8E"/></g><rect x=".5" y=".5" width="295" height="149" rx="18" fill="none" stroke="#E4E1F0"/>
+<rect x="22" y="26" width="38" height="38" rx="11" fill="#DDF6F2"/><g transform="translate(0,0)"><path d="M32 52l9-9 6 6 9-11M48 38h8v8" fill="none" stroke="#0E9F8E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="76" y="51" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3B3856">more approvals</text>
+<text x="22" y="108" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="700" fill="#0E9F8E">+27%</text>
+<text x="22" y="134" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#6B6787">at the same 3.69% default rate</text></g>
+<g transform="translate(328,0)"><g clip-path="url(#t)"><rect width="296" height="150" fill="#FFFFFF"/><rect width="296" height="5" fill="#6A4BEF"/></g><rect x=".5" y=".5" width="295" height="149" rx="18" fill="none" stroke="#E4E1F0"/>
+<rect x="22" y="26" width="38" height="38" rx="11" fill="#EEEAFE"/><g transform="translate(0,0)"><path d="M32 38l9 9 6-6 9 11M48 52h8v-8" fill="none" stroke="#6A4BEF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="76" y="51" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3B3856">fewer defaults</text>
+<text x="22" y="108" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="700" fill="#6A4BEF">-20%</text>
+<text x="22" y="134" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#6B6787">at the same 50% approval volume</text></g>
+<g transform="translate(656,0)"><g clip-path="url(#t)"><rect width="296" height="150" fill="#FFFFFF"/><rect width="296" height="5" fill="#C98500"/></g><rect x=".5" y=".5" width="295" height="149" rx="18" fill="none" stroke="#E4E1F0"/>
+<rect x="22" y="26" width="38" height="38" rx="11" fill="#FFF4D9"/><g transform="translate(0,0)"><path d="M35 36h13M35 42h13M39 36c8 0 8 12 0 12h-4l10 10" fill="none" stroke="#C98500" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+<text x="76" y="51" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3B3856">net income</text>
+<text x="22" y="108" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="700" fill="#C98500">₹176 cr</text>
+<text x="22" y="134" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#6B6787">at 61.9% approval, vs ₹144 cr</text></g>
+<g transform="translate(984,0)"><g clip-path="url(#t)"><rect width="296" height="150" fill="#FFFFFF"/><rect width="296" height="5" fill="#E0484D"/></g><rect x=".5" y=".5" width="295" height="149" rx="18" fill="none" stroke="#E4E1F0"/>
+<rect x="22" y="26" width="38" height="38" rx="11" fill="#FDE7E7"/><g transform="translate(0,0)"><path d="M41 34l10 17H31z" fill="none" stroke="#E0484D" stroke-width="2.6" stroke-linejoin="round"/><path d="M41 41v4" stroke="#E0484D" stroke-width="2.6" stroke-linecap="round"/><circle cx="41" cy="48" r="1.4" fill="#E0484D"/></g>
+<text x="76" y="51" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3B3856">provisioning cliff</text>
+<text x="22" y="108" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="700" fill="#E0484D">39×</text>
+<text x="22" y="134" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#6B6787">IFRS 9 Stage 1 to Stage 2</text></g>
+</svg>

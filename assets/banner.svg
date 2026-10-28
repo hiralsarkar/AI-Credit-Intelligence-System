@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-label="AI Credit Intelligence System banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBFAFF"/><stop offset="1" stop-color="#F1EEFD"/></linearGradient>
+    <radialGradient id="g1" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#6A4BEF" stop-opacity=".30"/><stop offset="1" stop-color="#6A4BEF" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g2" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#0E9F8E" stop-opacity=".24"/><stop offset="1" stop-color="#0E9F8E" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g3" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#E0A100" stop-opacity=".26"/><stop offset="1" stop-color="#E0A100" stop-opacity="0"/></radialGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4B2FC9"/><stop offset=".55" stop-color="#6A4BEF"/><stop offset="1" stop-color="#0E9F8E"/></linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A4BEF"/><stop offset=".6" stop-color="#9B7BFF"/><stop offset="1" stop-color="#E0A100"/></linearGradient>
+  </defs>
+  <rect width="1280" height="420" rx="24" fill="url(#bg)"/>
+  <circle cx="1060" cy="90" r="260" fill="url(#g1)"/>
+  <circle cx="760" cy="380" r="220" fill="url(#g2)"/>
+  <circle cx="1230" cy="380" r="200" fill="url(#g3)"/>
+  <rect x="0.5" y="0.5" width="1279" height="419" rx="24" fill="none" stroke="#E4E1F0"/>
+
+  <g transform="translate(64,70)">
+    <rect width="44" height="44" rx="12" fill="url(#mark)"/>
+    <path d="M22 11v22M13 33h18M14 17l8-3 8 3M10 25l4-8 4 8a4 4 0 0 1-8 0zM26 25l4-8 4 8a4 4 0 0 1-8 0z" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="60" y="20" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="14" letter-spacing="2" fill="#4B2FC9">CREDIT RISK · DECISIONING · IFRS 9</text>
+    <text x="60" y="40" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" fill="#6B6787">Hiral Sarkar</text>
+  </g>
+  <text x="64" y="178" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" fill="url(#title)" letter-spacing="-1">AI Credit Intelligence</text>
+  <text x="64" y="236" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" fill="#17142E" letter-spacing="-1">System</text>
+  <text x="64" y="282" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" fill="#3B3856">Approve more good borrowers. Price every loan for its risk.</text>
+  <text x="64" y="310" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" fill="#3B3856">Explain every decision.</text>
+
+  <g font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600">
+    <rect x="64" y="340" width="98" height="32" rx="16" fill="#DDF6F2"/><text x="113" y="361" text-anchor="middle" fill="#0B7F72">Approve</text>
+    <rect x="172" y="340" width="96" height="32" rx="16" fill="#FFF1CC"/><text x="220" y="361" text-anchor="middle" fill="#9A6600">Reprice</text>
+    <rect x="278" y="340" width="138" height="32" rx="16" fill="#E3EEFD"/><text x="347" y="361" text-anchor="middle" fill="#1F5FC4">Manual review</text>
+    <rect x="426" y="340" width="94" height="32" rx="16" fill="#FDE7E7"/><text x="473" y="361" text-anchor="middle" fill="#B8343A">Decline</text>
+  </g>
+
+  <g>
+    <rect x="780" y="70" width="450" height="290" rx="18" fill="#FFFFFF" fill-opacity=".86" stroke="#E4E1F0"/>
+    <text x="804" y="100" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#17142E">Approval rate vs default, 61,503 held-out loans</text>
+    <line x1="820" y1="300" x2="1200" y2="300" stroke="#E4E1F0"/>
+    <line x1="820" y1="211.4" x2="1200" y2="211.4" stroke="#E0A100" stroke-dasharray="5 5"/>
+    <path d="M820.0,265.0 L820.0,265.0 L845.3,257.5 L870.7,250.6 L896.0,243.8 L921.3,236.2 L946.7,226.8 L972.0,220.1 L997.3,215.3 L1022.7,208.6 L1048.0,202.8 L1073.3,193.7 L1098.7,184.8 L1124.0,174.5 L1149.3,163.7 L1174.7,149.8 L1200.0,131.8 L1200.0,139.2 L1174.7,162.2 L1149.3,177.6 L1124.0,189.8 L1098.7,200.6 L1073.3,209.5 L1048.0,217.7 L1022.7,225.6 L997.3,232.6 L972.0,239.3 L946.7,244.8 L921.3,249.8 L896.0,255.4 L870.7,263.5 L845.3,268.1 L820.0,275.8 Z" fill="#6A4BEF" fill-opacity=".10"/>
+    <polyline points="820.0,265.0 845.3,257.5 870.7,250.6 896.0,243.8 921.3,236.2 946.7,226.8 972.0,220.1 997.3,215.3 1022.7,208.6 1048.0,202.8 1073.3,193.7 1098.7,184.8 1124.0,174.5 1149.3,163.7 1174.7,149.8 1200.0,131.8" fill="none" stroke="#A8A4BE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="820.0,275.8 845.3,268.1 870.7,263.5 896.0,255.4 921.3,249.8 946.7,244.8 972.0,239.3 997.3,232.6 1022.7,225.6 1048.0,217.7 1073.3,209.5 1098.7,200.6 1124.0,189.8 1149.3,177.6 1174.7,162.2 1200.0,139.2" fill="none" stroke="#6A4BEF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="1060.2" cy="213.4" r="7" fill="#E0A100" stroke="#fff" stroke-width="2.5"/>
+    <text x="1048.2" y="239.4" text-anchor="end" font-family="SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#17142E">61.9% at 3.61%</text>
+    <g font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, sans-serif" font-size="12" fill="#6B6787">
+      <rect x="804" y="326" width="12" height="4" rx="2" fill="#A8A4BE"/><text x="822" y="331">Bureau benchmark</text>
+      <rect x="950" y="326" width="12" height="4" rx="2" fill="#6A4BEF"/><text x="968" y="331">Custom model</text>
+      <rect x="1074" y="326" width="12" height="4" rx="2" fill="#E0A100"/><text x="1092" y="331">Risk appetite</text>
+    </g>
+  </g>
+</svg>
