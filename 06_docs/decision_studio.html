@@ -14,7 +14,7 @@
 <body>
 <title>Credit Decision Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <style>
@@ -22,17 +22,18 @@
    (queue / decision / edit); Evidence is a chart grid. Single deliberate light theme. */
 :root{
   color-scheme:light;
-  --bg:#F6F5FB; --surface:#FFFFFF; --tint:#F0EEFA; --line:#E4E1F0; --line-strong:#D3CEE6;
-  --ink:#17142E; --text:#3B3856; --muted:#6B6787;
+  --bg:#F6F5FB; --surface:#FFFFFF; --tint:#F0EEFA; --line:#DCD8EA; --line-strong:#BFB9D6;
+  --ink:#14112A; --text:#2B2842; --muted:#4A4663;
   --violet:#6A4BEF; --violet-ink:#4B2FC9; --violet-soft:#EEEAFE;
-  --amber:#C98500; --amber-soft:#FFF4D9;
-  --teal:#0E9F8E; --teal-soft:#DDF6F2;
-  --sky:#2F7BEA; --sky-soft:#E3EEFD;
-  --coral:#E0484D; --coral-soft:#FDE7E7;
-  --orange:#E27512; --orange-soft:#FDEEDD;
-  --display:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
-  --body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --amber:#B87A00; --amber-ink:#7A5200; --amber-soft:#FFF1CC;
+  --teal:#0A7166; --teal-soft:#D8F3EE;
+  --sky:#1F5FC4; --sky-soft:#E1ECFC;
+  --coral:#BE3439; --coral-soft:#FCE4E4;
+  --orange:#A84F05; --orange-soft:#FDEBD8;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --display:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
   --r:14px; --shadow:0 1px 2px rgba(23,20,46,.05),0 8px 24px -12px rgba(23,20,46,.12);
 }
 *{box-sizing:border-box}
@@ -41,16 +42,17 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:rgba(246,245,251,.92)}
-h1,h2,h3,h4{font-family:var(--display);color:var(--ink);margin:0;letter-spacing:-.015em;text-wrap:balance}
-h1{font-size:clamp(32px,5vw,54px);line-height:1.05;font-weight:700}
-h2{font-size:clamp(24px,3vw,32px);line-height:1.15;font-weight:700}
-h3{font-size:18px;font-weight:600;line-height:1.3}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);margin:0;letter-spacing:-.005em;text-wrap:balance}
+h3,h4{font-family:var(--display);letter-spacing:0}
+h1{font-size:clamp(28px,3.2vw,40px);line-height:1.18;font-weight:600}
+h2{font-size:clamp(22px,2.4vw,28px);line-height:1.25;font-weight:600}
+h3{font-size:17px;font-weight:600;line-height:1.35}
 h4{font-size:15px;font-weight:600}
 p{margin:0}
 a{color:var(--violet-ink)}
-.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--violet-ink)}
-.lead{font-size:18px;color:var(--text);max-width:62ch}
+.mono,.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--violet-ink)}
+.lead{font-size:17px;color:var(--text);max-width:64ch}
 .muted{color:var(--muted)}
 .small{font-size:13px}
 .wrap{max-width:1240px;margin:0 auto}
@@ -63,7 +65,7 @@ svg.lucide{width:18px;height:18px;stroke-width:2;flex:none}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
 .brand .mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),#9B7BFF 55%,var(--amber));color:#fff}
-.brand b{font-family:var(--display);font-size:17px;display:block;line-height:1.1}
+.brand b{font-family:var(--serif);font-size:18px;font-weight:600;display:block;line-height:1.1}
 .brand span{font-size:12px;color:var(--muted)}
 nav.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--line);padding:4px;border-radius:12px;overflow-x:auto}
 nav.tabs a{display:flex;align-items:center;gap:7px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted);text-decoration:none;padding:7px 14px;border-radius:9px;white-space:nowrap}
@@ -76,7 +78,7 @@ nav.tabs a[aria-current="page"]{background:var(--violet);color:#fff}
 .btn.primary{background:var(--violet);color:#fff;box-shadow:0 6px 18px -8px var(--violet)}
 .btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line-strong)}
 .btn.small{padding:6px 11px;font-size:13px;border-radius:8px}
-.btn.amber{background:var(--amber);color:#fff}
+.btn.amber{background:var(--amber-ink);color:#fff}
 
 /* home */
 section.block{padding-block:56px 8px}
@@ -85,7 +87,7 @@ section.block{padding-block:56px 8px}
 .hero::before{content:"";position:absolute;inset:-40px 0 auto auto;width:70%;height:520px;z-index:-1;
   background:radial-gradient(40% 50% at 70% 30%,rgba(106,75,239,.18),transparent 70%),radial-gradient(35% 40% at 30% 70%,rgba(14,159,142,.14),transparent 70%),radial-gradient(30% 35% at 85% 75%,rgba(201,133,0,.16),transparent 70%)}
 .hero-copy{display:flex;flex-direction:column;gap:20px}
-.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--violet),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 em{font-style:normal;color:var(--violet-ink)}
 .byline{display:flex;align-items:center;gap:12px}
 .avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#fff;background:linear-gradient(135deg,var(--violet),var(--teal))}
 .cta{display:flex;gap:10px;flex-wrap:wrap}
@@ -100,7 +102,7 @@ section.block{padding-block:56px 8px}
 .swap{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
 .swap>div{border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:2px}
 .swap .old{background:var(--tint)} .swap .new{background:var(--amber-soft)}
-.swap b{font-family:var(--mono);font-size:22px;color:var(--ink)}
+.swap b{font-family:var(--body);font-weight:600;font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums}
 .bar{height:8px;border-radius:99px;background:var(--tint);position:relative;overflow:hidden}
 .bar>i{position:absolute;inset:0 auto 0 0;border-radius:99px}
 .bar .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
@@ -109,7 +111,7 @@ section.block{padding-block:56px 8px}
 @media (max-width:860px){.kpi-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpi-tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:6px}
 .kpi-tile .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center}
-.kpi-tile b{font-family:var(--display);font-size:30px;color:var(--ink);line-height:1.1}
+.kpi-tile b{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--ink);line-height:1.1}
 .kpi-tile span{font-size:13px;color:var(--muted)}
 
 .sec-head{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;max-width:760px}
@@ -121,10 +123,10 @@ section.block{padding-block:56px 8px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .icon-badge{width:42px;height:42px;border-radius:12px;display:grid;place-items:center}
 .icon-badge svg.lucide{width:21px;height:21px}
-.c-violet{background:var(--violet-soft);color:var(--violet-ink)} .c-amber{background:var(--amber-soft);color:var(--amber)}
+.c-violet{background:var(--violet-soft);color:var(--violet-ink)} .c-amber{background:var(--amber-soft);color:var(--amber-ink)}
 .c-teal{background:var(--teal-soft);color:var(--teal)} .c-sky{background:var(--sky-soft);color:var(--sky)}
 .c-coral{background:var(--coral-soft);color:var(--coral)} .c-orange{background:var(--orange-soft);color:var(--orange)}
-.stat-line{font-family:var(--mono);font-size:13px;color:var(--ink);background:var(--tint);border-radius:8px;padding:6px 10px;align-self:flex-start}
+.stat-line{font-family:var(--body);font-weight:600;font-size:13px;color:var(--ink);background:var(--tint);border-radius:8px;padding:6px 10px;align-self:flex-start}
 
 /* flow diagram */
 .flow{display:grid;grid-template-columns:minmax(0,1.3fr) 56px minmax(0,1fr) 56px minmax(0,1fr);align-items:center;gap:0}
@@ -165,7 +167,7 @@ tr.changed td{background:color-mix(in srgb,var(--amber-soft) 70%,white)}
 .chip{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--display);letter-spacing:.02em;padding:4px 9px;border-radius:99px;white-space:nowrap}
 .chip svg.lucide{width:14px;height:14px}
 .chip.APPROVE{background:var(--teal-soft);color:var(--teal)}
-.chip.REPRICE{background:var(--amber-soft);color:var(--amber)}
+.chip.REPRICE{background:var(--amber-soft);color:var(--amber-ink)}
 .chip.MANUAL{background:var(--sky-soft);color:var(--sky)}
 .chip.DECLINE{background:var(--coral-soft);color:var(--coral)}
 
@@ -179,7 +181,7 @@ tr.changed td{background:color-mix(in srgb,var(--amber-soft) 70%,white)}
 @media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.steps{grid-template-columns:minmax(0,1fr)}}
 .step{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.step .n{font-family:var(--mono);font-size:12px;color:var(--violet-ink);font-weight:600}
+.step .n{font-size:12px;letter-spacing:.08em;color:var(--violet-ink);font-weight:700}
 
 .pitch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 @media (max-width:900px){.pitch{grid-template-columns:minmax(0,1fr)}}
@@ -215,17 +217,17 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
 .q .id{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
 .dec{display:flex;flex-direction:column;gap:18px;padding:20px}
 .dec-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
-.who h2{font-size:24px}
+.who h2{font-size:23px}
 .who .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:4px}
 .who .meta span{display:inline-flex;align-items:center;gap:5px}
 .who .meta svg.lucide{width:15px;height:15px}
 .verdict{border-radius:14px;padding:18px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;border:1px solid}
 .verdict .vi{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff}
 .verdict .vi svg.lucide{width:26px;height:26px}
-.verdict .vt{font-family:var(--display);font-weight:700;font-size:26px;line-height:1.1}
+.verdict .vt{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.15}
 .verdict p{color:var(--ink);font-size:15px;margin-top:4px}
 .verdict.APPROVE{background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 30%,white)} .verdict.APPROVE .vi{background:var(--teal)} .verdict.APPROVE .vt{color:var(--teal)}
-.verdict.REPRICE{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,white)} .verdict.REPRICE .vi{background:var(--amber)} .verdict.REPRICE .vt{color:var(--amber)}
+.verdict.REPRICE{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,white)} .verdict.REPRICE .vi{background:var(--amber)} .verdict.REPRICE .vt{color:var(--amber-ink)}
 .verdict.MANUAL{background:var(--sky-soft);border-color:color-mix(in srgb,var(--sky) 30%,white)} .verdict.MANUAL .vi{background:var(--sky)} .verdict.MANUAL .vt{color:var(--sky)}
 .verdict.DECLINE{background:var(--coral-soft);border-color:color-mix(in srgb,var(--coral) 30%,white)} .verdict.DECLINE .vi{background:var(--coral)} .verdict.DECLINE .vt{color:var(--coral)}
 .actions{display:flex;gap:8px;flex-wrap:wrap;grid-column:1/-1}
@@ -234,9 +236,9 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
 .metric{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .metric .lbl{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .metric .lbl svg.lucide{width:15px;height:15px}
-.metric .val{font-family:var(--mono);font-size:22px;color:var(--ink);font-weight:500;line-height:1.1}
+.metric .val{font-family:var(--body);font-size:22px;color:var(--ink);font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
 .metric .sub{font-size:12px;color:var(--muted)}
-.good{color:var(--teal)!important} .bad{color:var(--coral)!important} .warn{color:var(--amber)!important}
+.good{color:var(--teal)!important} .bad{color:var(--coral)!important} .warn{color:var(--amber-ink)!important}
 .ruler svg{width:100%;height:64px;display:block;overflow:visible}
 .two{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px}
 @media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
@@ -279,7 +281,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="#home"><span class="mark"><i data-lucide="scale"></i></span><span><b>Credit Decision Studio</b><span>AI Credit Intelligence System · engine v2</span></span></a>
+    <a class="brand" href="#home"><span class="mark"><i data-lucide="scale"></i></span><span><b>Credit Decision Studio</b><span>AI Credit Intelligence System</span></span></a>
     <nav class="tabs" aria-label="Views">
       <a href="#home" data-view="home"><i data-lucide="house"></i>Home</a>
       <a href="#workbench" data-view="workbench"><i data-lucide="layout-dashboard"></i>Analyst workbench</a>
@@ -321,7 +323,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
       <div class="card"><span class="icon-badge c-teal"><i data-lucide="user-x"></i></span><h3>Good borrowers get declined</h3><p class="small">A generic score ranks risk coarsely, so the cutoff turns away people who would have repaid.</p><span class="stat-line">13.6 pts of approval left on the table</span></div>
       <div class="card"><span class="icon-badge c-amber"><i data-lucide="tag"></i></span><h3>Loans are priced blind</h3><p class="small">A risky loan at a safe loan's rate earns less than the capital it ties up. A rate cut can quietly destroy value.</p><span class="stat-line">Bands 4 and 5 run at negative RAROC</span></div>
       <div class="card"><span class="icon-badge c-coral"><i data-lucide="landmark"></i></span><h3>Provisions arrive as a surprise</h3><p class="small">Under IFRS 9 a loan that deteriorates must hold lifetime expected loss, not 12 months of it.</p><span class="stat-line">0.06% to 2.45% ECL at Stage 2</span></div>
-      <div class="card"><span class="icon-badge c-sky"><i data-lucide="message-circle-question"></i></span><h3>Analysts get scores, not reasons</h3><p class="small">A number with no explanation cannot be defended to a customer, an auditor or a regulator.</p><span class="stat-line">Every v2 decision carries reasons</span></div>
+      <div class="card"><span class="icon-badge c-sky"><i data-lucide="message-circle-question"></i></span><h3>Analysts get scores, not reasons</h3><p class="small">A number with no explanation cannot be defended to a customer, an auditor or a regulator.</p><span class="stat-line">Every decision carries reasons</span></div>
     </div>
   </section>
 
@@ -337,7 +339,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
       </div>
       <div class="arrow"><i data-lucide="arrow-right"></i></div>
       <div class="engine-box">
-        <span class="eyebrow" style="color:rgba(255,255,255,.8)">Decision engine v2</span>
+        <span class="eyebrow" style="color:rgba(255,255,255,.9)">Decision engine</span>
         <h3>Rules applied in order, first match wins</h3>
         <ol>
           <li>Composite PD of 35% or more: decline</li>
@@ -369,18 +371,18 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
   </section>
 
   <section class="block">
-    <div class="sec-head"><span class="eyebrow">Version 2</span><h2>I audited my own engine and fixed what I found</h2>
-      <p class="lead">Reading v1 line by line, I found that RAROC was always computed at a fixed 12% rate, whatever the loan was priced at. So a teaser-rate loan looked as profitable as a fully priced one. v2 fixes that and five other issues, with tests that keep them fixed.</p></div>
+    <div class="sec-head"><span class="eyebrow">Self-audit</span><h2>I audited my own engine and fixed what I found</h2>
+      <p class="lead">Reading my engine line by line, I found that RAROC was always computed at a fixed 12% rate, whatever the loan was priced at. So a teaser-rate loan looked as profitable as a fully priced one. The current engine fixes that and five other issues, with tests that keep them fixed.</p></div>
     <div class="fixes">
-      <div class="fix"><span class="icon-badge c-amber"><i data-lucide="badge-indian-rupee"></i></span><div><h4>RAROC at the rate actually offered</h4><p>The engine prices each loan at its offered rate and solves for the breakeven rate that just meets the 14% hurdle.</p><p class="was">v1: fixed 12% revenue, so RAROC was really a second PD cutoff at about 16.7%.</p></div></div>
-      <div class="fix"><span class="icon-badge c-violet"><i data-lucide="refresh-ccw"></i></span><div><h4>Reprice by economics</h4><p>A loan below breakeven is repriced to the higher of breakeven and the market grade rate, rounded up to 25 bp. Above the 24% ceiling it declines.</p><p class="was">v1: repriced only when Module C said so.</p></div></div>
-      <div class="fix"><span class="icon-badge c-sky"><i data-lucide="user-round-search"></i></span><div><h4>Honest thin-file handling</h4><p>New-to-credit applicants are scored on Module A alone, with a data-gap reason and an analyst review instead of an automatic decline.</p><p class="was">v1: showed an invented 6.7% behavioural PD in the narrative.</p></div></div>
-      <div class="fix"><span class="icon-badge c-teal"><i data-lucide="list-checks"></i></span><div><h4>Every decision has reasons</h4><p>Every route records its own reason code, and a test checks 1,000+ input combinations to prove no notice is ever empty.</p><p class="was">v1: one decline path could produce an empty adverse-action notice.</p></div></div>
-      <div class="fix"><span class="icon-badge c-coral"><i data-lucide="lightbulb"></i></span><div><h4>"What would change this"</h4><p>Each non-approval states the smallest change that moves it: the PD needed, or the rate needed.</p><p class="was">v1: decisions explained the past, not the path forward.</p></div></div>
-      <div class="fix"><span class="icon-badge c-orange"><i data-lucide="wrench"></i></span><div><h4>One source of truth</h4><p>All thresholds come from one constants file. The recommended operating point has one shared definition, and the pipelines now run on Mac and Linux, not only Windows.</p><p class="was">v1: hard-coded literals, 62.6% vs 61.9% in different outputs, backslash-only paths.</p></div></div>
+      <div class="fix"><span class="icon-badge c-amber"><i data-lucide="badge-indian-rupee"></i></span><div><h4>RAROC at the rate actually offered</h4><p>The engine prices each loan at its offered rate and solves for the breakeven rate that just meets the 14% hurdle.</p><p class="was">Before: fixed 12% revenue, so RAROC was really a second PD cutoff at about 16.7%.</p></div></div>
+      <div class="fix"><span class="icon-badge c-violet"><i data-lucide="refresh-ccw"></i></span><div><h4>Reprice by economics</h4><p>A loan below breakeven is repriced to the higher of breakeven and the market grade rate, rounded up to 25 bp. Above the 24% ceiling it declines.</p><p class="was">Before: repriced only when Module C said so.</p></div></div>
+      <div class="fix"><span class="icon-badge c-sky"><i data-lucide="user-round-search"></i></span><div><h4>Honest thin-file handling</h4><p>New-to-credit applicants are scored on Module A alone, with a data-gap reason and an analyst review instead of an automatic decline.</p><p class="was">Before: showed an invented 6.7% behavioural PD in the narrative.</p></div></div>
+      <div class="fix"><span class="icon-badge c-teal"><i data-lucide="list-checks"></i></span><div><h4>Every decision has reasons</h4><p>Every route records its own reason code, and a test checks 1,000+ input combinations to prove no notice is ever empty.</p><p class="was">Before: one decline path could produce an empty adverse-action notice.</p></div></div>
+      <div class="fix"><span class="icon-badge c-coral"><i data-lucide="lightbulb"></i></span><div><h4>"What would change this"</h4><p>Each non-approval states the smallest change that moves it: the PD needed, or the rate needed.</p><p class="was">Before: decisions explained the past, not the path forward.</p></div></div>
+      <div class="fix"><span class="icon-badge c-orange"><i data-lucide="wrench"></i></span><div><h4>One source of truth</h4><p>All thresholds come from one constants file. The recommended operating point has one shared definition, and the pipelines now run on Mac and Linux, not only Windows.</p><p class="was">Before: hard-coded literals, 62.6% vs 61.9% in different outputs, backslash-only paths.</p></div></div>
     </div>
     <div style="margin-top:22px;display:flex;flex-direction:column;gap:10px">
-      <h3>The same six applicants through both engines</h3>
+      <h3>The same six applicants, before and after the audit</h3>
       <div class="tablewrap"><table id="beforeAfter"></table></div>
       <p class="small muted">Computed live in this page by the same logic as the Python engine. Highlighted rows changed decision.</p>
     </div>
@@ -415,7 +417,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
     <div style="margin-top:18px">
       <details class="qa"><summary><i data-lucide="help-circle"></i>Why 61.9% and not the income-maximising 63.7%?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">63.7% is where income peaks while default stays inside the 3.69% appetite, but it sits exactly on that limit. I recommend one step inside, where the model beats the benchmark on approval and default at once. That leaves room for model error and economic drift, and it is easier to defend to a credit committee.</div></details>
       <details class="qa"><summary><i data-lucide="help-circle"></i>How did you choose the 60/40 weighting between Modules A and B?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">A and B are trained on different populations, so there is no joint label to fit the weights on. I made it a documented governance choice: A is primary because it exists for every applicant, B is an overlay. I ran a sensitivity analysis and recorded the rationale in the governance folder, to be revisited on any retrain.</div></details>
-      <details class="qa"><summary><i data-lucide="help-circle"></i>What was the most important bug you found?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">RAROC used a fixed 12% revenue rate. That made profitability a function of PD only, so a loan offered at 6.5% looked as good as one at 12%, and repricing could never change the numbers. In v2 the engine prices at the offered rate and solves for breakeven. Karan's teaser loan was approved by v1 at 9% RAROC; v2 reprices it to 7.00%.</div></details>
+      <details class="qa"><summary><i data-lucide="help-circle"></i>What was the most important bug you found?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">RAROC used a fixed 12% revenue rate. That made profitability a function of PD only, so a loan offered at 6.5% looked as good as one at 12%, and repricing could never change the numbers. Now the engine prices at the offered rate and solves for breakeven. Karan's teaser loan used to be approved at 9% real RAROC; it is now repriced to 7.00%.</div></details>
       <details class="qa"><summary><i data-lucide="help-circle"></i>Is the collections uplift result causal?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">No, and I say so in the code and docs. Loan modification was not randomly assigned, so the uplift is observational. I use it to compare targeting strategies, and I state that a randomised holdout is needed before it informs budget or capital.</div></details>
       <details class="qa"><summary><i data-lucide="help-circle"></i>How would you take this to production?<i data-lucide="chevron-right" class="chev"></i></summary><div class="ans">Score all four modules on one joint book, refit the composite weights on a shared label, add PSI drift monitoring with the amber and red triggers already in the constants file, run a randomised champion/challenger for collections, and wire the engine behind an API that writes to the audit log already in the code.</div></details>
     </div>
@@ -445,7 +447,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
       <div class="dec" id="dec" aria-live="polite">
         <div class="dec-head">
           <div class="who"><h2 id="dName"></h2><div class="meta" id="dMeta"></div></div>
-          <span class="chip" id="dEngine" style="background:var(--violet-soft);color:var(--violet-ink)"><i data-lucide="cpu"></i>Engine v2</span>
+          <span class="chip" id="dEngine" style="background:var(--violet-soft);color:var(--violet-ink)"><i data-lucide="shield-check"></i>Policy checked</span>
         </div>
         <div class="verdict" id="verdict">
           <span class="vi" id="vIcon"></span>
@@ -533,7 +535,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);display
 <script>
 (function(){
 "use strict";
-/* ============ engine (mirrors 04_decision_engine v2) ============ */
+/* ============ engine (mirrors 04_decision_engine) ============ */
 const DEFAULT_POLICY={wA:0.60,hurdle:0.14,approveMax:0.10,reviewMin:0.20,declineMin:0.35,lgd:0.45,capRatio:0.105,opex:0.03,baseRate:0.12,concPD:0.25,divergence:0.15,maxRate:0.24,step:0.0025};
 const RW={1:0.75,2:0.75,3:1.0,4:1.5,5:1.5};
 const BAND={1:"Very Low",2:"Low",3:"Medium",4:"High",5:"Very High"};
@@ -584,7 +586,7 @@ function runV2(s,P){
   const notes=[];const div=Math.abs(s.c.mpd-comp);if(div>P.divergence)notes.push(`Internal composite PD (${pct(comp)}) diverges from the market-implied PD (${pct(s.c.mpd)}) by ${pct(div)}.`);
   return{decision:d,primary,reasons,comp,band:cb,e,raroc,need,thin,overrides:ov,move,md,notes,wA,wB,suggested:d==="REPRICE"?need:null};
 }
-/* v1, kept only for the before/after comparison: fixed 12% revenue on Module A PD, synthetic B for thin files */
+/* pre-audit rules, kept only for the before/after comparison: fixed 12% revenue on Module A PD, synthetic B for thin files */
 function runV1(s,P){
   const B=s.b.has?s.b:{pd:0.067},wA=s.b.has?P.wA:1,wB=s.b.has?1-P.wA:0;
   const comp=Math.min(1,Math.max(0,wA*s.a.pd+wB*B.pd)),e=econ(s.a.pd,s.a.ead,P.baseRate,band(s.a.pd),P);
@@ -691,7 +693,7 @@ function copyNotice(app,s,r){
     `Composite PD ${pct(r.comp,2)} (band ${r.band}, ${BAND[r.band]})`,`Offered rate ${pct(s.a.rate,2)} · breakeven ${pct(r.e.breakeven,2)} · RAROC ${pct(r.raroc,1)} (hurdle ${pct(policy.hurdle,0)})`,`Expected loss ${inr(r.e.el)} on ${inr(s.a.ead)}`,"","Reason codes:",...r.reasons.map((x,i)=>`  ${i+1}. ${x.description}`)];
   if(r.move.length)L.push("","What would change this decision:",...r.move.map(m=>`  - ${m}`));
   if(r.decision==="DECLINE")L.push("","Adverse action notice (RBI Fair Practices Code): the principal reasons are listed above. The applicant may request this report within 60 days.");
-  L.push("",`Credit Decision Studio · engine v2`);
+  L.push("",`Credit Decision Studio`);
   const text=L.join("\n");
   const done=()=>toast("Decision notice copied");
   try{navigator.clipboard.writeText(text).then(done,()=>fallbackCopy(text))}catch(_){fallbackCopy(text)}
@@ -702,10 +704,10 @@ function fallbackCopy(text){const ta=document.createElement("textarea");ta.value
 function renderHome(){
   const k=APPS.find(a=>a.id==="A-1042"),r2=runV2(k,DEFAULT_POLICY),r1=runV1(k,DEFAULT_POLICY);
   $("heroCard").innerHTML=`<div class="app-head"><div><small>${k.id} · ${inr(k.a.ead)} · personal loan</small><h3>${k.name}</h3></div>${chip(r2.decision)}</div>
-   <div class="swap"><div class="old"><span class="small muted">Offered</span><b>${pct(k.a.rate,2)}</b><span class="small muted">RAROC ${pct(r2.raroc,0)}</span></div><i data-lucide="arrow-right" style="color:var(--amber)"></i><div class="new"><span class="small" style="color:var(--amber)">Engine suggests</span><b>${pct(r2.need,2)}</b><span class="small" style="color:var(--amber)">meets 14% hurdle</span></div></div>
+   <div class="swap"><div class="old"><span class="small muted">Offered</span><b>${pct(k.a.rate,2)}</b><span class="small muted">RAROC ${pct(r2.raroc,0)}</span></div><i data-lucide="arrow-right" style="color:var(--amber)"></i><div class="new"><span class="small" style="color:var(--amber-ink);font-weight:600">Engine suggests</span><b>${pct(r2.need,2)}</b><span class="small" style="color:var(--amber-ink)">meets 14% hurdle</span></div></div>
    <div><div class="small muted" style="display:flex;justify-content:space-between"><span>RAROC at offered rate</span><span class="num">${pct(r2.raroc,1)} / 14%</span></div><div class="bar" style="margin-top:6px"><i style="width:${r2.raroc/0.3*100}%;background:var(--amber)"></i><span class="tick" style="left:${0.14/0.3*100}%"></span></div></div>
-   <p class="small" style="color:var(--ink)"><i data-lucide="info" style="width:15px;height:15px;vertical-align:-3px;color:var(--violet)"></i> v1 would have ${r1.decision.toLowerCase()}d this loan, scoring it at a 12% rate it never earns.</p>`;
-  $("beforeAfter").innerHTML=`<thead><tr><th>Applicant</th><th class="num">Offered</th><th class="num">RAROC v1</th><th class="num">RAROC v2</th><th>v1 decision</th><th>v2 decision</th></tr></thead><tbody>`+
+   <p class="small" style="color:var(--ink)"><i data-lucide="info" style="width:15px;height:15px;vertical-align:-3px;color:var(--violet)"></i> Before my audit, the engine ${r1.decision.toLowerCase()}d this loan, scoring it at a 12% rate it never earns.</p>`;
+  $("beforeAfter").innerHTML=`<thead><tr><th>Applicant</th><th class="num">Offered</th><th class="num">RAROC before</th><th class="num">RAROC after</th><th>Before audit</th><th>After audit</th></tr></thead><tbody>`+
     APPS.map(a=>{const x=runV1(a,DEFAULT_POLICY),y=runV2(a,DEFAULT_POLICY);return `<tr class="${x.decision!==y.decision?"changed":""}"><td><b style="color:var(--ink)">${a.name}</b><div class="small muted">${a.tag}</div></td><td class="num">${pct(a.a.rate,2)}</td><td class="num">${pct(x.raroc,0)}</td><td class="num">${pct(y.raroc,0)}</td><td>${chip(x.decision)}</td><td>${chip(y.decision)}${y.suggested?` <span class="small num">to ${pct(y.suggested,2)}</span>`:""}</td></tr>`}).join("")+"</tbody>";
 }
 
@@ -716,10 +718,10 @@ const TM={"Stage 1":[0.98,0.0052,0,0,0.0148],"Stage 2":[0.2853,0.6152,0.0796,0.0
 const charts={};
 function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
 function frontierCfg(withMarkers){
-  const C={v:css("--violet"),m:"#A8A4BE",g:css("--amber"),t:css("--teal")};
+  const C={v:css("--violet"),m:"#5E5A7A",g:css("--amber"),t:css("--teal")};
   const ds=[
     {label:"Bureau-score benchmark",data:FR.map(p=>({x:p[0]*100,y:p[1]*100})),borderColor:C.m,backgroundColor:C.m,borderWidth:2.5,pointRadius:0,tension:.25},
-    {label:"My custom PD model",data:FR.map(p=>({x:p[0]*100,y:p[2]*100})),borderColor:C.v,backgroundColor:"rgba(106,75,239,.10)",fill:"-1",borderWidth:3,pointRadius:0,tension:.25},
+    {label:"My custom PD model",data:FR.map(p=>({x:p[0]*100,y:p[2]*100})),borderColor:C.v,backgroundColor:"rgba(106,75,239,.14)",fill:"-1",borderWidth:3,pointRadius:0,tension:.25},
     {label:"Risk appetite 3.69%",data:[{x:5,y:3.69},{x:95,y:3.69}],borderColor:C.g,borderDash:[6,5],borderWidth:1.5,pointRadius:0}];
   if(withMarkers)ds.push({type:"scatter",label:"Operating points",data:[{x:50,y:3.69,l:"Benchmark 50% / 3.69%"},{x:50,y:2.95,l:"Same volume: 2.95% default"},{x:63.6,y:3.69,l:"Same risk: 63.6% approval"},{x:61.9,y:3.61,l:"Recommended SC3: 61.9% / 3.61%"}],
     pointRadius:7,pointHoverRadius:9,pointBackgroundColor:[C.m,C.v,C.v,C.g],pointBorderColor:"#fff",pointBorderWidth:2});
@@ -734,14 +736,14 @@ function makeCharts(view){
   const mk=(id,cfg)=>{if(charts[id]||!$(id))return;charts[id]=new Chart($(id),cfg)};
   if(view==="home"){
     mk("cFrontierHome",frontierCfg(false));
-    mk("cIncome",{type:"bar",data:{labels:["Benchmark 50%","Custom 50%","Recommended 61.9%","Same risk 63.6%"],datasets:[{data:[144.4,149.3,176.2,179.8],backgroundColor:["#C9C5DB",css("--violet"),css("--amber"),"#A995FF"],borderRadius:8,maxBarThickness:64}]},
+    mk("cIncome",{type:"bar",data:{labels:["Benchmark 50%","Custom 50%","Recommended 61.9%","Same risk 63.6%"],datasets:[{data:[144.4,149.3,176.2,179.8],backgroundColor:["#7D7898",css("--violet"),css("--amber"),"#8566FF"],borderRadius:8,maxBarThickness:64}]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`₹${c.parsed.y} cr net income`}}},scales:{y:{beginAtZero:true,title:{display:true,text:"Net income (₹ crore)"},grid:{color:css("--line")}},x:{grid:{display:false}}}}});
   }
   if(view==="evidence"){
     mk("cFrontier",frontierCfg(true));
-    mk("cAuc",{type:"bar",data:{labels:["A · Application","B · Behavioural","C · Pricing"],datasets:[{label:"Benchmark",data:[0.718,0.768,0.705],backgroundColor:"#C9C5DB",borderRadius:6},{label:"Custom",data:[0.756,0.860,0.729],backgroundColor:css("--violet"),borderRadius:6}]},
+    mk("cAuc",{type:"bar",data:{labels:["A · Application","B · Behavioural","C · Pricing"],datasets:[{label:"Benchmark",data:[0.718,0.768,0.705],backgroundColor:"#7D7898",borderRadius:6},{label:"Custom",data:[0.756,0.860,0.729],backgroundColor:css("--violet"),borderRadius:6}]},
       options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:0.6,max:0.9,title:{display:true,text:"AUC"},grid:{color:css("--line")}},x:{grid:{display:false}}},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}}}}});
-    mk("cCapture",{type:"line",data:{labels:["10%","15%","20%","30%"],datasets:[{label:"Past-DPD rule",data:[49.8,58.4,65.3,70.8],borderColor:"#A8A4BE",backgroundColor:"#A8A4BE",borderWidth:2.5,tension:.3},{label:"Behavioural model",data:[53.6,64.3,71.6,81.2],borderColor:css("--teal"),backgroundColor:css("--teal"),borderWidth:3,tension:.3}]},
+    mk("cCapture",{type:"line",data:{labels:["10%","15%","20%","30%"],datasets:[{label:"Past-DPD rule",data:[49.8,58.4,65.3,70.8],borderColor:"#5E5A7A",backgroundColor:"#5E5A7A",borderWidth:2.5,tension:.3},{label:"Behavioural model",data:[53.6,64.3,71.6,81.2],borderColor:css("--teal"),backgroundColor:css("--teal"),borderWidth:3,tension:.3}]},
       options:{responsive:true,maintainAspectRatio:false,scales:{y:{min:40,max:90,title:{display:true,text:"Delinquents caught (%)"},grid:{color:css("--line")}},x:{title:{display:true,text:"Accounts contacted"},grid:{display:false}}},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}}}}});
     const bv=[97.7,73.8,26.8,-18.9,-78.4];
     mk("cBands",{type:"bar",data:{labels:["Band 1","Band 2","Band 3","Band 4","Band 5"],datasets:[{label:"RAROC",data:bv,backgroundColor:bv.map(v=>v>=14?css("--teal"):v>=0?css("--amber"):css("--coral")),borderRadius:6},{type:"line",label:"Hurdle 14%",data:[14,14,14,14,14],borderColor:css("--violet"),borderDash:[6,5],borderWidth:1.5,pointRadius:0}]},
@@ -749,7 +751,7 @@ function makeCharts(view){
     const vc={"2008":css("--coral"),"2009":css("--amber"),"2010":css("--teal"),"2011":css("--violet")};
     mk("cVintage",{type:"line",data:{labels:VINT["2008"].map((_,i)=>i*6),datasets:Object.keys(VINT).map(y=>({label:y+" vintage",data:VINT[y].map(v=>v*100),borderColor:vc[y],backgroundColor:vc[y],borderWidth:2.5,pointRadius:0,tension:.3}))},
       options:{responsive:true,maintainAspectRatio:false,scales:{y:{title:{display:true,text:"Cumulative default (%)"},grid:{color:css("--line")}},x:{title:{display:true,text:"Months on book"},ticks:{maxTicksLimit:6},grid:{display:false}}},plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:8}}}}});
-    mk("cEcl",{type:"bar",data:{labels:["Stage 1 · 12-month","Stage 1 · lifetime","Stage 2 · lifetime","Stage 3 · lifetime"],datasets:[{data:[0.06,0.64,2.45,4.07],backgroundColor:[css("--teal"),"#9FDCD3",css("--amber"),css("--coral")],borderRadius:6,maxBarThickness:56}]},
+    mk("cEcl",{type:"bar",data:{labels:["Stage 1 · 12-month","Stage 1 · lifetime","Stage 2 · lifetime","Stage 3 · lifetime"],datasets:[{data:[0.06,0.64,2.45,4.07],backgroundColor:[css("--teal"),"#3FAF9F",css("--amber"),css("--coral")],borderRadius:6,maxBarThickness:56}]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`ECL ${c.parsed.y.toFixed(2)}% of exposure`}}},scales:{y:{title:{display:true,text:"ECL rate (%)"},grid:{color:css("--line")}},x:{grid:{display:false}}}}});
   }
 }

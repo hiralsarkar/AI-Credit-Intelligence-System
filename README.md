@@ -21,7 +21,7 @@
 <a href="#-the-problem">Problem</a> ·
 <a href="#-how-it-works">How it works</a> ·
 <a href="#-results">Results</a> ·
-<a href="#-decision-engine-v2">Engine v2</a> ·
+<a href="#-the-self-audit">Self-audit</a> ·
 <a href="#-credit-decision-studio">Studio</a> ·
 <a href="#-run-it">Run it</a> ·
 <a href="#-scope-and-honest-limitations">Limitations</a>
@@ -93,7 +93,7 @@ flowchart LR
     C[C · Pricing and portfolio<br/>AUC 0.705 → 0.729]
     E[D · IFRS 9 and collections<br/>LGD 41.8% · 39x cliff]
   end
-  G{{Decision engine v2<br/>composite PD · RAROC at offered rate}}
+  G{{Decision engine<br/>composite PD · RAROC at offered rate}}
   O1([Approve])
   O2([Reprice])
   O3([Manual review])
@@ -168,11 +168,11 @@ On **61,503 held-out loans**, the custom model's approved book defaults less tha
 
 Module D's transition matrix (28.5% monthly cure from Stage 2 to Stage 1) and vintage curves (2008 crisis 6.0% vs 2011 1.1% default) carry the provisioning case. Its surgical-strike score, which ranks the live Stage 2 book by roll-to-loss risk times measured persuadability, raises avoided expected loss to 2.7x the risk-only status quo at the same contact capacity. See [Module D](04_module_d_ecl_ifrs9/README.md#surgical-strike-fused-priority-targeting) for the method and its causal caveats.
 
-## 🛠️ Decision engine v2
+## 🛠️ The self-audit
 
-I audited v1 line by line and found that **RAROC was always computed at a fixed 12% rate**, whatever the loan was actually priced at. A 6.5% teaser loan looked as profitable as a 12% one, and repricing could never change the numbers. v2 fixes that and six other issues, with tests that keep them fixed.
+I audited my engine line by line and found that **RAROC was always computed at a fixed 12% rate**, whatever the loan was actually priced at. A 6.5% teaser loan looked as profitable as a 12% one, and repricing could never change the numbers. The current engine fixes that and six other issues, with tests that keep them fixed.
 
-| | v1 | v2 |
+| | Before the audit | After the audit |
 |---|---|---|
 | 💰 **Pricing** | RAROC at a fixed 12%, a function of PD alone | RAROC at the **offered rate**, plus a **breakeven rate** that exactly meets the 14% hurdle |
 | 🔁 **Repricing** | Only when Module C said "Underpriced" | When the offered rate is below breakeven or the grade rate; rounded up to 25 bp; decline above the 24% ceiling |
@@ -182,17 +182,17 @@ I audited v1 line by line and found that **RAROC was always computed at a fixed 
 | ⚙️ **Config** | Thresholds repeated as literals | Every threshold read from `constants.py` |
 | 🎯 **Consistency** | SC3 was 62.6% in one output, 61.9% elsewhere; Windows-only paths | One shared SC3 rule; portable paths; both guarded by tests |
 
-> **Karan Desai** is offered a 6.5% teaser rate on ₹4 lakh. v1 scores him at 12% and approves at 74% RAROC. v2 sees 9% RAROC against a 14% hurdle and reprices to **7.00%**, the lowest rate at which the loan earns its capital.
+> **Karan Desai** is offered a 6.5% teaser rate on ₹4 lakh. Before the audit, the engine scored him at 12% and approved at 74% RAROC. Now it sees 9% RAROC against a 14% hurdle and reprices to **7.00%**, the lowest rate at which the loan earns its capital.
 
 ## 🖥️ Credit Decision Studio
 
 <a href="https://ai-credit-intelligence-system.vercel.app"><img src="https://img.shields.io/badge/Open%20the%20Studio-ai--credit--intelligence--system.vercel.app-0E9F8E?style=for-the-badge&logo=vercel&logoColor=white" alt="Open the Studio"></a>
 
-The front end tells the story, lets an analyst work a queue, and shows the evidence. It runs the same v2 rules as the Python engine and matches it exactly on 1,120 test inputs.
+The front end tells the story, lets an analyst work a queue, and shows the evidence. It runs the same rules as the Python engine and matches it exactly on 1,120 test inputs.
 
 | 🏠 Home | 🧑‍💼 Analyst workbench | 📊 Evidence |
 |---|---|---|
-| The problem, the architecture, the results, the v2 audit, and how I talk about the project in an interview | A live queue, a verdict with reasons, each model's signal, what-if sliders, one-click repricing, and a copyable decision notice | The frontier, AUC lift, collections capture, RAROC by band, vintage curves, ECL by stage and the transition matrix |
+| The problem, the architecture, the results, the self-audit, and how I talk about the project in an interview | A live queue, a verdict with reasons, each model's signal, what-if sliders, one-click repricing, and a copyable decision notice | The frontier, AUC lift, collections capture, RAROC by band, vintage curves, ECL by stage and the transition matrix |
 
 Source: [`06_docs/decision_studio.html`](06_docs/decision_studio.html), a single self-contained page. It deploys to Vercel on every push to `main` (config in [`vercel.json`](vercel.json)), and you can also open it straight from a clone.
 
@@ -225,7 +225,7 @@ python tools/run_notebooks.py  # re-executes notebooks whose data is present
 02_module_b_behavioural_risk/        🟢 Delinquency model, collections capture, SHAP
 03_module_c_portfolio_pricing_risk/  🟡 Grade and market-implied PD, pricing, reject inference
 04_module_d_ecl_ifrs9/               🔴 IFRS 9 staging, transition matrix, lifetime ECL, collections uplift
-04_decision_engine/                  ⚙️  Composite signal, v2 decision rules, explainability, audit trail
+04_decision_engine/                  ⚙️  Composite signal, decision rules, explainability, audit trail
 05_governance/                       🛡️  Model cards, SR 11-7, RBI MRM, regulatory alignment
 06_docs/                             🖥️  Credit Decision Studio and methodology papers (HTML)
 tests/                               ✅ Engine contracts, output guards, hygiene checks
